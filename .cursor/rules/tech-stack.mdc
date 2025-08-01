@@ -1,0 +1,9 @@
+---
+alwaysApply: true
+---
+# Tech Stack
+
+This project uses:
+
+- **Package Manager:** pnpm
+- **Node.js Version:** (read from [.node-version](mdc:.node-version))

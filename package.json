@@ -1,0 +1,22 @@
+{
+  "name": "typescript-template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm --recursive build",
+    "format": "trunk fmt",
+    "format:all": "trunk fmt --all",
+    "lint": "trunk check",
+    "lint:all": "trunk check --all",
+    "lint:security": "trunk check --all --scope security",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

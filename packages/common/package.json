@@ -1,0 +1,13 @@
+{
+  "name": "@typescript-template/common",
+  "version": "1.0.0",
+  "description": "Common utilities and types for the TypeScript template project.",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  }
+}
