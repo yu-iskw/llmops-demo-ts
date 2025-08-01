@@ -55,65 +55,6 @@ type AgentState = typeof AgentGraphState.State;
 // const graph = new StateGraph(AgentGraphState);
 ```
 
-### 1.4 Integrating with Gemini on Vertex AI
-
-To use Gemini models on Vertex AI, install `@google/genai` and configure the `GoogleGenAI` client with your Vertex AI project and location.
-
-```bash
-pnpm add @google/genai
-```
-
-Then, you can initialize the model as follows:
-
-```typescript
-import { GoogleGenAI } from "@google/genai";
-
-const PROJECT_ID = process.env.GOOGLE_CLOUD_PROJECT_ID || "your-gcp-project-id";
-const LOCATION = process.env.GOOGLE_CLOUD_LOCATION || "us-central1"; // e.g., "us-central1"
-
-const genAI = new GoogleGenAI(process.env.GEMINI_API_KEY || "YOUR_API_KEY");
-
-const model = genAI.getGenerativeModel({
-  model: "gemini-pro", // Or "gemini-ultra", "gemini-flash", etc.
-  safetySettings: [
-    {
-      category: "HARM_CATEGORY_HARASSMENT",
-      threshold: "BLOCK_NONE",
-    },
-    {
-      category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-      threshold: "BLOCK_NONE",
-    },
-  ],
-  generationConfig: {
-    stopSequences: ["\n\n"],
-    maxOutputTokens: 200,
-    temperature: 0.7,
-    topP: 0.9,
-    topK: 1,
-  },
-});
-
-// To use with Vertex AI:
-// import { GoogleGenAI, HarmCategory, HarmBlockThreshold } from "@google/genai";
-// import { VertexAI } from "@google-cloud/vertexai";
-
-// const vertex_ai = new VertexAI({ project: PROJECT_ID, location: LOCATION });
-// const model = vertex_ai.get
-//   generativeModel({
-//     model: "gemini-pro",
-//     safetySettings: [
-//       {
-//         category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-//         threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-//       },
-//     ],
-//     generationConfig: {
-//       maxOutputTokens: 256,
-//     },
-//   });
-```
-
 ## 2. Defining Nodes
 
 Nodes are the building blocks of your graph. They are typically asynchronous functions that take the current `AgentState` as input and return a `Partial<AgentState>` to update the state.
