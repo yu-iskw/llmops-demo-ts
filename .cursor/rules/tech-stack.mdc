@@ -10,3 +10,4 @@ This project uses:
 - **Backend:** tsoa
 - **Frontend:** Vue.js
 - **LLM Provider:** Gemini API and Gemini on Vertex AI (using google/genai)
+- **CLI Framework:** Commander.js (for building command-line interfaces)
