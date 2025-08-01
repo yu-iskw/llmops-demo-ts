@@ -8,7 +8,7 @@
   "author": "",
   "main": "index.js",
   "scripts": {
-    "build": "pnpm --recursive build",
+    "build": "pnpm --filter @llmops-demo-ts/common build && pnpm --filter @llmops-demo-ts/backend build",
     "format": "trunk fmt",
     "format:all": "trunk fmt --all",
     "lint": "trunk check",

@@ -35,7 +35,10 @@ importers:
         version: 0.3.66
       '@langchain/langgraph':
         specifier: ^0.4.1
-        version: 0.4.1(@langchain/core@0.3.66)(zod-to-json-schema@3.24.6(zod@3.25.76))
+        version: 0.4.2(@langchain/core@0.3.66)(zod-to-json-schema@3.24.6(zod@3.25.76))
+      '@llmops-demo/common':
+        specifier: workspace:*
+        version: link:../common
       '@tsoa/runtime':
         specifier: ^6.0.0
         version: 6.6.0
@@ -79,6 +82,8 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.2
+
+  packages/common: {}
 
   packages/frontend:
     dependencies:
@@ -784,8 +789,8 @@ packages:
       react-dom:
         optional: true
 
-  '@langchain/langgraph@0.4.1':
-    resolution: {integrity: sha512-641p9viuC8ukwk4stsYpCRHWqMBZRQph7JxZvBmkPGQBmHKV8ox3KK8ya8yiLOkt0ioL4LW6CSAXAea7SVPMow==}
+  '@langchain/langgraph@0.4.2':
+    resolution: {integrity: sha512-QAxeBIjamn2T2hlqCi+qC8k3Bv/bE/j0VGA+qR+z8NizSbGeD2uftqAYIrk3YtYLWIwk0kIICKcmTz8dKIWzog==}
     engines: {node: '>=18'}
     peerDependencies:
       '@langchain/core': '>=0.3.58 < 0.4.0'
@@ -3414,7 +3419,7 @@ snapshots:
     optionalDependencies:
       '@langchain/core': 0.3.66
 
-  '@langchain/langgraph@0.4.1(@langchain/core@0.3.66)(zod-to-json-schema@3.24.6(zod@3.25.76))':
+  '@langchain/langgraph@0.4.2(@langchain/core@0.3.66)(zod-to-json-schema@3.24.6(zod@3.25.76))':
     dependencies:
       '@langchain/core': 0.3.66
       '@langchain/langgraph-checkpoint': 0.1.0(@langchain/core@0.3.66)

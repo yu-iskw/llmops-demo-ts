@@ -1,30 +1,20 @@
-import { StateGraph, END } from "@langchain/langgraph";
-import { DefaultAgentGraphState, DefaultAgentState } from "./state";
+import { StateGraph, END, START } from "@langchain/langgraph";
 import { callModel } from "./nodes";
-import { HumanMessage } from "@langchain/core/messages";
+import { DefaultAgentStateAnnotation, DefaultAgentState } from "./state";
 
-// Conditional Edge: Decide whether to continue or end
-function shouldContinue(
-  state: DefaultAgentState,
-): "end_conversation" {
-  // For now, always end after the model call.
-  return "end_conversation";
-}
+type NodeNames = "call_model";
 
-export function createDefaultAgentGraph() {
-  const workflow = new StateGraph(DefaultAgentGraphState);
+export function CreateDefaultAgentGraphBuilder() {
+  const workflow = new StateGraph(DefaultAgentStateAnnotation);
 
   // Add nodes
   workflow.addNode("call_model", callModel);
-  workflow.addNode("should_continue", shouldContinue);
+  // Add edges
+  workflow
+    // @ts-ignore ts(2345)
+    .addEdge(START, "call_model")
+    // @ts-ignore ts(2345)
+    .addEdge("call_model", END);
 
-  // Define the entry point
-  workflow.setEntryPoint("call_model");
-
-  // Add conditional edges
-  workflow.addConditionalEdges("call_model", "should_continue", {
-    end_conversation: END,
-  });
-
-  return workflow.compile();
+  return workflow;
 }

@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { ChatService } from "./services/chat-service";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: "./.env" });
 
 const program = new Command();
 const chatService = new ChatService();
@@ -13,29 +13,18 @@ program
   .version("1.0.0");
 
 program
-  .command("financial-advisor <message>")
-  .description("Interact with the Financial Advisor agent")
-  .action(async (message: string) => {
-    console.log(`Sending message to Financial Advisor: \"${message}\"`);
+  .command("default-agent <message>")
+  .description("Interact with the Default agent")
+  .option("-m, --model <model>", "Model to use", "gemini-2.0-flash")
+  .option("-p, --project <project>", "Project to use", "")
+  .action(async (message: string, options: { model: string, project: string }) => {
+    console.log(`Sending message to Default Agent: \"${message}\"`);
     const response = await chatService.processMessage(
       message,
       [],
-      "financial-advisor",
+      "default",
     );
-    console.log("Financial Advisor Response:", response);
-  });
-
-program
-  .command("trip-planner <message>")
-  .description("Interact with the Trip Planner agent")
-  .action(async (message: string) => {
-    console.log(`Sending message to Trip Planner: \"${message}\"`);
-    const response = await chatService.processMessage(
-      message,
-      [],
-      "trip-planner",
-    );
-    console.log("Trip Planner Response:", response);
+    console.log("Default Agent Response:", response);
   });
 
 program.parse(process.argv);

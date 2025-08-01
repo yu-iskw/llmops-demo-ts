@@ -1,21 +1,19 @@
+import { AIMessage } from "@langchain/core/messages";
+import { DefaultAgentStateAnnotation } from "./state";
 import { GoogleGenAI } from "@google/genai";
-import { AIMessage, BaseMessage } from "@langchain/core/messages";
-import { Runnable } from "@langchain/core/runnables";
-import { DefaultAgentState } from "./state";
 
-const genAI = new GoogleGenAI({}); // [[memory:4951926]]
+const genAI = new GoogleGenAI({
+  vertexai: true,
+  project: "ubie-yu-sandbox",
+  location: "us-central1",
+}); // [[memory:4951926]]
 
-// Node: Call the AI model
-export const callModel: Runnable<DefaultAgentState, Partial<DefaultAgentState>> = async (state: DefaultAgentState) => {
+// Define the function that calls the model
+export const callModel = async (state: typeof DefaultAgentStateAnnotation.State) => {
   try {
-    const modelName = state.agentType || "default";
-    // Convert messages to content for the model
-    const contents = state.messages.map((msg: BaseMessage) => ({
-      role: msg._getType() === "human" ? "user" : "model",
-      parts: [{ text: msg.content as string }],
-    }));
-
-    // Call Gemini API
+    // TODO parameterize model name
+    const modelName = "gemini-2.0-flash";
+    const contents = [{ role: "user", parts: [{ text: state.user_message }] }];
     const result = await genAI.models.generateContent({ model: modelName, contents });
     const aiMessage = new AIMessage(result.text || '');
 

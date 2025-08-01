@@ -1,12 +1,14 @@
-import { Annotation, messagesStateReducer } from "@langchain/langgraph";
-import { BaseMessage } from "@langchain/core/messages";
+import { Annotation } from "@langchain/langgraph";
 
-export const DefaultAgentGraphState = Annotation.Root({
-  messages: Annotation<BaseMessage[]>({
-    reducer: messagesStateReducer,
+
+// Graph state
+export const DefaultAgentStateAnnotation = Annotation.Root({
+  user_message: Annotation<string>,
+  messages: Annotation<Array<any>>({ // Add messages channel
     default: () => [],
+    reducer: (s: Array<any>, a: Array<any>) => s.concat(a),
   }),
-  agentType: Annotation<string>,
 });
 
-export type DefaultAgentState = typeof DefaultAgentGraphState.State;
+// To derive the AgentState type for use in this agent's nodes and graph:
+export type DefaultAgentState = typeof DefaultAgentStateAnnotation.State;

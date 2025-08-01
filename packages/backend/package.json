@@ -13,12 +13,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "cli": "tsx src/cli.ts",
+    "build": "tsoa spec-and-routes && tsc",
+    "cli": "pnpm exec tsx src/cli.ts",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
-    "test": "jest",
-    "generate-spec": "tsoa spec-and-routes"
+    "test": "jest"
   },
   "dependencies": {
     "@google-cloud/vertexai": "^1.0.0",
@@ -29,7 +28,8 @@
     "commander": "^12.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "@llmops-demo/common": "workspace:*"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

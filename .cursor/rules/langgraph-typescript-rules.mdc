@@ -64,41 +64,83 @@ Nodes are the building blocks of your graph. They are typically asynchronous fun
 Nodes should clearly define their input and output types.
 
 ```typescript
-// src/agents/<agent_name>/nodes.ts
-import { AgentState } from "./state"; // Assumes state.ts is in the same directory
-import { HumanMessage } from "@langchain/core/messages"; // Assuming you might use BaseMessage types for chat history etc.
+// src/agents/<agent_name>/nodes.ts (or similar location)
+import { Annotation, StateGraph, Send } from "@langchain/langgraph";
 
-// Example node functions operating on AgentGraphState (topic, joke, etc.)
-async function generateJoke(state: AgentState): Promise<Partial<AgentState>> {
-  // In a real scenario, this would involve an LLM call to generate a joke based on the topic
-  console.log(`Generating joke about: ${state.topic}`);
-  return { joke: `Why did the ${state.topic} cross the road? To get to the other side!` };
+// Graph state
+const StateAnnotation = Annotation.Root({
+  topic: Annotation<string>,
+  sections: Annotation<Array<any>>,
+  completedSections: Annotation<string[]>({
+    default: () => [],
+    reducer: (a, b) => a.concat(b),
+  }),
+  finalReport: Annotation<string>,
+});
+
+// Worker state (for parallel processing, if applicable)
+const WorkerStateAnnotation = Annotation.Root({
+  section: Annotation<any>,
+  completedSections: Annotation<string[]>({
+    default: () => [],
+    reducer: (a, b) => a.concat(b),
+  }),
+});
+
+// Derive the AgentState types for use in this agent's nodes and graph:
+type OrchestratorAgentState = typeof StateAnnotation.State;
+type WorkerAgentState = typeof WorkerStateAnnotation.State;
+
+// Assuming `llm` is an initialized language model (e.g., from @google/genai, langchain/google_vertexai, etc.)
+// And `planner` is an LLM augmented with a schema for planning.
+// For example:
+// import { GoogleGenerativeAI } from '@google/generative-ai';
+// const llm = new GoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY }).getGenerativeModel({ model: 'gemini-pro' });
+// const planner = llm.withStructuredOutput(z.object({ sections: z.array(sectionSchema) }));
+
+// Node to orchestrate the report generation
+async function orchestrator(state: OrchestratorAgentState) {
+  // Generate queries (example: using a planner LLM to define sections)
+  // In a real scenario, `planner` would be an LLM that structures the report sections.
+  const reportSections = {
+      sections: [
+          { name: "Introduction", description: "Overview of LLM scaling laws" },
+          { name: "Empirical Studies", description: "Discuss key research findings" },
+          { name: "Theoretical Foundations", description: "Underlying principles" },
+      ]
+  }; // await planner.invoke([...]);
+
+  return { sections: reportSections.sections };
 }
 
-async function generateStory(state: AgentState): Promise<Partial<AgentState>> {
-  // In a real scenario, this would involve an LLM call
-  console.log(`Generating story about: ${state.topic}`);
-  return { story: `Once upon a time, in a land of ${state.topic}, there was a great adventure.` };
+// Node for an LLM to generate a specific section of the report (worker node)
+async function llmCall(state: WorkerAgentState) {
+  // Generate section content (example: using an LLM to write a section)
+  // In a real scenario, `llm` would be used to generate content for state.section.
+  const sectionContent = `Content for section: ${state.section.name}. Description: ${state.section.description}`; // await llm.invoke([...]);
+
+  // Write the updated section to completed sections
+  return { completedSections: [sectionContent] };
 }
 
-async function combineOutput(state: AgentState): Promise<Partial<AgentState>> {
-  // Combines outputs from previous nodes
-  const combined = `Joke: ${state.joke}\nStory: ${state.story}\nPoem: ${state.poem || 'N/A'}`;
-  return { combinedOutput: combined };
+// Node to synthesize the final report from completed sections
+async function synthesizer(state: OrchestratorAgentState) {
+  // List of completed sections
+  const completedSections = state.completedSections;
+
+  // Format completed sections to a single string for the final report
+  const completedReportSections = completedSections.join("\n\n---\n\n");
+
+  return { finalReport: completedReportSections };
 }
 
-// Original example nodes, commented out as they don't align with the new state structure:
-/*
-async function generateResponse(state: AgentState): Promise<Partial<AgentState>> {
-  const newGeneration = `Generated response for: ${state.input}`;
-  return { generation: newGeneration };
+// Conditional edge function to create llm_call workers that each write a section of the report
+function assignWorkers(state: OrchestratorAgentState) {
+  // Kick off section writing in parallel via Send() API
+  return state.sections.map((section) =>
+    new Send("llmCall", { section })
+  );
 }
-
-async function updateChatHistory(state: AgentState): Promise<Partial<AgentState>> {
-  const newChatHistory: [string, string][] = [...state.chat_history, [state.input, state.generation]];
-  return { chat_history: newChatHistory, input: "" };
-}
-*/
 ```
 
 ### 2.2 Modularity and Separation of Concerns
@@ -132,13 +174,92 @@ graph.addNode("combine_output", combineOutput);
 Edges dictate the flow between nodes.
 
 * **Direct Edges:** `addEdge(source, target)`
-* **Conditional Edges:** `addConditionalEdges(source, condition_node, branch_map)`
+* **Conditional Edges:** `addConditionalEdges(source, condition_node, branch_map, {name?: string})`
   * `condition_node`: A node that returns a string key, which maps to the next node in `branch_map`.
+  * `branch_map`: An object where keys are strings returned by `condition_node` and values are the names of the next nodes.
 
 ```typescript
 // src/agents/<agent_name>/agent.ts or index.ts (continued)
+import { END, StateGraph, Annotation, START } from "@langchain/langgraph";
 
-// Define entry and exit points
+// Define a new Annotation for conditional branching example
+const ConditionalBranchingAnnotation = Annotation.Root({
+  aggregate: Annotation<string[]>({
+    reducer: (x, y) => x.concat(y),
+  }),
+  which: Annotation<string>({
+    reducer: (x: string, y: string) => (y ?? x),
+  })
+});
+
+// Create the graph
+const nodeA2 = (state: typeof ConditionalBranchingAnnotation.State) => {
+  console.log(`Adding I'm A to ${state.aggregate}`);
+  return { aggregate: [`I'm A`] };
+};
+const nodeB2 = (state: typeof ConditionalBranchingAnnotation.State) => {
+  console.log(`Adding I'm B to ${state.aggregate}`);
+  return { aggregate: [`I'm B`] };
+};
+const nodeC2 = (state: typeof ConditionalBranchingAnnotation.State) => {
+  console.log(`Adding I'm C to ${state.aggregate}`);
+  return { aggregate: [`I'm C`] };
+};
+const nodeD2 = (state: typeof ConditionalBranchingAnnotation.State) => {
+  console.log(`Adding I'm D to ${state.aggregate}`);
+  return { aggregate: [`I'm D`] };
+};
+const nodeE2 = (state: typeof ConditionalBranchingAnnotation.State) => {
+  console.log(`Adding I'm E to ${state.aggregate}`);
+  return { aggregate: [`I'm E`] };
+};
+
+// Define the route function
+function routeCDorBC(state: typeof ConditionalBranchingAnnotation.State): string[] {
+  if (state.which === "cd") {
+    return ["c", "d"];
+  }
+  return ["b", "c"];
+}
+
+const graphBuilder = new StateGraph(ConditionalBranchingAnnotation)
+  .addNode("a", nodeA2)
+  // @ts-ignore ts(2345)
+  .addEdge(START, "a")
+  .addNode("b", nodeB2)
+  .addNode("c", nodeC2)
+  .addNode("d", nodeD2)
+  .addNode("e", nodeE2)
+  // Add conditional edges
+  // Third parameter is to support visualizing the graph
+  .addConditionalEdges("a", routeCDorBC, {
+    b: "b",
+    c: "c",
+    d: "d",
+  }, { name: "routeCDorBC"})
+  // @ts-ignore ts(2345)
+  .addEdge("b", "e")
+  // @ts-ignore ts(2345)
+  .addEdge("c", "e")
+  // @ts-ignore ts(2345)
+  .addEdge("d", "e")
+  // @ts-ignore ts(2345)
+  .addEdge("e", END);
+
+const conditionalGraph = graphBuilder.compile();
+
+// Example usage:
+/*
+// Invoke the graph with 'bc'
+let result1 = await conditionalGraph.invoke({ aggregate: [], which: "bc" });
+console.log("Result 1: ", result1);
+
+// Invoke the graph with 'cd'
+let result2 = await conditionalGraph.invoke({ aggregate: [], which: "cd" });
+console.log("Result 2: ", result2);
+*/
+
+// Define entry and exit points for the original example
 graph.setEntryPoint("generate_joke");
 graph.setFinishPoint("combine_output");
 
@@ -146,9 +267,8 @@ graph.setFinishPoint("combine_output");
 graph.addEdge("generate_joke", "generate_story"); // Direct edge
 graph.addEdge("generate_story", "combine_output"); // Direct edge
 
-// Example of a conditional edge (using the previous AgentState structure, for illustration):
-/*
-async function decideNextStep(state: AgentState): Promise<string> {
+/* This section was replaced by the more comprehensive example above.
+async function decideNextStep(state: AgentState) {
   if (state.generation.includes("final")) {
     return "finish";
   }

@@ -142,3 +142,5 @@ packages/**/build/
 packages/backend/build/
 packages/frontend/dist/
 .env
+
+pacckages/**/*.js

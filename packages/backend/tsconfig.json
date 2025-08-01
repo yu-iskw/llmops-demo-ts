@@ -1,20 +1,22 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "moduleResolution": "Node",
-    "typeRoots": ["./node_modules/@types"],
-    "lib": ["ES2020", "DOM"],
-    "target": "ES2020",
-    "module": "CommonJS",
     "outDir": "./dist",
-    "rootDir": "./",
-    "baseUrl": "./src",
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
+    "rootDir": ".",
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@agents/*": ["src/agents/*"],
+      "@models/*": ["src/models/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"],
+      "@graph": ["src/graph.ts"],
+      "@llmops-demo/common": ["../common/src"]
+    }
   },
-  "include": ["src/**/*.ts", "src/models/**/*.ts", "types/**/*.d.ts"],
+  "references": [
+    { "path": "../common" }
+  ],
+  "include": ["src/**/*.ts", "src/generated/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
