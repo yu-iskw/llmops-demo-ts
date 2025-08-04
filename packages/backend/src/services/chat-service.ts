@@ -47,7 +47,12 @@ export class ChatService {
         if (keys.length === 0) continue;
 
         const stepResult = (s as any)[keys[0]];
-        if (!stepResult || !stepResult.messages || !Array.isArray(stepResult.messages)) continue;
+        if (
+          !stepResult ||
+          !stepResult.messages ||
+          !Array.isArray(stepResult.messages)
+        )
+          continue;
 
         const lastMessage = stepResult.messages.slice(-1)[0];
         if (lastMessage && lastMessage._getType() === "ai") {

@@ -1,10 +1,10 @@
 import { Annotation } from "@langchain/langgraph";
 
-
 // Graph state
 export const DefaultAgentStateAnnotation = Annotation.Root({
   user_message: Annotation<string>,
-  messages: Annotation<Array<any>>({ // Add messages channel
+  messages: Annotation<Array<any>>({
+    // Add messages channel
     default: () => [],
     reducer: (s: Array<any>, a: Array<any>) => s.concat(a),
   }),

@@ -10,11 +10,38 @@ body {
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
+  background-color: #343541;
+  color: #ececf1;
+  line-height: 1.6;
 }
 
 #app {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: #343541;
+}
+
+/* ChatGPT-like scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #565869;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #676a7d;
+}
+
+/* Selection color */
+::selection {
+  background-color: #565869;
+  color: #ececf1;
 }

@@ -14,9 +14,7 @@
       "@llmops-demo/common": ["../common/src"]
     }
   },
-  "references": [
-    { "path": "../common" }
-  ],
+  "references": [{ "path": "../common" }],
   "include": ["src/**/*.ts", "src/generated/**/*.ts", "build/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

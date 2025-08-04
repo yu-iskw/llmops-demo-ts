@@ -1,5 +1,5 @@
-import { reactive } from 'vue';
-import type { ChatMessage } from '../services/chatService';
+import { reactive } from "vue";
+import type { ChatMessage } from "../services/chatService";
 
 export class MessageStore {
   private messages = reactive<ChatMessage[]>([]);
@@ -28,7 +28,7 @@ export class MessageStore {
         // Force reactivity by creating a new object
         const updatedMessage = {
           ...lastMessage,
-          text: lastMessage.text + text
+          text: lastMessage.text + text,
         };
         // Replace the last message in the array
         this.messages[this.messages.length - 1] = updatedMessage;

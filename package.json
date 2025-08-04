@@ -14,9 +14,9 @@
     "lint": "trunk check",
     "lint:all": "trunk check --all",
     "lint:security": "trunk check --all --scope security",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start:backend": "pnpm --filter @llmops-demo-ts/backend dev",
-    "start:frontend": "pnpm --filter @llmops-demo-ts/frontend dev"
+    "start:frontend": "pnpm --filter @llmops-demo-ts/frontend dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@types/uuid": "^10.0.0",

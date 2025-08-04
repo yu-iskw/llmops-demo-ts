@@ -1,15 +1,25 @@
 <template>
   <div class="chat-container">
+    <!-- Header -->
     <div class="chat-header">
-      <h1>AI Chat</h1>
+      <div class="header-content">
+        <h1>AI Assistant</h1>
+        <p class="header-subtitle">Powered by Gemini</p>
+      </div>
     </div>
 
-    <MessageList :messages="messages" />
+    <!-- Messages Area -->
+    <div class="messages-area">
+      <MessageList :messages="messages" :is-loading="isLoading" />
+    </div>
 
-    <MessageInput
-      :is-loading="isLoading"
-      @send-message="handleSendMessage"
-    />
+    <!-- Input Area -->
+    <div class="input-area">
+      <MessageInput
+        :is-loading="isLoading"
+        @send-message="handleSendMessage"
+      />
+    </div>
   </div>
 </template>
 
@@ -41,7 +51,7 @@ const isLoading = ref(false);
 onMounted(() => {
   const testMessage: ChatMessage = {
     id: 'test-1',
-    text: 'Welcome to AI Chat! Type a message to get started.',
+    text: 'Hello! I\'m your AI assistant. How can I help you today?',
     fromUser: false
   };
   messages.push(testMessage);
@@ -96,7 +106,7 @@ const handleSendMessage = async (message: string) => {
     // Add error message
     const errorMessage: ChatMessage = {
       id: (Date.now() + 1).toString(),
-      text: 'Sorry, there was an error processing your message.',
+      text: 'Sorry, there was an error processing your message. Please try again.',
       fromUser: false
     };
     messages.push(errorMessage);
@@ -112,21 +122,50 @@ const handleSendMessage = async (message: string) => {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  max-width: 800px;
-  margin: 0 auto;
-  background: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #343541;
+  color: #ececf1;
 }
 
 .chat-header {
-  padding: 20px;
-  border-bottom: 1px solid #e0e0e0;
-  background: #f8f9fa;
+  background-color: #202123;
+  border-bottom: 1px solid #4a4b53;
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-content {
+  max-width: 768px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .chat-header h1 {
   margin: 0;
-  color: #333;
-  font-size: 24px;
+  color: #ececf1;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.header-subtitle {
+  color: #8e8ea0;
+  font-size: 14px;
+  margin: 0;
+}
+
+.messages-area {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.input-area {
+  background-color: #343541;
+  border-top: 1px solid #4a4b53;
+  padding: 20px 0;
+  position: sticky;
+  bottom: 0;
 }
 </style>
