@@ -17,6 +17,6 @@
   "references": [
     { "path": "../common" }
   ],
-  "include": ["src/**/*.ts", "src/generated/**/*.ts"],
+  "include": ["src/**/*.ts", "src/generated/**/*.ts", "build/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

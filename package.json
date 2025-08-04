@@ -10,11 +10,13 @@
   "scripts": {
     "build": "pnpm --filter @llmops-demo-ts/common build && pnpm --filter @llmops-demo-ts/backend build",
     "format": "trunk fmt",
-    "format:all": "trunk fmt --all",
+    "format:all": "trunk fmt --alubiel",
     "lint": "trunk check",
     "lint:all": "trunk check --all",
     "lint:security": "trunk check --all --scope security",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:backend": "pnpm --filter @llmops-demo-ts/backend dev",
+    "start:frontend": "pnpm --filter @llmops-demo-ts/frontend dev"
   },
   "dependencies": {
     "@types/uuid": "^10.0.0",

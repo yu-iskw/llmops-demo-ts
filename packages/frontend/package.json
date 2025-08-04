@@ -18,7 +18,8 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "vue": "^3.4.0"
+    "vue": "^3.4.0",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

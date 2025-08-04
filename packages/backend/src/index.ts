@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { RegisterRoutes } from "../build/routes";
+import { RegisterRoutes } from "./generated/routes/routes";
 import { ValidateError } from "tsoa";
 
 dotenv.config();

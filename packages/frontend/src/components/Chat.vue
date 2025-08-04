@@ -4,145 +4,97 @@
       <h1>AI Chat</h1>
     </div>
 
-    <div class="messages-container" ref="messagesContainer">
-      <div
-        v-for="message in messages"
-        :key="message.id"
-        :class="['message', message.fromUser ? 'user-message' : 'ai-message']"
-      >
-        <div class="message-content">
-          {{ message.text }}
-        </div>
-      </div>
-    </div>
+    <MessageList :messages="messages" />
 
-    <!-- Agent Selection Dropdown -->
-    <div class="p-4 border-t border-gray-200">
-      <label for="agent-select" class="block text-sm font-medium text-gray-700">Select Agent:</label>
-      <select
-        id="agent-select"
-        v-model="selectedAgent"
-        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-      >
-        <option value="default">Default</option>
-        <option value="creative">Creative</option>
-        <option value="scientific">Scientific</option>
-      </select>
-    </div>
-
-    <div class="input-container">
-      <form @submit.prevent="sendMessage" class="message-form">
-        <input
-          v-model="newMessage"
-          type="text"
-          placeholder="Type your message..."
-          :disabled="isLoading"
-          class="message-input"
-        />
-        <button
-          type="submit"
-          :disabled="!newMessage.trim() || isLoading"
-          class="send-button"
-        >
-          {{ isLoading ? 'Sending...' : 'Send' }}
-        </button>
-      </form>
-    </div>
+    <MessageInput
+      :is-loading="isLoading"
+      @send-message="handleSendMessage"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, nextTick, onMounted } from 'vue';
+import { reactive, ref, computed, type Ref, onMounted } from 'vue';
+import MessageList from './MessageList.vue';
+import MessageInput from './MessageInput.vue';
+import { ChatService, type ChatMessage } from '../services/chatService';
 
-interface Message {
-  id: string;
-  text: string;
-  fromUser: boolean;
-}
+// Debug logging utility
+const debugLog = (level: string, message: string, data?: any) => {
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] [UI-${level.toUpperCase()}] ${message}`;
 
-const messages = reactive<Message[]>([]);
-const newMessage = ref('');
-const isLoading = ref(false);
-const messagesContainer = ref<HTMLElement>();
-const selectedAgent = ref('default'); // New state for selected agent
-
-const scrollToBottom = () => {
-  nextTick(() => {
-    if (messagesContainer.value) {
-      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
-    }
-  });
+  if (data) {
+    console.group(logMessage);
+    console.log('Data:', data);
+    console.groupEnd();
+  } else {
+    console.log(logMessage);
+  }
 };
 
-const sendMessage = async () => {
-  if (!newMessage.value.trim() || isLoading.value) return;
+// Direct reactive state
+const messages = reactive<ChatMessage[]>([]);
+const isLoading = ref(false);
 
-  const userMessage: Message = {
+// Add a test message on mount to verify UI is working
+onMounted(() => {
+  const testMessage: ChatMessage = {
+    id: 'test-1',
+    text: 'Welcome to AI Chat! Type a message to get started.',
+    fromUser: false
+  };
+  messages.push(testMessage);
+});
+
+const handleSendMessage = async (message: string) => {
+  if (!message.trim()) return;
+
+  debugLog('info', 'User sent message', { message });
+
+  // Add user message
+  const userMessage: ChatMessage = {
     id: Date.now().toString(),
-    text: newMessage.value,
+    text: message, // Use plain string instead of ref
     fromUser: true
   };
-
   messages.push(userMessage);
-  const messageToSend = newMessage.value;
-  newMessage.value = '';
+
+  debugLog('debug', 'User message added', { userMessage });
+
+  // Set loading state
   isLoading.value = true;
 
-  scrollToBottom();
-
   try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: messageToSend,
-        history: messages.filter(m => m.id !== userMessage.id),
-        agentType: selectedAgent.value, // Pass selected agent type
-      })
+    // Include the user message in history for proper context
+    const history = [...messages]; // Include all messages including the one we just added
+
+    debugLog('debug', 'Starting chat request', {
+      message,
+      historyLength: history.length
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to send message');
-    }
+    // Send message and get response
+    const response = await ChatService.sendMessage(message, history, 'default');
 
-    const reader = response.body?.getReader();
-    if (!reader) {
-      throw new Error('No response body');
-    }
+    debugLog('info', 'Received response from API', { response });
 
-    let aiMessage: Message = {
+    // Create AI message with the response
+    const aiMessage: ChatMessage = {
       id: (Date.now() + 1).toString(),
-      text: '',
+      text: response, // Use plain string instead of ref
       fromUser: false
     };
-
     messages.push(aiMessage);
 
-    const decoder = new TextDecoder();
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
+    debugLog('debug', 'AI message added', { aiMessage });
 
-      const chunk = decoder.decode(value);
-      const lines = chunk.split('\n');
-
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          try {
-            const data = JSON.parse(line.slice(6));
-            aiMessage.text += data.chunk;
-            scrollToBottom();
-          } catch (e) {
-            console.error('Error parsing SSE data:', e);
-          }
-        }
-      }
-    }
+    debugLog('info', 'Chat request completed successfully');
   } catch (error) {
     console.error('Error sending message:', error);
-    const errorMessage: Message = {
+
+    // Add error message
+    const errorMessage: ChatMessage = {
       id: (Date.now() + 1).toString(),
       text: 'Sorry, there was an error processing your message.',
       fromUser: false
@@ -150,13 +102,9 @@ const sendMessage = async () => {
     messages.push(errorMessage);
   } finally {
     isLoading.value = false;
-    scrollToBottom();
+    debugLog('debug', 'Loading state set to false');
   }
 };
-
-onMounted(() => {
-  scrollToBottom();
-});
 </script>
 
 <style scoped>
@@ -180,81 +128,5 @@ onMounted(() => {
   margin: 0;
   color: #333;
   font-size: 24px;
-}
-
-.messages-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.message {
-  max-width: 70%;
-  padding: 12px 16px;
-  border-radius: 12px;
-  word-wrap: break-word;
-}
-
-.user-message {
-  align-self: flex-end;
-  background: #007bff;
-  color: white;
-}
-
-.ai-message {
-  align-self: flex-start;
-  background: #f1f3f4;
-  color: #333;
-}
-
-.message-content {
-  line-height: 1.4;
-}
-
-.input-container {
-  padding: 20px;
-  border-top: 1px solid #e0e0e0;
-  background: white;
-}
-
-.message-form {
-  display: flex;
-  gap: 12px;
-}
-
-.message-input {
-  flex: 1;
-  padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  outline: none;
-}
-
-.message-input:focus {
-  border-color: #007bff;
-}
-
-.send-button {
-  padding: 12px 24px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.send-button:hover:not(:disabled) {
-  background: #0056b3;
-}
-
-.send-button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
 }
 </style>
