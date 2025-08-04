@@ -15,7 +15,7 @@ export class ChatService {
     history: any[] = [],
     agentType: string = "default",
     config?: GenAIConfig,
-    modelName: string = "gemini-2.0-flash" // Add modelName parameter with default
+    modelName: string = "gemini-2.0-flash", // Default model set here
   ): Promise<string> {
     try {
       console.log("Processing message:", message);
@@ -27,9 +27,9 @@ export class ChatService {
       let compiledGraph: CompiledStateGraph<any, any>;
 
       if (agentType === "research") {
-        compiledGraph = createResearchAgentGraphBuilder(genAI, modelName).compile(); // Pass modelName
+        compiledGraph = createResearchAgentGraphBuilder(genAI, modelName).compile();
       } else {
-        compiledGraph = CreateDefaultAgentGraphBuilder(genAI, modelName).compile(); // Pass modelName
+        compiledGraph = CreateDefaultAgentGraphBuilder(genAI, modelName).compile();
       }
 
       // Convert history to proper message format
@@ -46,7 +46,7 @@ export class ChatService {
         initialState = {
           user_message: message,
           messages: initialMessages,
-        } as ResearchAgentState; // Cast to ResearchAgentState
+        } as ResearchAgentState;
       } else {
         initialState = {
           user_message: message,
@@ -64,7 +64,7 @@ export class ChatService {
       for await (const s of stream as AsyncIterable<StreamState>) {
         console.log("Stream state:", s);
 
-        if ("report" in s && s.report) {
+        if ("report" in s && s.report !== null && typeof s.report === 'string') {
           finalResponse = s.report;
           console.log("Final report:", finalResponse);
         } else if ("messages" in s && s.messages.length > 0) {

@@ -31,6 +31,8 @@ export class ChatController extends Controller {
       message,
       history,
       agentType,
+      undefined,
+      requestBody.modelName, // Pass modelName from requestBody
     );
     return { chunk: response };
   }
@@ -46,11 +48,6 @@ export class ChatController extends Controller {
         name: "research",
         description:
           "An AI assistant specializing in research and information gathering.",
-      },
-      {
-        name: "trip-planner",
-        description:
-          "An AI assistant for planning trips and generating itineraries.",
       },
     ];
     return agentTypes;

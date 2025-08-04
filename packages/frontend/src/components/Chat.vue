@@ -5,6 +5,23 @@
       <div class="header-content">
         <h1>AI Assistant</h1>
         <p class="header-subtitle">Powered by Gemini</p>
+        <div class="controls">
+          <div class="select-wrapper">
+            <label for="agent-select">Agent:</label>
+            <select id="agent-select" v-model="selectedAgentType">
+              <option v-for="agent in agentTypes" :key="agent.name" :value="agent.name">
+                {{ agent.name }}
+              </option>
+            </select>
+          </div>
+          <div class="select-wrapper">
+            <label for="model-select">Model:</label>
+            <select id="model-select" v-model="selectedModelName">
+              <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+              <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -24,10 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, type Ref, onMounted } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import MessageList from './MessageList.vue';
 import MessageInput from './MessageInput.vue';
-import { ChatService, type ChatMessage } from '../services/chatService';
+import { ChatService, type ChatMessage, type AgentType } from '../services/chatService';
 
 // Debug logging utility
 const debugLog = (level: string, message: string, data?: any) => {
@@ -46,9 +63,20 @@ const debugLog = (level: string, message: string, data?: any) => {
 // Direct reactive state
 const messages = reactive<ChatMessage[]>([]);
 const isLoading = ref(false);
+const selectedAgentType = ref<string>('default'); // Default agent type
+const selectedModelName = ref<string>('gemini-2.5-flash'); // Default model name
+const agentTypes = ref<AgentType[]>([]); // To store fetched agent types
 
-// Add a test message on mount to verify UI is working
-onMounted(() => {
+// Fetch agent types on mount
+onMounted(async () => {
+  try {
+    agentTypes.value = await ChatService.getAgentTypes();
+    debugLog('info', 'Fetched agent types', agentTypes.value);
+  } catch (error) {
+    console.error('Error fetching agent types:', error);
+    debugLog('error', 'Failed to fetch agent types', error);
+  }
+
   const testMessage: ChatMessage = {
     id: 'test-1',
     text: 'Hello! I\'m your AI assistant. How can I help you today?',
@@ -60,12 +88,12 @@ onMounted(() => {
 const handleSendMessage = async (message: string) => {
   if (!message.trim()) return;
 
-  debugLog('info', 'User sent message', { message });
+  debugLog('info', 'User sent message', { message, selectedAgentType: selectedAgentType.value, selectedModelName: selectedModelName.value });
 
   // Add user message
   const userMessage: ChatMessage = {
     id: Date.now().toString(),
-    text: message, // Use plain string instead of ref
+    text: message,
     fromUser: true
   };
   messages.push(userMessage);
@@ -76,23 +104,24 @@ const handleSendMessage = async (message: string) => {
   isLoading.value = true;
 
   try {
-    // Include the user message in history for proper context
-    const history = [...messages]; // Include all messages including the one we just added
+    const history = [...messages];
 
     debugLog('debug', 'Starting chat request', {
       message,
-      historyLength: history.length
+      historyLength: history.length,
+      agentType: selectedAgentType.value,
+      modelName: selectedModelName.value
     });
 
-    // Send message and get response
-    const response = await ChatService.sendMessage(message, history, 'default');
+    // Send message and get response with selected agent type and model name
+    const response = await ChatService.sendMessage(message, history, selectedAgentType.value, selectedModelName.value);
 
     debugLog('info', 'Received response from API', { response });
 
     // Create AI message with the response
     const aiMessage: ChatMessage = {
       id: (Date.now() + 1).toString(),
-      text: response, // Use plain string instead of ref
+      text: response,
       fromUser: false
     };
     messages.push(aiMessage);
@@ -153,6 +182,39 @@ const handleSendMessage = async (message: string) => {
   color: #8e8ea0;
   font-size: 14px;
   margin: 0;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.select-wrapper label {
+  color: #ececf1;
+  font-size: 14px;
+}
+
+.select-wrapper select {
+  background-color: #343541;
+  color: #ececf1;
+  border: 1px solid #565869;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.select-wrapper select:focus {
+  outline: none;
+  border-color: #10a37f;
 }
 
 .messages-area {

@@ -11,10 +11,10 @@
       "@services/*": ["src/services/*"],
       "@utils/*": ["src/utils/*"],
       "@graph": ["src/graph.ts"],
-      "@llmops-demo/common": ["../common/src"]
+      "@llmops-demo/common": ["../common/dist"]
     }
   },
   "references": [{ "path": "../common" }],
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "./src/generated/routes/routes.ts"],
   "exclude": ["node_modules", "dist"]
 }

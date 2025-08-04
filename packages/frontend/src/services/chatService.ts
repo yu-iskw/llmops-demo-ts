@@ -12,7 +12,13 @@ export interface ChatRequest {
     role: "user" | "assistant";
     content: string;
   }>;
-  agentType: string;
+  agentType?: string;
+  modelName?: string;
+}
+
+export interface AgentType {
+  name: string;
+  description: string;
 }
 
 // Temporarily removed debugLog utility as part of phased refactor.
@@ -23,6 +29,7 @@ export class ChatService {
     message: string,
     history: ChatMessage[],
     agentType: string = "default",
+    modelName: string = "gemini-2.0-flash", // Add modelName parameter
   ): Promise<string> {
     const response = await fetch("/api/chat", {
       method: "POST",
@@ -33,9 +40,10 @@ export class ChatService {
         message,
         history: history.map((m) => ({
           role: m.fromUser ? "user" : "assistant",
-          content: m.text, // Removed .value since text is now plain string
+          content: m.text,
         })),
         agentType,
+        modelName, // Pass modelName
       } as ChatRequest),
     });
 
@@ -48,5 +56,17 @@ export class ChatService {
 
     const data = await response.json();
     return data.chunk;
+  }
+
+  static async getAgentTypes(): Promise<AgentType[]> {
+    const response = await fetch("/api/chat/agent-types");
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to fetch agent types: ${response.status} ${response.statusText} - ${errorText}`,
+      );
+    }
+    const data = await response.json();
+    return data;
   }
 }
