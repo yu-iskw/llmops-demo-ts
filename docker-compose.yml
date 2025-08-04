@@ -6,7 +6,7 @@ services:
       context: ./packages/backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - 3000:3000
     environment:
       # - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - GOOGLE_GENAI_USE_VERTEXAI=${GOOGLE_GENAI_USE_VERTEXAI}
@@ -22,7 +22,7 @@ services:
       context: ./packages/frontend
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - 80:80
     volumes:
       - ./packages/frontend:/app/frontend
       - /app/frontend/node_modules # Anonymous volume to prevent host node_modules from overriding container node_modules

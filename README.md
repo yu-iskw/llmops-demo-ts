@@ -15,10 +15,11 @@ A modern AI chat application built with Vue.js frontend and Node.js backend, pow
 ### Backend
 
 - **Node.js** with Express
-- **Google Gemini AI** (`@google/generative-ai`) for chat responses
+- **Google Gemini AI** (`@google/genai`) for chat responses
 - **TypeScript** for type safety
 - **LangChain/LangGraph-inspired Logic**: Modular, graph-like structure for conversation flow
 - **Server-Sent Events** for real-time streaming
+- **tsoa** for OpenAPI specification generation
 
 ### Frontend
 
@@ -26,6 +27,7 @@ A modern AI chat application built with Vue.js frontend and Node.js backend, pow
 - **Vite** for fast development
 - **TypeScript** for type safety
 - **Modern CSS** with responsive design
+- **Playwright** for end-to-end testing
 
 ## Quick Start
 
@@ -53,16 +55,21 @@ A modern AI chat application built with Vue.js frontend and Node.js backend, pow
 3. **Set up environment variables**
 
    ```bash
-   # Copy the example environment file
-   cp packages/backend/.env.example packages/backend/.env
+   # Copy the environment template file
+   cp env_template.txt packages/backend/.env
 
    # Edit the file and add your Google Gemini API key
-   # Get your API key from: https://makersuite.google.com/app/apikey
+   # Get your API key from: https://aistudio.google.com/app/apikey
    ```
 
 4. **Start the development servers**
 
    ```bash
+   # Option 1: Use root-level scripts (recommended)
+   pnpm start:backend    # Start backend
+   pnpm start:frontend   # Start frontend
+
+   # Option 2: Start individually
    # Terminal 1: Start backend
    cd packages/backend
    pnpm run dev
@@ -73,37 +80,61 @@ A modern AI chat application built with Vue.js frontend and Node.js backend, pow
    ```
 
 5. **Open the application**
-   - Frontend: http://localhost:4200
-   - Backend API: http://localhost:3001
+   - Frontend: <http://localhost:4200>
+   - Backend API: <http://localhost:3001>
 
 ## Development
 
 ### Project Structure
 
-```
+```text
 llmops-demo-ts/
 ├── packages/
 │   ├── backend/          # Node.js + Express server
 │   │   ├── src/
-│   │   │   ├── index.ts      # Express server setup
-│   │   │   ├── chat-service.ts # LangGraph-inspired chat logic
-│   │   │   └── types.ts       # TypeScript types
+│   │   │   ├── agents/   # LangGraph agent implementations
+│   │   │   ├── controllers/ # tsoa API controllers
+│   │   │   ├── services/ # Business logic services
+│   │   │   ├── models/   # TypeScript interfaces
+│   │   │   ├── utils/    # Utility functions
+│   │   │   ├── index.ts  # Express server setup
+│   │   │   └── cli.ts    # CLI interface
+│   │   ├── build/        # Generated tsoa files
 │   │   └── package.json
-│   └── frontend/         # Vue.js application
+│   ├── frontend/         # Vue.js application
+│   │   ├── src/
+│   │   │   ├── components/ # Vue components
+│   │   │   ├── services/   # API services
+│   │   │   ├── stores/     # State management
+│   │   │   ├── App.vue     # Root component
+│   │   │   └── main.ts     # Application entry
+│   │   ├── tests/          # E2E tests
+│   │   └── package.json
+│   └── common/            # Shared types and utilities
 │       ├── src/
-│       │   ├── components/
-│       │   │   └── Chat.vue   # Main chat component
-│       │   ├── App.vue        # Root component
-│       │   └── main.ts        # Application entry
+│       │   └── models/     # Shared TypeScript interfaces
 │       └── package.json
-├── DESIGN_DOC.md         # Architecture documentation
-├── API_DOCUMENTATION.md  # API reference
+├── env_template.txt       # Environment variables template
+├── docker-compose.yml     # Docker configuration
 └── README.md
 ```
 
 ### Available Scripts
 
-#### Backend
+#### Root-level Commands
+
+```bash
+pnpm build              # Build all packages
+pnpm start:backend      # Start backend development server
+pnpm start:frontend     # Start frontend development server
+pnpm format             # Format code with trunk
+pnpm format:all         # Format all files
+pnpm lint               # Lint code with trunk
+pnpm lint:all           # Lint all files
+pnpm lint:security      # Security-focused linting
+```
+
+#### Backend Commands
 
 ```bash
 cd packages/backend
@@ -111,9 +142,10 @@ pnpm run dev      # Start development server
 pnpm run build    # Build for production
 pnpm run start    # Start production server
 pnpm run test     # Run unit tests
+pnpm run cli      # Run CLI interface
 ```
 
-#### Frontend
+#### Frontend Commands
 
 ```bash
 cd packages/frontend
@@ -122,45 +154,3 @@ pnpm run build    # Build for production
 pnpm run preview  # Preview production build
 pnpm run test:e2e # Run E2E tests
 ```
-
-### Testing
-
-Run the test suite to verify everything works:
-
-```bash
-./test-app.sh
-```
-
-## API Reference
-
-See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for detailed API documentation.
-
-## Architecture
-
-See [DESIGN_DOC.md](./DESIGN_DOC.md) for detailed architecture documentation.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## License
-
-ISC License - see LICENSE file for details.
-
-## Troubleshooting
-
-### Common Issues
-
-1. **API Key Error**: Make sure you've set the `GOOGLE_GENAI_API_KEY` in `packages/backend/.env`
-2. **Port Already in Use**: Change the port in the respective package.json files
-3. **Build Errors**: Run `pnpm install` to ensure all dependencies are installed
-
-### Getting Help
-
-- Check the API documentation for endpoint details
-- Review the design document for architecture information
-- Run the test script to verify your setup

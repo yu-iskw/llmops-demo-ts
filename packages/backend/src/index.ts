@@ -13,6 +13,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Health check endpoint
+app.get("/health", (_req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 RegisterRoutes(app);
 
 app.use(function notFoundHandler(_req, res: express.Response) {
