@@ -27,9 +27,15 @@ export class ChatService {
       let compiledGraph: CompiledStateGraph<any, any>;
 
       if (agentType === "research") {
-        compiledGraph = createResearchAgentGraphBuilder(genAI, modelName).compile();
+        compiledGraph = createResearchAgentGraphBuilder(
+          genAI,
+          modelName,
+        ).compile();
       } else {
-        compiledGraph = CreateDefaultAgentGraphBuilder(genAI, modelName).compile();
+        compiledGraph = CreateDefaultAgentGraphBuilder(
+          genAI,
+          modelName,
+        ).compile();
       }
 
       // Convert history to proper message format
@@ -64,7 +70,11 @@ export class ChatService {
       for await (const s of stream as AsyncIterable<StreamState>) {
         console.log("Stream state:", s);
 
-        if ("report" in s && s.report !== null && typeof s.report === 'string') {
+        if (
+          "report" in s &&
+          s.report !== null &&
+          typeof s.report === "string"
+        ) {
           finalResponse = s.report;
           console.log("Final report:", finalResponse);
         } else if ("messages" in s && s.messages.length > 0) {

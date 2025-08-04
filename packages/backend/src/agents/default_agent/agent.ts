@@ -3,7 +3,10 @@ import { callModel } from "./nodes";
 import { DefaultAgentStateAnnotation } from "./state";
 import { GoogleGenAI } from "@google/genai";
 
-export function CreateDefaultAgentGraphBuilder(genAI: GoogleGenAI, modelName: string) {
+export function CreateDefaultAgentGraphBuilder(
+  genAI: GoogleGenAI,
+  modelName: string,
+) {
   const workflow = new StateGraph(DefaultAgentStateAnnotation);
 
   // Add nodes

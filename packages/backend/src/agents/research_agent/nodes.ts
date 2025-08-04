@@ -7,7 +7,12 @@ import {
   Tool,
   FunctionCall,
 } from "@google/genai";
-import { HumanMessage, AIMessage, FunctionMessage, BaseMessage } from "@langchain/core/messages";
+import {
+  HumanMessage,
+  AIMessage,
+  FunctionMessage,
+  BaseMessage,
+} from "@langchain/core/messages";
 
 interface CustomToolCall {
   name: string;
@@ -26,11 +31,14 @@ async function runWithConcurrencyLimit<T>(
   function enqueue() {
     if (index < tasks.length) {
       const task = tasks[index++];
-      const promise = task().then(result => {
+      const promise = task().then((result) => {
         results.push(result);
         executing.splice(executing.indexOf(currentPromise), 1);
       });
-      const currentPromise = promise.then(() => {}, () => {}); // Handle potential rejections to avoid unhandled promise rejections
+      const currentPromise = promise.then(
+        () => {},
+        () => {},
+      ); // Handle potential rejections to avoid unhandled promise rejections
       executing.push(currentPromise);
       return currentPromise;
     }
@@ -57,11 +65,13 @@ async function runWithConcurrencyLimit<T>(
 
 // Helper to extract string content from BaseMessage.content
 function getContentAsString(content: BaseMessage["content"]): string {
-  if (typeof content === 'string') {
+  if (typeof content === "string") {
     return content;
   } else if (Array.isArray(content)) {
     // Attempt to join text parts, or stringify objects
-    return content.map(part => typeof part === 'string' ? part : JSON.stringify(part)).join("\n");
+    return content
+      .map((part) => (typeof part === "string" ? part : JSON.stringify(part)))
+      .join("\n");
   }
   return "";
 }
@@ -85,9 +95,7 @@ export const planQueries = async (
     jsonString = match[1];
   }
 
-  const queries = jsonString
-    ? JSON.parse(jsonString).queries
-    : [];
+  const queries = jsonString ? JSON.parse(jsonString).queries : [];
 
   return { search_queries: queries };
 };
@@ -132,5 +140,8 @@ export const synthesizeResults = async (
   });
   const finalResponse = result.text || "";
 
-  return { response: finalResponse, messages: [new AIMessage({ content: finalResponse })] };
+  return {
+    response: finalResponse,
+    messages: [new AIMessage({ content: finalResponse })],
+  };
 };

@@ -1,152 +1,139 @@
 {
-	"openapi": "3.0.0",
-	"components": {
-		"examples": {},
-		"headers": {},
-		"parameters": {},
-		"requestBodies": {},
-		"responses": {},
-		"schemas": {
-			"ChatMessage": {
-				"properties": {
-					"role": {
-						"type": "string",
-						"enum": [
-							"user",
-							"assistant"
-						]
-					},
-					"content": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"role",
-					"content"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ChatRequest": {
-				"properties": {
-					"message": {
-						"type": "string"
-					},
-					"history": {
-						"items": {
-							"$ref": "#/components/schemas/ChatMessage"
-						},
-						"type": "array"
-					},
-					"agentType": {
-						"type": "string"
-					},
-					"modelName": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AgentType": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"name",
-					"description"
-				],
-				"type": "object",
-				"additionalProperties": false
-			}
-		},
-		"securitySchemes": {}
-	},
-	"info": {
-		"title": "@llmops-demo-ts/backend",
-		"version": "1.0.0",
-		"description": "Backend for AI chat application using LangGraph and Google Gemini",
-		"license": {
-			"name": "ISC"
-		},
-		"contact": {}
-	},
-	"paths": {
-		"/chat": {
-			"post": {
-				"operationId": "ProcessChatMessage",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"chunk": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"chunk"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"description": "Processes a chat message and returns a response.",
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"description": "The chat request containing message, history, and agent type.",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ChatRequest",
-								"description": "The chat request containing message, history, and agent type."
-							}
-						}
-					}
-				}
-			}
-		},
-		"/chat/agent-types": {
-			"get": {
-				"operationId": "GetAgentTypes",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/AgentType"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"description": "Retrieves a list of available agent types.",
-				"security": [],
-				"parameters": []
-			}
-		}
-	},
-	"servers": [
-		{
-			"url": "/"
-		}
-	]
+  "openapi": "3.0.0",
+  "components": {
+    "examples": {},
+    "headers": {},
+    "parameters": {},
+    "requestBodies": {},
+    "responses": {},
+    "schemas": {
+      "ChatMessage": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": ["user", "assistant"]
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": ["role", "content"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "ChatRequest": {
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "type": "array"
+          },
+          "agentType": {
+            "type": "string"
+          },
+          "modelName": {
+            "type": "string"
+          }
+        },
+        "required": ["message"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "AgentType": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "description"],
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {}
+  },
+  "info": {
+    "title": "@llmops-demo-ts/backend",
+    "version": "1.0.0",
+    "description": "Backend for AI chat application using LangGraph and Google Gemini",
+    "license": {
+      "name": "ISC"
+    },
+    "contact": {}
+  },
+  "paths": {
+    "/chat": {
+      "post": {
+        "operationId": "ProcessChatMessage",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "chunk": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["chunk"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "description": "Processes a chat message and returns a response.",
+        "security": [],
+        "parameters": [],
+        "requestBody": {
+          "description": "The chat request containing message, history, and agent type.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest",
+                "description": "The chat request containing message, history, and agent type."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/agent-types": {
+      "get": {
+        "operationId": "GetAgentTypes",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AgentType"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "description": "Retrieves a list of available agent types.",
+        "security": [],
+        "parameters": []
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ]
 }
