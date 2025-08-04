@@ -24,14 +24,39 @@ program
       options: { model: string; project: string; location: string },
     ) => {
       console.log(`Sending message to Default Agent: \"${message}\"`);
-      const { project, location } = options;
+      const { project, location, model } = options; // Destructure model
       const response = await chatService.processMessage(
         message,
         [],
         "default",
         { project, location },
+        model, // Pass model
       );
       console.log("Default Agent Response:", response);
+    },
+  );
+
+program
+  .command("search-agent <message>")
+  .description("Interact with the Search agent")
+  .option("-m, --model [model]", "Model to use", "gemini-2.5-flash")
+  .option("-p, --project [project]", "Project to use")
+  .option("-l, --location [location]", "Location to use")
+  .action(
+    async (
+      message: string,
+      options: { model: string; project: string; location: string },
+    ) => {
+      console.log(`Sending message to Search Agent: \"${message}\"`);
+      const { project, location, model } = options; // Destructure model
+      const response = await chatService.processMessage(
+        message,
+        [],
+        "search",
+        { project, location },
+        model, // Pass model
+      );
+      console.log("Search Agent Response:", response);
     },
   );
 

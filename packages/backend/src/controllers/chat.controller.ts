@@ -43,7 +43,7 @@ export class ChatController extends Controller {
     const agentTypes = [
       { name: "default", description: "A general-purpose AI assistant." },
       {
-        name: "financial-advisor",
+        name: "search",
         description:
           "An AI assistant specializing in financial advice and risk assessment.",
       },
