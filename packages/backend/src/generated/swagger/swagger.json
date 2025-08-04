@@ -33,7 +33,8 @@
             "type": "array"
           },
           "agentType": {
-            "type": "string"
+            "type": "string",
+            "enum": ["default", "research"]
           },
           "modelName": {
             "type": "string"

@@ -41,10 +41,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import MessageList from './MessageList.vue';
 import MessageInput from './MessageInput.vue';
-import { ChatService, type ChatMessage, type AgentType } from '../services/chatService';
+import { ChatService, type UIChatMessage, type AgentType } from '../services/chatService';
+import { useMessageStore } from '../stores/messageStore';
+import { storeToRefs } from 'pinia';
 
 // Debug logging utility
 const debugLog = (level: string, message: string, data?: any) => {
@@ -60,9 +62,13 @@ const debugLog = (level: string, message: string, data?: any) => {
   }
 };
 
+// Pinia Store
+const messageStore = useMessageStore();
+const { messages, isLoading } = storeToRefs(messageStore); // Use storeToRefs to maintain reactivity
+
 // Direct reactive state
-const messages = reactive<ChatMessage[]>([]);
-const isLoading = ref(false);
+// const messages = reactive<UIChatMessage[]>([]); // Removed, now from store
+// const isLoading = ref(false); // Removed, now from store
 const selectedAgentType = ref<string>('default'); // Default agent type
 const selectedModelName = ref<string>('gemini-2.5-flash'); // Default model name
 const agentTypes = ref<AgentType[]>([]); // To store fetched agent types
@@ -77,12 +83,12 @@ onMounted(async () => {
     debugLog('error', 'Failed to fetch agent types', error);
   }
 
-  const testMessage: ChatMessage = {
+  const testMessage: UIChatMessage = {
     id: 'test-1',
     text: 'Hello! I\'m your AI assistant. How can I help you today?',
     fromUser: false
   };
-  messages.push(testMessage);
+  messageStore.addMessage(testMessage); // Use store action
 });
 
 const handleSendMessage = async (message: string) => {
@@ -91,20 +97,21 @@ const handleSendMessage = async (message: string) => {
   debugLog('info', 'User sent message', { message, selectedAgentType: selectedAgentType.value, selectedModelName: selectedModelName.value });
 
   // Add user message
-  const userMessage: ChatMessage = {
+  const userMessage: UIChatMessage = {
     id: Date.now().toString(),
     text: message,
     fromUser: true
   };
-  messages.push(userMessage);
+  messageStore.addMessage(userMessage); // Use store action
 
   debugLog('debug', 'User message added', { userMessage });
 
   // Set loading state
-  isLoading.value = true;
+  messageStore.setIsLoading(true); // Use store action
 
   try {
-    const history = [...messages];
+    // Pass a copy of messages from the store to avoid direct mutation of store state outside of actions
+    const history = messages.value.map(m => ({ role: m.fromUser ? "user" : "assistant", content: m.text }));
 
     debugLog('debug', 'Starting chat request', {
       message,
@@ -119,12 +126,12 @@ const handleSendMessage = async (message: string) => {
     debugLog('info', 'Received response from API', { response });
 
     // Create AI message with the response
-    const aiMessage: ChatMessage = {
+    const aiMessage: UIChatMessage = {
       id: (Date.now() + 1).toString(),
       text: response,
       fromUser: false
     };
-    messages.push(aiMessage);
+    messageStore.addMessage(aiMessage); // Use store action
 
     debugLog('debug', 'AI message added', { aiMessage });
 
@@ -133,14 +140,14 @@ const handleSendMessage = async (message: string) => {
     console.error('Error sending message:', error);
 
     // Add error message
-    const errorMessage: ChatMessage = {
+    const errorMessage: UIChatMessage = {
       id: (Date.now() + 1).toString(),
       text: 'Sorry, there was an error processing your message. Please try again.',
       fromUser: false
     };
-    messages.push(errorMessage);
+    messageStore.addMessage(errorMessage); // Use store action
   } finally {
-    isLoading.value = false;
+    messageStore.setIsLoading(false); // Use store action
     debugLog('debug', 'Loading state set to false');
   }
 };

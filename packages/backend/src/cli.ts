@@ -52,7 +52,7 @@ program
       const response = await chatService.processMessage(
         message,
         [],
-        "search",
+        "research",
         { project, location },
         model, // Pass model
       );

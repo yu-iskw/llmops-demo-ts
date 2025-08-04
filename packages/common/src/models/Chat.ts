@@ -13,6 +13,6 @@ export interface ChatSession {
 export interface ChatRequest {
   message: string;
   history?: ChatMessage[];
-  agentType?: string;
+  agentType?: "default" | "research";
   modelName?: string;
 }

@@ -42,7 +42,7 @@ export function createGenAIClient(config: GenAIConfig = {}): GoogleGenAI {
     ),
   );
 
-  return new GoogleGenAI(finalConfig as any);
+  return new GoogleGenAI(finalConfig);
 }
 
 export const genAI = createGenAIClient();

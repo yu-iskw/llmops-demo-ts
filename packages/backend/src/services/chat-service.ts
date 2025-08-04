@@ -8,12 +8,18 @@ import { DefaultAgentState } from "../agents/default_agent/state";
 
 type StreamState = ResearchAgentState | DefaultAgentState; // Update StreamState
 
+// Define a map to hold agent builders
+const agentBuilders = {
+  default: CreateDefaultAgentGraphBuilder,
+  research: createResearchAgentGraphBuilder,
+};
+
 // Simple LangGraph-inspired implementation
 export class ChatService {
   public async processMessage(
     message: string,
     history: any[] = [],
-    agentType: string = "default",
+    agentType: keyof typeof agentBuilders = "default", // Use keyof typeof agentBuilders
     config?: GenAIConfig,
     modelName: string = "gemini-2.0-flash", // Default model set here
   ): Promise<string> {
@@ -24,19 +30,14 @@ export class ChatService {
       console.log("Model name:", modelName);
 
       const genAI = createGenAIClient(config);
-      let compiledGraph: CompiledStateGraph<any, any>;
 
-      if (agentType === "research") {
-        compiledGraph = createResearchAgentGraphBuilder(
-          genAI,
-          modelName,
-        ).compile();
-      } else {
-        compiledGraph = CreateDefaultAgentGraphBuilder(
-          genAI,
-          modelName,
-        ).compile();
+      // Get the appropriate agent builder from the map
+      const agentBuilder = agentBuilders[agentType];
+      if (!agentBuilder) {
+        throw new Error(`Unknown agent type: ${agentType}`);
       }
+
+      const compiledGraph = agentBuilder(genAI, modelName).compile();
 
       // Convert history to proper message format
       const initialMessages: BaseMessage[] = history.map((msg: any) => {
@@ -47,18 +48,10 @@ export class ChatService {
         }
       });
 
-      let initialState: any = {};
-      if (agentType === "research") {
-        initialState = {
-          user_message: message,
-          messages: initialMessages,
-        } as ResearchAgentState;
-      } else {
-        initialState = {
-          user_message: message,
-          messages: initialMessages,
-        };
-      }
+      const initialState: StreamState = {
+        user_message: message,
+        messages: initialMessages,
+      };
 
       console.log("Initial state:", initialState);
 
