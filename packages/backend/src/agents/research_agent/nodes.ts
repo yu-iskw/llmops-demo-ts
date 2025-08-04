@@ -14,6 +14,47 @@ interface CustomToolCall {
   args: Record<string, any>;
 }
 
+// Helper to run promises with a concurrency limit
+async function runWithConcurrencyLimit<T>(
+  tasks: (() => Promise<T>)[],
+  limit: number,
+): Promise<T[]> {
+  const results: T[] = [];
+  const executing: Promise<void>[] = [];
+  let index = 0;
+
+  function enqueue() {
+    if (index < tasks.length) {
+      const task = tasks[index++];
+      const promise = task().then(result => {
+        results.push(result);
+        executing.splice(executing.indexOf(currentPromise), 1);
+      });
+      const currentPromise = promise.then(() => {}, () => {}); // Handle potential rejections to avoid unhandled promise rejections
+      executing.push(currentPromise);
+      return currentPromise;
+    }
+    return null;
+  }
+
+  // Start initial tasks up to the limit
+  for (let i = 0; i < limit && i < tasks.length; i++) {
+    enqueue();
+  }
+
+  // Await completion of all tasks
+  while (executing.length > 0) {
+    await Promise.race(executing);
+    // After a promise settles, try to enqueue another task
+    const nextTask = enqueue();
+    if (nextTask) {
+      await nextTask; // Wait for the newly enqueued task to start and settle, or immediately proceed if it's not a new task
+    }
+  }
+
+  return results;
+}
+
 // Helper to extract string content from BaseMessage.content
 function getContentAsString(content: BaseMessage["content"]): string {
   if (typeof content === 'string') {
@@ -57,18 +98,18 @@ export const executeSearches = async (
   genAI: GoogleGenAI,
   modelName: string,
 ) => {
-  const searchResults: Array<{ query: string; result: string }> = [];
-
-  for (const query of state.search_queries) {
+  const searchTasks = state.search_queries.map((query) => async () => {
     const response = await genAI.models.generateContent({
       model: modelName,
       contents: [{ role: "user", parts: [{ text: `Search for: ${query}` }] }],
       config: {
         tools: [{ googleSearch: {} }],
-      }
+      },
     });
-    searchResults.push({ query, result: response.text || "No result." });
-  }
+    return { query, result: response.text || "No result." };
+  });
+
+  const searchResults = await runWithConcurrencyLimit(searchTasks, 5);
 
   return { search_results: searchResults };
 };
