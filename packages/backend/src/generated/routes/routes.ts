@@ -39,7 +39,13 @@ const models: TsoaRoute.Models = {
         dataType: "array",
         array: { dataType: "refObject", ref: "ChatMessage" },
       },
-      agentType: { dataType: "string" },
+      agentType: {
+        dataType: "union",
+        subSchemas: [
+          { dataType: "enum", enums: ["default"] },
+          { dataType: "enum", enums: ["research"] },
+        ],
+      },
       modelName: { dataType: "string" },
     },
     additionalProperties: false,

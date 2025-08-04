@@ -63,19 +63,6 @@ async function runWithConcurrencyLimit<T>(
   return results;
 }
 
-// Helper to extract string content from BaseMessage.content
-function getContentAsString(content: BaseMessage["content"]): string {
-  if (typeof content === "string") {
-    return content;
-  } else if (Array.isArray(content)) {
-    // Attempt to join text parts, or stringify objects
-    return content
-      .map((part) => (typeof part === "string" ? part : JSON.stringify(part)))
-      .join("\n");
-  }
-  return "";
-}
-
 // Node for planning search queries
 export const planQueries = async (
   state: SearchAgentState,

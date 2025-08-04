@@ -1,6 +1,7 @@
 import { Ref } from "vue";
+import { ChatMessage as CommonChatMessage } from "@llmops-demo/common"; // Import common ChatMessage
 
-export interface ChatMessage {
+export interface UIChatMessage {
   id: string;
   text: string; // Changed from Ref<string> to plain string
   fromUser: boolean;
@@ -27,7 +28,7 @@ export interface AgentType {
 export class ChatService {
   static async sendMessage(
     message: string,
-    history: ChatMessage[],
+    history: UIChatMessage[],
     agentType: string = "default",
     modelName: string = "gemini-2.0-flash", // Add modelName parameter
   ): Promise<string> {
@@ -38,10 +39,12 @@ export class ChatService {
       },
       body: JSON.stringify({
         message,
-        history: history.map((m) => ({
-          role: m.fromUser ? "user" : "assistant",
-          content: m.text,
-        })),
+        history: history.map(
+          (m): CommonChatMessage => ({
+            role: m.fromUser ? "user" : "assistant",
+            content: m.text || "", // Ensure content is always a string
+          }),
+        ),
         agentType,
         modelName, // Pass modelName
       } as ChatRequest),

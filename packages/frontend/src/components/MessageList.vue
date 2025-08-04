@@ -51,10 +51,10 @@
 
 <script setup lang="ts">
 import { ref, nextTick, onMounted, watch } from 'vue';
-import type { ChatMessage } from '../services/chatService';
+import type { UIChatMessage } from '../services/chatService';
 
 interface Props {
-  messages: ChatMessage[];
+  messages: UIChatMessage[];
   isLoading?: boolean;
 }
 
