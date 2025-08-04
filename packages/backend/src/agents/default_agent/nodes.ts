@@ -6,14 +6,12 @@ import { GoogleGenAI } from "@google/genai";
 export const callModel = async (
   state: typeof DefaultAgentStateAnnotation.State,
   genAI: GoogleGenAI,
-  modelName: string, // Add modelName parameter
+  modelName: string,
 ) => {
   try {
-    // TODO parameterize model name
-    // const modelName = "gemini-2.0-flash"; // This line is no longer needed
     const contents = [{ role: "user", parts: [{ text: state.user_message }] }];
     const result = await genAI.models.generateContent({
-      model: modelName, // Use the passed modelName
+      model: modelName,
       contents,
     });
     const aiMessage = new AIMessage(result.text || "");

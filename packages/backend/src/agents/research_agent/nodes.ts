@@ -13,6 +13,7 @@ import {
   FunctionMessage,
   BaseMessage,
 } from "@langchain/core/messages";
+import { traceable } from "langsmith/traceable";
 
 interface CustomToolCall {
   name: string;
@@ -88,26 +89,29 @@ export const planQueries = async (
 };
 
 // Node for executing searches
-export const executeSearches = async (
-  state: SearchAgentState,
-  genAI: GoogleGenAI,
-  modelName: string,
-) => {
-  const searchTasks = state.search_queries.map((query) => async () => {
-    const response = await genAI.models.generateContent({
-      model: modelName,
-      contents: [{ role: "user", parts: [{ text: `Search for: ${query}` }] }],
-      config: {
-        tools: [{ googleSearch: {} }],
-      },
+export const executeSearches = traceable(
+  async (
+    state: SearchAgentState,
+    genAI: GoogleGenAI,
+    modelName: string,
+  ) => {
+    const searchTasks = state.search_queries.map((query) => async () => {
+      const response = await genAI.models.generateContent({
+        model: modelName,
+        contents: [{ role: "user", parts: [{ text: `Search for: ${query}` }] }],
+        config: {
+          tools: [{ googleSearch: {} }],
+        },
+      });
+      return { query, result: response.text || "No result." };
     });
-    return { query, result: response.text || "No result." };
-  });
 
-  const searchResults = await runWithConcurrencyLimit(searchTasks, 5);
+    const searchResults = await runWithConcurrencyLimit(searchTasks, 5);
 
-  return { search_results: searchResults };
-};
+    return { search_results: searchResults };
+  },
+  { run_type: "tool" },
+);
 
 // Node for synthesizing results
 export const synthesizeResults = async (

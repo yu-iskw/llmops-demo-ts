@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { ChatService } from "./services/chat-service";
 import dotenv from "dotenv";
 
-dotenv.config({ path: "./.env" });
+dotenv.config({ path: "../../.env", debug: true });
 
 const program = new Command();
 const chatService = new ChatService();

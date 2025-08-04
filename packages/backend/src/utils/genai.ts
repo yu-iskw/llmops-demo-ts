@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { traceable } from "langsmith/traceable";
 
 export interface GenAIConfig {
   apiKey?: string;
@@ -8,41 +9,33 @@ export interface GenAIConfig {
 }
 
 export function createGenAIClient(config: GenAIConfig = {}): GoogleGenAI {
-  // 1. Start with environment variables as the base
-  const envConfig: GenAIConfig = {
-    apiKey: process.env.GOOGLE_API_KEY,
-    project: process.env.GOOGLE_CLOUD_PROJECT,
-    location: process.env.GOOGLE_CLOUD_LOCATION,
-  };
+  const finalApiKey = config.apiKey || process.env.GOOGLE_API_KEY;
+  const finalProject = config.project || process.env.GOOGLE_CLOUD_PROJECT;
+  const finalLocation = config.location || process.env.GOOGLE_CLOUD_LOCATION;
+  const finalUseVertexAI = config.vertexai !== undefined
+    ? config.vertexai // Use boolean from config if provided
+    : (process.env.GOOGLE_GENAI_USE_VERTEXAI === "true"); // Otherwise, parse from env var
 
-  // 2. Filter out empty/null values from the overriding config (CLI options)
-  // so they don't incorrectly override set environment variables.
-  const overrideConfig = Object.fromEntries(
-    Object.entries(config).filter(
-      ([, v]) => v !== null && v !== undefined && v !== "",
-    ),
-  );
+  const useVertexAI = finalUseVertexAI && !!finalProject && !!finalLocation;
 
-  // 3. Merge the cleaned override config onto the environment config
-  const mergedConfig = {
-    ...envConfig,
-    ...overrideConfig,
-  };
+  const genAI = new GoogleGenAI({
+    apiKey: useVertexAI ? undefined : finalApiKey,
+    vertexai: useVertexAI,
+    project: finalProject,
+    location: finalLocation,
+  });
 
-  // 4. Determine if we should use Vertex AI.
-  // If a project is specified (either from env or CLI), we assume Vertex AI.
-  if (mergedConfig.project) {
-    mergedConfig.vertexai = true;
-  }
+  console.log("LangSmith Tracing Enabled:", process.env.LANGSMITH_TRACING);
+  console.log("LangSmith API Key Set:", !!process.env.LANGSMITH_API_KEY);
+  console.log("LangSmith Project:", process.env.LANGSMITH_PROJECT);
+  console.log("LangChain Callbacks Background:", process.env.LANGCHAIN_CALLBACKS_BACKGROUND);
 
-  // 5. Final cleanup of properties before passing to the constructor.
-  const finalConfig = Object.fromEntries(
-    Object.entries(mergedConfig).filter(
-      ([, v]) => v !== null && v !== undefined && v !== "",
-    ),
-  );
+  // Wrap the generateContent method for tracing
+  genAI.models.generateContent = traceable(genAI.models.generateContent.bind(genAI.models), {
+    run_type: "llm",
+  });
 
-  return new GoogleGenAI(finalConfig);
+  return genAI;
 }
 
 export const genAI = createGenAIClient();
