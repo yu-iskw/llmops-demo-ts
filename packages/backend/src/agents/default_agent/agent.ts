@@ -1,14 +1,14 @@
 import { StateGraph, END, START } from "@langchain/langgraph";
 import { callModel } from "./nodes";
-import { DefaultAgentStateAnnotation, DefaultAgentState } from "./state";
+import { DefaultAgentStateAnnotation } from "./state";
+import { GoogleGenAI } from "@google/genai";
 
-type NodeNames = "call_model";
-
-export function CreateDefaultAgentGraphBuilder() {
+export function CreateDefaultAgentGraphBuilder(genAI: GoogleGenAI) {
   const workflow = new StateGraph(DefaultAgentStateAnnotation);
 
   // Add nodes
-  workflow.addNode("call_model", callModel);
+  workflow.addNode("call_model", (state) => callModel(state, genAI));
+
   // Add edges
   workflow
     // @ts-ignore ts(2345)

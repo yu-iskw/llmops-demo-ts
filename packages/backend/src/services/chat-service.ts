@@ -1,31 +1,24 @@
-import { HumanMessage, AIMessage } from "@langchain/core/messages";
+import { AIMessage } from "@langchain/core/messages";
 import { CreateDefaultAgentGraphBuilder } from "../agents/default_agent/agent";
-import { ChatMessage } from "@llmops-demo/common";
+import { GenAIConfig, createGenAIClient } from "../utils/genai";
 
 // Simple LangGraph-inspired implementation
 export class ChatService {
-  private compiledGraphs: { [key: string]: any };
-
-  constructor() {
-    this.compiledGraphs = {
-      default: CreateDefaultAgentGraphBuilder().compile(),
-    };
-  }
-
   public async processMessage(
     message: string,
     history: any[] = [],
     agentType: string = "default",
+    config?: GenAIConfig,
   ): Promise<string> {
     try {
-      const compiledGraph = this.compiledGraphs[agentType];
-      if (!compiledGraph) {
-        return `Error: Agent type \"${agentType}\" not found.`;
-      }
+      console.log("config", config);
+      const genAI = createGenAIClient(config);
+      const compiledGraph =
+        CreateDefaultAgentGraphBuilder(genAI).compile();
 
       const initialMessages = history.map((msg: any) =>
         msg.role === "human"
-          ? new HumanMessage(msg.content)
+          ? new AIMessage(msg.content)
           : new AIMessage(msg.content),
       );
 
@@ -33,17 +26,16 @@ export class ChatService {
       if (agentType === "default") {
         initialState = {
           user_message: message,
+          messages: initialMessages,
         };
       }
 
       const stream = await compiledGraph.stream(initialState);
       let finalResponse = "";
       for await (const s of stream) {
-        if (s.call_model && s.call_model.messages && s.call_model.messages.length > 0) {
-          const latestMessage = s.call_model.messages[s.call_model.messages.length - 1];
-          if (latestMessage._getType() === "ai") {
-            finalResponse = latestMessage.content as string;
-          }
+        const lastMessage = s[Object.keys(s)[0]].messages.slice(-1)[0];
+        if (lastMessage && lastMessage._getType() === "ai") {
+          finalResponse = lastMessage.content;
         }
       }
       return finalResponse;

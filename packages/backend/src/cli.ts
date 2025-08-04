@@ -15,16 +15,24 @@ program
 program
   .command("default-agent <message>")
   .description("Interact with the Default agent")
-  .option("-m, --model <model>", "Model to use", "gemini-2.0-flash")
-  .option("-p, --project <project>", "Project to use", "")
-  .action(async (message: string, options: { model: string, project: string }) => {
-    console.log(`Sending message to Default Agent: \"${message}\"`);
-    const response = await chatService.processMessage(
-      message,
-      [],
-      "default",
-    );
-    console.log("Default Agent Response:", response);
-  });
+  .option("-m, --model [model]", "Model to use", "gemini-2.0-flash")
+  .option("-p, --project [project]", "Project to use")
+  .option("-l, --location [location]", "Location to use")
+  .action(
+    async (
+      message: string,
+      options: { model: string; project: string; location: string },
+    ) => {
+      console.log(`Sending message to Default Agent: \"${message}\"`);
+      const { project, location } = options;
+      const response = await chatService.processMessage(
+        message,
+        [],
+        "default",
+        { project, location },
+      );
+      console.log("Default Agent Response:", response);
+    },
+  );
 
 program.parse(process.argv);
