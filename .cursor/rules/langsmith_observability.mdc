@@ -1,0 +1,131 @@
+---
+description: Guidelines for implementing LLM observability using LangSmith, covering setup, tracing, feedback collection, and metadata logging for debugging and monitoring.
+alwaysApply: false
+---
+# LLM Observability with LangSmith
+
+This rule provides guidelines for setting up and utilizing LangSmith for LLM-native observability, which is crucial for debugging and monitoring non-deterministic LLM applications.
+
+## 1. Environment Setup
+
+To enable LangSmith tracing, set the following environment variables:
+
+```bash
+export LANGSMITH_TRACING=true
+export LANGSMITH_API_KEY=<your-api-key>
+export LANGSMITH_PROJECT=<your-project-name>
+```
+
+**Note**: `LANGSMITH_PROJECT` is supported in JS SDK versions >= 0.2.16; otherwise, use `LANGCHAIN_PROJECT`.
+
+## 2. Tracing LLM Calls and Chains
+
+LangSmith allows you to trace individual LLM calls and entire application chains.
+
+### 2.1 Basic Tracing with `traceable`
+
+Wrap your functions or methods with `traceable` to automatically log their execution as LangSmith runs. This is applicable even if you are using `@google/genai` or other LLM providers.
+
+```typescript
+import { traceable } from "langsmith/traceable";
+import { GoogleGenAI } from '@google/genai';
+
+// Initialize GoogleGenAI client (assuming environment variables are set)
+const genAI = new GoogleGenAI();
+
+const tracedGenerateContent = traceable(
+  async function generateContentWithTracing(modelName: string, prompt: string) {
+    const response = await genAI.models.generateContent({
+      model: modelName,
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    });
+    return response.text;
+  },
+  { run_type: "llm" } // Designate as an LLM run
+);
+
+// Example usage:
+// await tracedGenerateContent('gemini-pro', 'What is the capital of France?');
+```
+
+### 2.2 Tracing with `wrapOpenAI` (for OpenAI SDK)
+
+If you are using the OpenAI SDK, you can directly wrap the client:
+
+```typescript
+import { OpenAI } from "openai";
+import { wrapOpenAI } from "langsmith/wrappers";
+
+const openAIClient = wrapOpenAI(new OpenAI());
+
+// Use openAIClient as usual, and calls will be traced automatically.
+// const response = await openAIClient.chat.completions.create({...});
+```
+
+## 3. Collecting Feedback
+
+Collect user feedback by associating it with a `run_id`.
+
+```typescript
+import { Client } from "langsmith";
+import { traceable } from "langsmith/traceable"; // Needed to pass run_id
+
+const ls_client = new Client();
+
+const tracedFunctionWithRunId = traceable(async function myAppLogic(
+  input: string,
+  langsmith_extra?: { run_id?: string } // Pass run_id via langsmith_extra
+) {
+  // ... your application logic ...
+  return `Processed: ${input}`;
+});
+
+// Example usage to get run_id and then log feedback
+async function runAndLogFeedback() {
+  const result = await tracedFunctionWithRunId("Some input", {
+    langsmith_extra: { run_id: "your-generated-run-id" }, // Or use a UUID
+  });
+
+  await ls_client.createFeedback(
+    "your-generated-run-id", // The run_id from the traced function call
+    {
+      key: "user-score",
+      score: 1.0, // Or 0.0 for negative feedback
+      comment: "Great response!",
+    }
+  );
+}
+```
+
+## 4. Logging Metadata
+
+Add metadata to your traces to track attributes like model versions, user IDs, or experiment variants.
+
+```typescript
+import { traceable } from "langsmith/traceable";
+
+// Metadata known at design time
+const tracedFunctionWithStaticMetadata = traceable(
+  async function myLLMProcess(query: string) {
+    return `Result for: ${query}`;
+  },
+  { metadata: { llm_model: "gemini-2.5-flash", version: "v1.2" } }
+);
+
+// Metadata known at runtime
+const tracedFunctionWithDynamicMetadata = traceable(
+  async function myDynamicProcess(
+    input: string,
+    langsmith_extra?: { metadata?: Record<string, unknown> }
+  ) {
+    return `Dynamic result: ${input}`;
+  }
+);
+
+// Example usage:
+// await tracedFunctionWithDynamicMetadata("data", { langsmith_extra: { metadata: { user_id: "user123" } } });
+```
+
+## 5. Monitoring and A/B Testing
+
+LangSmith provides a UI for monitoring trace statistics (number of traces, feedback, time-to-first-token) and performing A/B testing by grouping metrics by metadata attributes. Access these features in the LangSmith project's "Monitor" tab.
