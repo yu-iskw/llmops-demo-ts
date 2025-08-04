@@ -34,9 +34,6 @@
           },
           "agentType": {
             "type": "string"
-          },
-          "modelName": {
-            "type": "string"
           }
         },
         "required": ["message"],

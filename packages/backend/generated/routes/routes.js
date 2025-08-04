@@ -1,20 +1,11 @@
-/* tslint:disable */
-/* eslint-disable */
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RegisterRoutes = RegisterRoutes;
+const runtime_1 = require("@tsoa/runtime");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import type { TsoaRoute } from "@tsoa/runtime";
-import { fetchMiddlewares, ExpressTemplateService } from "@tsoa/runtime";
+const chat_controller_1 = require("./../../src/controllers/chat.controller");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { ChatController } from "./../../controllers/chat.controller";
-import type {
-  Request as ExRequest,
-  Response as ExResponse,
-  RequestHandler,
-  Router,
-} from "express";
-
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-const models: TsoaRoute.Models = {
+const models = {
   ChatMessage: {
     dataType: "refObject",
     properties: {
@@ -40,7 +31,6 @@ const models: TsoaRoute.Models = {
         array: { dataType: "refObject", ref: "ChatMessage" },
       },
       agentType: { dataType: "string" },
-      modelName: { dataType: "string" },
     },
     additionalProperties: false,
   },
@@ -55,23 +45,17 @@ const models: TsoaRoute.Models = {
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
-const templateService = new ExpressTemplateService(models, {
+const templateService = new runtime_1.ExpressTemplateService(models, {
   noImplicitAdditionalProperties: "throw-on-extras",
   bodyCoercion: true,
 });
-
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-export function RegisterRoutes(app: Router) {
+function RegisterRoutes(app) {
   // ###########################################################################################################
   //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
   //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
   // ###########################################################################################################
-
-  const argsChatController_processChatMessage: Record<
-    string,
-    TsoaRoute.ParameterSchema
-  > = {
+  const argsChatController_processChatMessage = {
     requestBody: {
       in: "body",
       name: "requestBody",
@@ -81,28 +65,20 @@ export function RegisterRoutes(app: Router) {
   };
   app.post(
     "/chat",
-    ...fetchMiddlewares<RequestHandler>(ChatController),
-    ...fetchMiddlewares<RequestHandler>(
-      ChatController.prototype.processChatMessage,
+    ...(0, runtime_1.fetchMiddlewares)(chat_controller_1.ChatController),
+    ...(0, runtime_1.fetchMiddlewares)(
+      chat_controller_1.ChatController.prototype.processChatMessage,
     ),
-
-    async function ChatController_processChatMessage(
-      request: ExRequest,
-      response: ExResponse,
-      next: any,
-    ) {
+    async function ChatController_processChatMessage(request, response, next) {
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-      let validatedArgs: any[] = [];
+      let validatedArgs = [];
       try {
         validatedArgs = templateService.getValidatedArgs({
           args: argsChatController_processChatMessage,
           request,
           response,
         });
-
-        const controller = new ChatController();
-
+        const controller = new chat_controller_1.ChatController();
         await templateService.apiHandler({
           methodName: "processChatMessage",
           controller,
@@ -117,32 +93,23 @@ export function RegisterRoutes(app: Router) {
     },
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  const argsChatController_getAgentTypes: Record<
-    string,
-    TsoaRoute.ParameterSchema
-  > = {};
+  const argsChatController_getAgentTypes = {};
   app.get(
     "/chat/agent-types",
-    ...fetchMiddlewares<RequestHandler>(ChatController),
-    ...fetchMiddlewares<RequestHandler>(ChatController.prototype.getAgentTypes),
-
-    async function ChatController_getAgentTypes(
-      request: ExRequest,
-      response: ExResponse,
-      next: any,
-    ) {
+    ...(0, runtime_1.fetchMiddlewares)(chat_controller_1.ChatController),
+    ...(0, runtime_1.fetchMiddlewares)(
+      chat_controller_1.ChatController.prototype.getAgentTypes,
+    ),
+    async function ChatController_getAgentTypes(request, response, next) {
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-      let validatedArgs: any[] = [];
+      let validatedArgs = [];
       try {
         validatedArgs = templateService.getValidatedArgs({
           args: argsChatController_getAgentTypes,
           request,
           response,
         });
-
-        const controller = new ChatController();
-
+        const controller = new chat_controller_1.ChatController();
         await templateService.apiHandler({
           methodName: "getAgentTypes",
           controller,
@@ -157,10 +124,7 @@ export function RegisterRoutes(app: Router) {
     },
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 }
-
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

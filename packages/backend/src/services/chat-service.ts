@@ -1,6 +1,12 @@
-import { HumanMessage, AIMessage } from "@langchain/core/messages";
+import { HumanMessage, AIMessage, BaseMessage } from "@langchain/core/messages";
 import { CreateDefaultAgentGraphBuilder } from "../agents/default_agent/agent";
+import { createSearchAgentGraphBuilder as createResearchAgentGraphBuilder } from "../agents/research_agent/agent"; // Import research agent builder
 import { GenAIConfig, createGenAIClient } from "../utils/genai";
+import { CompiledStateGraph } from "@langchain/langgraph";
+import { SearchAgentState as ResearchAgentState } from "../agents/research_agent/state"; // Import research agent state
+import { DefaultAgentState } from "../agents/default_agent/state";
+
+type StreamState = ResearchAgentState | DefaultAgentState; // Update StreamState
 
 // Simple LangGraph-inspired implementation
 export class ChatService {
@@ -9,16 +15,31 @@ export class ChatService {
     history: any[] = [],
     agentType: string = "default",
     config?: GenAIConfig,
+    modelName: string = "gemini-2.0-flash", // Default model set here
   ): Promise<string> {
     try {
       console.log("Processing message:", message);
       console.log("History length:", history.length);
+      console.log("Agent type:", agentType);
+      console.log("Model name:", modelName);
 
       const genAI = createGenAIClient(config);
-      const compiledGraph = CreateDefaultAgentGraphBuilder(genAI).compile();
+      let compiledGraph: CompiledStateGraph<any, any>;
+
+      if (agentType === "research") {
+        compiledGraph = createResearchAgentGraphBuilder(
+          genAI,
+          modelName,
+        ).compile();
+      } else {
+        compiledGraph = CreateDefaultAgentGraphBuilder(
+          genAI,
+          modelName,
+        ).compile();
+      }
 
       // Convert history to proper message format
-      const initialMessages = history.map((msg: any) => {
+      const initialMessages: BaseMessage[] = history.map((msg: any) => {
         if (msg.role === "user") {
           return new HumanMessage(msg.content);
         } else {
@@ -27,7 +48,12 @@ export class ChatService {
       });
 
       let initialState: any = {};
-      if (agentType === "default") {
+      if (agentType === "research") {
+        initialState = {
+          user_message: message,
+          messages: initialMessages,
+        } as ResearchAgentState;
+      } else {
         initialState = {
           user_message: message,
           messages: initialMessages,
@@ -36,28 +62,27 @@ export class ChatService {
 
       console.log("Initial state:", initialState);
 
-      const stream = await compiledGraph.stream(initialState);
+      const stream = await compiledGraph.stream(initialState, {
+        streamMode: "values",
+      });
       let finalResponse = "";
 
-      for await (const s of stream) {
+      for await (const s of stream as AsyncIterable<StreamState>) {
         console.log("Stream state:", s);
 
-        // Each 's' in the stream represents the current state of the graph.
-        const keys = Object.keys(s);
-        if (keys.length === 0) continue;
-
-        const stepResult = (s as any)[keys[0]];
         if (
-          !stepResult ||
-          !stepResult.messages ||
-          !Array.isArray(stepResult.messages)
-        )
-          continue;
-
-        const lastMessage = stepResult.messages.slice(-1)[0];
-        if (lastMessage && lastMessage._getType() === "ai") {
-          finalResponse = lastMessage.content;
-          console.log("Final response:", finalResponse);
+          "report" in s &&
+          s.report !== null &&
+          typeof s.report === "string"
+        ) {
+          finalResponse = s.report;
+          console.log("Final report:", finalResponse);
+        } else if ("messages" in s && s.messages.length > 0) {
+          const lastMessage = s.messages.slice(-1)[0];
+          if (lastMessage._getType() === "ai") {
+            finalResponse = lastMessage.content as string;
+            console.log("Final response:", finalResponse);
+          }
         }
       }
 

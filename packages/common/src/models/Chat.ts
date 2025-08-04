@@ -14,4 +14,5 @@ export interface ChatRequest {
   message: string;
   history?: ChatMessage[];
   agentType?: string;
+  modelName?: string;
 }

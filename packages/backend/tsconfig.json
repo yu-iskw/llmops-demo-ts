@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": ".",
+    "rootDir": "src",
     "composite": true,
     "baseUrl": ".",
     "paths": {
@@ -11,10 +11,10 @@
       "@services/*": ["src/services/*"],
       "@utils/*": ["src/utils/*"],
       "@graph": ["src/graph.ts"],
-      "@llmops-demo/common": ["../common/src"]
+      "@llmops-demo/common": ["../common/dist"]
     }
   },
   "references": [{ "path": "../common" }],
-  "include": ["src/**/*.ts", "src/generated/**/*.ts", "build/**/*.ts"],
+  "include": ["src/**/*.ts", "./src/generated/routes/routes.ts"],
   "exclude": ["node_modules", "dist"]
 }

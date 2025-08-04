@@ -4,7 +4,7 @@
 import type { TsoaRoute } from "@tsoa/runtime";
 import { fetchMiddlewares, ExpressTemplateService } from "@tsoa/runtime";
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { ChatController } from "./../../controllers/chat.controller";
+import { ChatController } from "./../../src/controllers/chat.controller";
 import type {
   Request as ExRequest,
   Response as ExResponse,
@@ -40,7 +40,6 @@ const models: TsoaRoute.Models = {
         array: { dataType: "refObject", ref: "ChatMessage" },
       },
       agentType: { dataType: "string" },
-      modelName: { dataType: "string" },
     },
     additionalProperties: false,
   },
