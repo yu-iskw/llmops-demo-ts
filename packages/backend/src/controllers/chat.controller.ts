@@ -1,6 +1,7 @@
 import { Body, Controller, Post, Route, Get, SuccessResponse } from "tsoa";
 import { ChatService } from "../services/chat-service";
 import { ChatRequest, ChatMessage, AgentType } from "@llmops-demo/common";
+import { AgentFactory } from "../agents/AgentFactory";
 
 @Route("chat")
 export class ChatController extends Controller {
@@ -42,14 +43,6 @@ export class ChatController extends Controller {
    */
   @Get("/agent-types")
   public async getAgentTypes(): Promise<AgentType[]> {
-    const agentTypes = [
-      { name: "default", description: "A general-purpose AI assistant." },
-      {
-        name: "research",
-        description:
-          "An AI assistant specializing in research and information gathering.",
-      },
-    ];
-    return agentTypes;
+    return AgentFactory.getAvailableAgents();
   }
 }
