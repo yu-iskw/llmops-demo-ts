@@ -1,0 +1,32 @@
+{
+  "name": "@llmops-demo-ts/frontend",
+  "version": "1.0.0",
+  "description": "Frontend for AI chat application using Vue.js",
+  "keywords": [
+    "vue",
+    "chat",
+    "frontend"
+  ],
+  "license": "ISC",
+  "author": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "esbuild": "^0.25.8",
+    "typescript": "^5.0.0",
+    "vite": "^6.0.0"
+  }
+}

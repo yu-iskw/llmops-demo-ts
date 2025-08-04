@@ -7,3 +7,7 @@ This project uses:
 
 - **Package Manager:** pnpm
 - **Node.js Version:** (read from [.node-version](mdc:.node-version))
+- **Backend:** tsoa
+- **Frontend:** Vue.js
+- **LLM Provider:** Gemini API and Gemini on Vertex AI (using google/genai)
+- **CLI Framework:** Commander.js (for building command-line interfaces)

@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./packages/backend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      # - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GOOGLE_GENAI_USE_VERTEXAI=${GOOGLE_GENAI_USE_VERTEXAI}
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+      - GOOGLE_CLOUD_LOCATION=${GOOGLE_CLOUD_LOCATION}
+    volumes:
+      - ./packages/backend:/app/backend
+      - /app/backend/node_modules # Anonymous volume to prevent host node_modules from overriding container node_modules
+    command: pnpm start
+
+  frontend:
+    build:
+      context: ./packages/frontend
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ./packages/frontend:/app/frontend
+      - /app/frontend/node_modules # Anonymous volume to prevent host node_modules from overriding container node_modules
