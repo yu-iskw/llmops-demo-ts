@@ -1,12 +1,12 @@
 import { HumanMessage, AIMessage, BaseMessage } from "@langchain/core/messages";
 import { CreateDefaultAgentGraphBuilder } from "../agents/default_agent/agent";
-import { createSearchAgentGraphBuilder } from "../agents/search_agent/agent"; // Import search agent builder
+import { createSearchAgentGraphBuilder as createResearchAgentGraphBuilder } from "../agents/research_agent/agent"; // Import research agent builder
 import { GenAIConfig, createGenAIClient } from "../utils/genai";
 import { CompiledStateGraph } from "@langchain/langgraph";
-import { SearchAgentState } from "../agents/search_agent/state"; // Import search agent state
+import { SearchAgentState as ResearchAgentState } from "../agents/research_agent/state"; // Import research agent state
 import { DefaultAgentState } from "../agents/default_agent/state";
 
-type StreamState = SearchAgentState | DefaultAgentState; // Update StreamState
+type StreamState = ResearchAgentState | DefaultAgentState; // Update StreamState
 
 // Simple LangGraph-inspired implementation
 export class ChatService {
@@ -26,8 +26,8 @@ export class ChatService {
       const genAI = createGenAIClient(config);
       let compiledGraph: CompiledStateGraph<any, any>;
 
-      if (agentType === "search") {
-        compiledGraph = createSearchAgentGraphBuilder(genAI, modelName).compile(); // Pass modelName
+      if (agentType === "research") {
+        compiledGraph = createResearchAgentGraphBuilder(genAI, modelName).compile(); // Pass modelName
       } else {
         compiledGraph = CreateDefaultAgentGraphBuilder(genAI, modelName).compile(); // Pass modelName
       }
@@ -42,11 +42,11 @@ export class ChatService {
       });
 
       let initialState: any = {};
-      if (agentType === "search") {
+      if (agentType === "research") {
         initialState = {
           user_message: message,
           messages: initialMessages,
-        } as SearchAgentState; // Cast to SearchAgentState
+        } as ResearchAgentState; // Cast to ResearchAgentState
       } else {
         initialState = {
           user_message: message,

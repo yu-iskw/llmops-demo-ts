@@ -37,8 +37,8 @@ program
   );
 
 program
-  .command("search-agent <message>")
-  .description("Interact with the Search agent")
+  .command("research-agent <message>")
+  .description("Interact with the Research agent")
   .option("-m, --model [model]", "Model to use", "gemini-2.5-flash")
   .option("-p, --project [project]", "Project to use")
   .option("-l, --location [location]", "Location to use")
