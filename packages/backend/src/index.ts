@@ -3,8 +3,17 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { RegisterRoutes } from "./generated/routes/routes";
 import { ValidateError } from "tsoa";
+import { getPackageRootPath } from "./utils/utils";
+import path from "path";
+import { initializeGenAIClient } from "./utils/genai";
 
-dotenv.config();
+// Load environment variables from the root of the package
+dotenv.config({
+  path: path.resolve(path.join(getPackageRootPath(), "..", "..", ".env")),
+});
+
+
+initializeGenAIClient();
 
 const app = express();
 const port = process.env.PORT || 3000;

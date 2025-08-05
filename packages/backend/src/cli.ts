@@ -1,8 +1,18 @@
 import { Command } from "commander";
 import { ChatService } from "./services/chat-service";
 import dotenv from "dotenv";
+import { getPackageRootPath } from "./utils/utils";
+import path from "path";
+import { initializeGenAIClient } from "./utils/genai";
 
-dotenv.config({ path: "../../.env", debug: true });
+// Load environment variables from the root of the package
+dotenv.config({
+  path: path.resolve(getPackageRootPath(), "../../.env"),
+  debug: true,
+});
+
+
+initializeGenAIClient();
 
 const program = new Command();
 const chatService = new ChatService();

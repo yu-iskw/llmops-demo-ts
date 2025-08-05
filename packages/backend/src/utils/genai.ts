@@ -18,17 +18,23 @@ export function createGenAIClient(config: GenAIConfig = {}): GoogleGenAI {
 
   const useVertexAI = finalUseVertexAI && !!finalProject && !!finalLocation;
 
+  console.log("--- createGenAIClient debug ---");
+  console.log("config.project:", config.project);
+  console.log("config.location:", config.location);
+  console.log("process.env.GOOGLE_CLOUD_PROJECT:", process.env.GOOGLE_CLOUD_PROJECT);
+  console.log("process.env.GOOGLE_CLOUD_LOCATION:", process.env.GOOGLE_CLOUD_LOCATION);
+  console.log("finalProject:", finalProject);
+  console.log("finalLocation:", finalLocation);
+  console.log("finalUseVertexAI:", finalUseVertexAI);
+  console.log("useVertexAI:", useVertexAI);
+  console.log("--- end createGenAIClient debug ---");
+
   const genAI = new GoogleGenAI({
     apiKey: useVertexAI ? undefined : finalApiKey,
     vertexai: useVertexAI,
     project: finalProject,
     location: finalLocation,
   });
-
-  console.log("LangSmith Tracing Enabled:", process.env.LANGSMITH_TRACING);
-  console.log("LangSmith API Key Set:", !!process.env.LANGSMITH_API_KEY);
-  console.log("LangSmith Project:", process.env.LANGSMITH_PROJECT);
-  console.log("LangChain Callbacks Background:", process.env.LANGCHAIN_CALLBACKS_BACKGROUND);
 
   // Wrap the generateContent method for tracing
   genAI.models.generateContent = traceable(genAI.models.generateContent.bind(genAI.models), {
@@ -38,4 +44,8 @@ export function createGenAIClient(config: GenAIConfig = {}): GoogleGenAI {
   return genAI;
 }
 
-export const genAI = createGenAIClient();
+export let genAI: GoogleGenAI;
+
+export function initializeGenAIClient() {
+  genAI = createGenAIClient();
+}

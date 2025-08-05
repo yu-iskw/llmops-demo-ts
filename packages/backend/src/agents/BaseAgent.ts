@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { CompiledStateGraph } from "@langchain/langgraph";
 import { GenAIConfig, createGenAIClient } from "../utils/genai";
 import { IAgent } from "./IAgent";
+import { traceable } from "langsmith/traceable";
 
 export abstract class BaseAgent implements IAgent {
   protected defaultModelName: string;
@@ -48,9 +49,14 @@ export abstract class BaseAgent implements IAgent {
       console.log(`[${this.getType()}] Processing message with model:`, finalModelName);
       console.log(`[${this.getType()}] Initial state:`, initialState);
 
-      const stream = await compiledGraph.stream(initialState, {
-        streamMode: "values",
-      });
+      const stream = await traceable(async () => {
+        return compiledGraph.stream(initialState, {
+          streamMode: "values",
+        });
+      }, {
+        run_type: "chain",
+        name: `${this.getType()} Agent Graph Execution`,
+      })();
 
       let finalResponse = "";
 
