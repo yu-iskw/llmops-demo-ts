@@ -1,5 +1,5 @@
-import { Annotation, MessagesAnnotation } from "@langchain/langgraph";
-import { FunctionCall } from "@google/genai";
+import { Annotation } from "@langchain/langgraph";
+import { CommonAgentStateAnnotation } from "../../commonAgentState";
 
 export interface OutputSanitizerOutput {
   isSensitive: boolean;
@@ -7,11 +7,8 @@ export interface OutputSanitizerOutput {
 }
 
 export const OutputSanitizerStateAnnotation = Annotation.Root({
-  user_message: Annotation<string>(),
-  messages: MessagesAnnotation.spec.messages,
+  ...CommonAgentStateAnnotation.spec,
   is_sensitive: Annotation<boolean>(),
-  feedback_message: Annotation<string | undefined>(),
-  messageWindowSize: Annotation<number>(),
 });
 
 export type OutputSanitizerState = typeof OutputSanitizerStateAnnotation.State;

@@ -31,7 +31,8 @@ export const answerRequest = async (
       model: modelName,
       contents,
       config: {
-        systemInstruction: "You are a helpful AI assistant. Answer the user's request based on the provided context.",
+        systemInstruction:
+          "You are a helpful AI assistant. Answer the user's request based on the provided context.",
       },
     });
 
@@ -49,7 +50,8 @@ export const answerRequest = async (
   } catch (error) {
     logger.error("Error answering request:", error);
 
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
 
     return {
       ai_response: undefined,

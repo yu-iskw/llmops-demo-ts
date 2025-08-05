@@ -9,7 +9,9 @@ export function CreateInputSanitizerGraphBuilder(
 ) {
   const workflow = new StateGraph(InputSanitizerStateAnnotation);
 
-  workflow.addNode("check_input", (state) => checkInput(state, genAI, modelName));
+  workflow.addNode("check_input", (state) =>
+    checkInput(state, genAI, modelName),
+  );
 
   // @ts-ignore TS2345
   workflow.addEdge(START, "check_input");

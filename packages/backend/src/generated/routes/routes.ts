@@ -26,7 +26,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "message": {"dataType":"string","required":true},
             "history": {"dataType":"array","array":{"dataType":"refObject","ref":"ChatMessage"}},
-            "agentType": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["default"]},{"dataType":"enum","enums":["research"]}]},
+            "agentType": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["default"]},{"dataType":"enum","enums":["research"]},{"dataType":"enum","enums":["secure"]}]},
             "modelName": {"dataType":"string"},
             "sessionId": {"dataType":"string"},
         },
@@ -36,7 +36,7 @@ const models: TsoaRoute.Models = {
     "AgentType": {
         "dataType": "refObject",
         "properties": {
-            "name": {"dataType":"string","required":true},
+            "name": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["default"]},{"dataType":"enum","enums":["research"]},{"dataType":"enum","enums":["secure"]}],"required":true},
             "description": {"dataType":"string","required":true},
         },
         "additionalProperties": false,

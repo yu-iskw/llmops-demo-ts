@@ -1,12 +1,8 @@
-import { Annotation, MessagesAnnotation } from "@langchain/langgraph";
-import { FunctionCall } from "@google/genai";
+import { Annotation } from "@langchain/langgraph";
+import { CommonAgentStateAnnotation } from "../../commonAgentState";
 
 export const RequestAnswererStateAnnotation = Annotation.Root({
-  user_message: Annotation<string>(),
-  messages: MessagesAnnotation.spec.messages,
-  ai_response: Annotation<string | undefined>(),
-  feedback_message: Annotation<string | undefined>(),
-  messageWindowSize: Annotation<number>(),
+  ...CommonAgentStateAnnotation.spec,
 });
 
 export type RequestAnswererState = typeof RequestAnswererStateAnnotation.State;

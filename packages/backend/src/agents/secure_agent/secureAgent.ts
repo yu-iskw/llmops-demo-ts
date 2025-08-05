@@ -4,16 +4,17 @@ import { BaseAgent } from "../baseAgent";
 import { SecureAgentState } from "./secureAgentState";
 import logger from "@utils/logger";
 import { extractStringContent } from "@utils/agentUtils";
-import { checkInput } from "./subagents/input_sanitizer/inputSanitizerNodes";
-import { answerRequest } from "./subagents/request_answerer/requestAnswererNodes";
-import { checkOutput } from "./subagents/output_sanitizer/outputSanitizerNodes";
+import { createSecureAgentGraphBuilder } from "./secureAgentBuilder";
 
 export class SecureAgent extends BaseAgent {
   private messageWindowSize: number;
+  private compiledGraph: any;
 
   constructor(messageWindowSize: number = 3) {
     super("gemini-2.5-flash");
     this.messageWindowSize = messageWindowSize;
+    const genAI = new GoogleGenAI({});
+    this.compiledGraph = this.createGraph(genAI);
   }
 
   getType(): string {
@@ -25,9 +26,12 @@ export class SecureAgent extends BaseAgent {
   }
 
   protected createGraph(genAI: GoogleGenAI): any {
-    // This agent no longer uses a CompiledStateGraph directly.
-    // The orchestration is handled within the execute method.
-    return null;
+    logger.info("Creating SecureAgent graph...");
+    const graphBuilder = createSecureAgentGraphBuilder(
+      genAI,
+      this.defaultModelName,
+    );
+    return graphBuilder.compile();
   }
 
   protected createInitialState(
@@ -37,13 +41,13 @@ export class SecureAgent extends BaseAgent {
     return {
       user_message: message,
       messages: history,
-      sanitized_message: extractStringContent(history.length > 0 ? history[history.length - 1].content : undefined),
+      sanitized_message: undefined, // Will be set by input_sanitizer
       is_suspicious: false,
       ai_response: undefined,
       is_sensitive: false,
       feedback_message: undefined,
       messageWindowSize: this.messageWindowSize,
-      next_step: undefined,
+      next_step: undefined, // Not used directly by the graph, but kept for state consistency if needed elsewhere
     };
   }
 
@@ -56,72 +60,28 @@ export class SecureAgent extends BaseAgent {
       history,
     );
 
-    const genAI = new GoogleGenAI({}); // Initialize GenAI here or pass from higher level
+    try {
+      logger.info("Invoking SecureAgent graph...");
+      const result = await this.compiledGraph.invoke(currentState);
 
-    // --- Sub Graph 1: Check and sanitize the user's input ---
-    logger.info("Executing Input Sanitizer");
-    const inputSanitizerResult = await checkInput(
-      { ...currentState, user_message: userMessage },
-      genAI,
-      this.defaultModelName,
-    );
-    currentState = { ...currentState, ...inputSanitizerResult };
-
-    if (currentState.is_suspicious) {
-      return "I cannot answer requests that are suspicious or contain potential prompt injections. Please rephrase your request.";
-    }
-
-    let maxRetries = 3;
-    let retries = 0;
-
-    while (retries < maxRetries) {
-      // --- Sub Graph 2: Answer the user's request ---
-      logger.info("Executing Request Answerer");
-      const requestAnswererResult = await answerRequest(
-        { ...currentState, user_message: currentState.sanitized_message || userMessage },
-        genAI,
-        this.defaultModelName,
-      );
-      currentState = { ...currentState, ...requestAnswererResult };
-
-      // If no AI response, something went wrong in answering, break loop
-      if (!currentState.ai_response) {
-        logger.error("Request Answerer failed to generate a response.");
-        return "I apologize, but I encountered an error while trying to answer your request. Please try again.";
-      }
-
-      // --- Sub Graph 3: Check if the answer contains sensitive information ---
-      logger.info("Executing Output Sanitizer");
-      const outputSanitizerResult = await checkOutput(
-        { ...currentState, ai_response: currentState.ai_response },
-        genAI,
-        this.defaultModelName,
-      );
-      currentState = { ...currentState, ...outputSanitizerResult };
-
-      if (currentState.is_sensitive) {
-        logger.warn("Output detected as sensitive. Re-answering with feedback.");
-        // Feedback loop: go back to request answerer with feedback
-        currentState.feedback_message = currentState.feedback_message || "The previous answer contained sensitive information. Please refine.";
-        retries++;
+      if (result.is_suspicious) {
+        return "I cannot answer requests that are suspicious or contain potential prompt injections. Please rephrase your request.";
+      } else if (result.is_sensitive) {
+        // This case should ideally be handled by the graph's internal loop.
+        // If it reaches here, it means the graph ended with a sensitive output.
+        return "I cannot provide a response as it contains sensitive information even after multiple attempts. Please refine your query.";
+      } else if (result.ai_response) {
+        return result.ai_response;
       } else {
-        // Output is safe, break loop and return response
-        return currentState.ai_response || null;
+        return "I apologize, but I encountered an unexpected error while processing your request.";
       }
+    } catch (error) {
+      logger.error("Error during SecureAgent execution:", error);
+      return "I apologize, but I encountered an error while trying to answer your request. Please try again.";
     }
-
-    // If max retries reached and still sensitive
-    if (currentState.is_sensitive) {
-      return "I cannot provide a response as it contains sensitive information even after multiple attempts. Please refine your query.";
-    }
-
-    return null; // Should not reach here in normal flow
   }
 
   protected extractResponse(streamState: SecureAgentState): string | null {
-    // This method is no longer directly used for streaming responses in this non-LangGraph setup.
-    // The execute method returns the final string response directly.
-    // However, it can be used for final state interpretation if needed.
     return streamState.ai_response || null;
   }
 }

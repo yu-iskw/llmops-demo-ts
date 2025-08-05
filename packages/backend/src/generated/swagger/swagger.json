@@ -42,7 +42,8 @@
 						"type": "string",
 						"enum": [
 							"default",
-							"research"
+							"research",
+							"secure"
 						]
 					},
 					"modelName": {
@@ -61,7 +62,12 @@
 			"AgentType": {
 				"properties": {
 					"name": {
-						"type": "string"
+						"type": "string",
+						"enum": [
+							"default",
+							"research",
+							"secure"
+						]
 					},
 					"description": {
 						"type": "string"

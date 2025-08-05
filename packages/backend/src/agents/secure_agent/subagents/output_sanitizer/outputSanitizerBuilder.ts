@@ -9,7 +9,9 @@ export function CreateOutputSanitizerGraphBuilder(
 ) {
   const workflow = new StateGraph(OutputSanitizerStateAnnotation);
 
-  workflow.addNode("check_output", (state) => checkOutput(state, genAI, modelName));
+  workflow.addNode("check_output", (state) =>
+    checkOutput(state, genAI, modelName),
+  );
 
   // @ts-ignore TS2345
   workflow.addEdge(START, "check_output");

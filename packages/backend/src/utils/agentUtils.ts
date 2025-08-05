@@ -73,7 +73,11 @@ export function extractStringContent(content: any): string {
     return content;
   } else if (Array.isArray(content)) {
     const textParts = content.filter(
-      (part: any): part is { text: string } => typeof part === "object" && part !== null && "text" in part && typeof part.text === "string",
+      (part: any): part is { text: string } =>
+        typeof part === "object" &&
+        part !== null &&
+        "text" in part &&
+        typeof part.text === "string",
     );
     if (textParts.length > 0) {
       return textParts.map((part) => part.text).join(" ");

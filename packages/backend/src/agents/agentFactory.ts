@@ -40,7 +40,7 @@ export class AgentFactory {
     name: string;
     description: string;
   }> {
-    const agentTypes: AgentType[] = ["default", "research"];
+    const agentTypes: AgentType[] = ["default", "research", "secure"];
     return agentTypes.map((type) => {
       const agent = this.getAgent(type);
       return {
@@ -65,7 +65,9 @@ export class AgentFactory {
       case "secure":
         return new SecureAgent(config?.messageWindowSize);
       default:
-        logger.warn(`Unknown agent type: ${agentType}. Falling back to default.`);
+        logger.warn(
+          `Unknown agent type: ${agentType}. Falling back to default.`,
+        );
         return new DefaultAgent();
     }
   }

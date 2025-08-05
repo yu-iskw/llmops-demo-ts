@@ -27,7 +27,8 @@ export const checkInput = async (
       model: modelName,
       contents,
       config: {
-        systemInstruction: "You are an input sanitizer. Classify user messages as 'SAFE' or 'SUSPICIOUS'. Provide a reason for the classification and a confidence score (0-1). Respond with a JSON object { \"isSuspicious\": boolean, \"reason\": string, \"confidence\": number }.",
+        systemInstruction:
+          'You are an input sanitizer. Classify user messages as \'SAFE\' or \'SUSPICIOUS\'. Provide a reason for the classification and a confidence score (0-1). Respond with a JSON object { "isSuspicious": boolean, "reason": string, "confidence": number }.',
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
@@ -42,7 +43,8 @@ export const checkInput = async (
             },
             confidence: {
               type: Type.NUMBER,
-              description: "The confidence score for the classification (LOW, MEDIUM, HIGH)",
+              description:
+                "The confidence score for the classification (LOW, MEDIUM, HIGH)",
             },
           },
           required: ["isSuspicious", "reason", "confidence"],
@@ -50,12 +52,16 @@ export const checkInput = async (
       },
     });
 
-    const parsedResult = JSON.parse(result.text || "{}") as InputSanitizerOutput;
+    const parsedResult = JSON.parse(
+      result.text || "{}",
+    ) as InputSanitizerOutput;
     const isSuspicious = parsedResult.isSuspicious || false;
     const reason = parsedResult.reason || "";
     const confidence = parsedResult.confidence || 0;
 
-    logger.info(`Input check result: ${isSuspicious ? "SUSPICIOUS" : "SAFE"}, Reason: ${reason}, Confidence: ${confidence}`);
+    logger.info(
+      `Input check result: ${isSuspicious ? "SUSPICIOUS" : "SAFE"}, Reason: ${reason}, Confidence: ${confidence}`,
+    );
 
     return {
       sanitized_message: isSuspicious ? "" : state.user_message,

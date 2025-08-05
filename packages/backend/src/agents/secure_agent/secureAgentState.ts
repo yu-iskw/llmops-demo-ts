@@ -1,16 +1,11 @@
-import { Annotation, MessagesAnnotation } from "@langchain/langgraph";
-import { FunctionCall } from "@google/genai";
+import { Annotation } from "@langchain/langgraph";
+import { CommonAgentStateAnnotation } from "./commonAgentState";
 
 export const SecureAgentStateAnnotation = Annotation.Root({
-  user_message: Annotation<string>(),
-  // Use MessagesAnnotation for proper message history handling
-  ...MessagesAnnotation.spec,
+  ...CommonAgentStateAnnotation.spec,
   sanitized_message: Annotation<string | undefined>(),
   is_suspicious: Annotation<boolean>(),
-  ai_response: Annotation<string | undefined>(),
   is_sensitive: Annotation<boolean>(),
-  feedback_message: Annotation<string | undefined>(),
-  messageWindowSize: Annotation<number>(),
   next_step: Annotation<string | undefined>(),
 });
 

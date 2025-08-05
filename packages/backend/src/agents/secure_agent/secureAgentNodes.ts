@@ -27,7 +27,11 @@ export const callInputSanitizer = async (
     user_message: state.user_message,
     messages: state.messages,
     sanitized_message: state.sanitized_message,
-    is_suspicious: false,
+    isSuspicious: false,
+    reason: undefined, // Added missing property
+    confidence: undefined, // Added missing property
+    ai_response: undefined,
+    feedback_message: undefined,
     messageWindowSize: state.messageWindowSize,
   };
 
@@ -35,7 +39,7 @@ export const callInputSanitizer = async (
 
   return {
     sanitized_message: result.sanitized_message,
-    is_suspicious: result.is_suspicious,
+    is_suspicious: result.isSuspicious,
     messages: result.messages,
   };
 };
@@ -51,7 +55,9 @@ export const callRequestAnswerer = async (
     modelName,
   ).compile();
 
-  const sanitizedUserMessage = extractStringContent(state.sanitized_message || state.user_message);
+  const sanitizedUserMessage = extractStringContent(
+    state.sanitized_message || state.user_message,
+  );
 
   const initialState: RequestAnswererState = {
     user_message: sanitizedUserMessage,
@@ -82,9 +88,11 @@ export const callOutputSanitizer = async (
   ).compile();
 
   const initialState: OutputSanitizerState = {
-    user_message: extractStringContent(state.sanitized_message || state.user_message),
+    user_message: extractStringContent(
+      state.sanitized_message || state.user_message,
+    ),
     messages: state.messages,
-    ai_response: extractStringContent(state.ai_response),
+    ai_response: state.ai_response, // Now it can be undefined
     is_sensitive: false,
     feedback_message: undefined,
     messageWindowSize: state.messageWindowSize,
