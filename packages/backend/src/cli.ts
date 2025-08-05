@@ -11,7 +11,6 @@ dotenv.config({
   debug: true,
 });
 
-
 initializeGenAIClient();
 
 const program = new Command();
@@ -25,7 +24,7 @@ program
 program
   .command("default-agent <message>")
   .description("Interact with the Default agent")
-  .option("-m, --model [model]", "Model to use", "gemini-2.0-flash")
+  .option("-m, --model [model]", "Model to use", "gemini-2.5-flash")
   .option("-p, --project [project]", "Project to use")
   .option("-l, --location [location]", "Location to use")
   .action(

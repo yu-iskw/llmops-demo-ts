@@ -90,11 +90,7 @@ export const planQueries = async (
 
 // Node for executing searches
 export const executeSearches = traceable(
-  async (
-    state: SearchAgentState,
-    genAI: GoogleGenAI,
-    modelName: string,
-  ) => {
+  async (state: SearchAgentState, genAI: GoogleGenAI, modelName: string) => {
     const searchTasks = state.search_queries.map((query) => async () => {
       const response = await genAI.models.generateContent({
         model: modelName,

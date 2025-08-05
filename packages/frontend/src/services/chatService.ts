@@ -30,7 +30,8 @@ export class ChatService {
     message: string,
     history: UIChatMessage[],
     agentType: string = "default",
-    modelName: string = "gemini-2.0-flash", // Add modelName parameter
+    modelName: string = "gemini-2.5-flash", // Add modelName parameter
+    sessionId?: string, // Add sessionId parameter
   ): Promise<string> {
     const response = await fetch("/api/chat", {
       method: "POST",
@@ -46,7 +47,8 @@ export class ChatService {
           }),
         ),
         agentType,
-        modelName, // Pass modelName
+        modelName,
+        sessionId, // Pass sessionId
       } as ChatRequest),
     });
 

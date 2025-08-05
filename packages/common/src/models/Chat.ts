@@ -15,4 +15,5 @@ export interface ChatRequest {
   history?: ChatMessage[];
   agentType?: "default" | "research";
   modelName?: string;
+  sessionId?: string;
 }

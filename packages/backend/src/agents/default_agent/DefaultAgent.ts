@@ -7,7 +7,7 @@ import { DefaultAgentState } from "./state";
 
 export class DefaultAgent extends BaseAgent {
   constructor() {
-    super("gemini-2.0-flash");
+    super("gemini-2.5-flash");
   }
 
   getType(): string {
@@ -18,11 +18,17 @@ export class DefaultAgent extends BaseAgent {
     return "A general-purpose AI assistant.";
   }
 
-  protected createGraph(genAI: GoogleGenAI, modelName: string): CompiledStateGraph<any, any, any> {
+  protected createGraph(
+    genAI: GoogleGenAI,
+    modelName: string,
+  ): CompiledStateGraph<any, any, any> {
     return CreateDefaultAgentGraphBuilder(genAI, modelName).compile();
   }
 
-  protected createInitialState(message: string, history: BaseMessage[]): DefaultAgentState {
+  protected createInitialState(
+    message: string,
+    history: BaseMessage[],
+  ): DefaultAgentState {
     return {
       user_message: message,
       messages: history,

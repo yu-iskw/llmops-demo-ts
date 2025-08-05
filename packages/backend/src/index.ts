@@ -12,7 +12,6 @@ dotenv.config({
   path: path.resolve(path.join(getPackageRootPath(), "..", "..", ".env")),
 });
 
-
 initializeGenAIClient();
 
 const app = express();

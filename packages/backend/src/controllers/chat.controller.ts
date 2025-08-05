@@ -21,7 +21,13 @@ export class ChatController extends Controller {
   public async processChatMessage(
     @Body() requestBody: ChatRequest,
   ): Promise<{ chunk: string }> {
-    const { message, history = [], agentType = "default" } = requestBody;
+    const {
+      message,
+      history = [],
+      agentType = "default",
+      modelName,
+      sessionId,
+    } = requestBody;
 
     if (!message) {
       this.setStatus(400);
@@ -33,7 +39,8 @@ export class ChatController extends Controller {
       history,
       agentType,
       undefined,
-      requestBody.modelName, // Pass modelName from requestBody
+      modelName,
+      sessionId, // Pass sessionId
     );
     return { chunk: response };
   }

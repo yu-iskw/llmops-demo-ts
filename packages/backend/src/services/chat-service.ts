@@ -11,12 +11,14 @@ export class ChatService {
       history: any[] = [],
       agentType: AgentType = "default",
       config?: GenAIConfig,
-      modelName: string = "gemini-2.0-flash",
+      modelName: string = "gemini-2.5-flash",
+      sessionId?: string, // Add sessionId parameter
     ): Promise<string> => {
       console.log("Processing message:", message);
       console.log("History length:", history.length);
       console.log("Agent type:", agentType);
       console.log("Model name:", modelName);
+      console.log("Session ID:", sessionId); // Log session ID
 
       // Convert history to proper message format
       const initialMessages: BaseMessage[] = history.map((msg: any) => {
@@ -29,6 +31,14 @@ export class ChatService {
 
       // Get the agent and delegate message processing
       const agent = AgentFactory.getAgent(agentType);
-      return await agent.processMessage(message, initialMessages, config, modelName);
-    }, { run_type: "chain", name: "ChatService.processMessage" });
+      return await agent.processMessage(
+        message,
+        initialMessages,
+        config,
+        modelName,
+        sessionId,
+      );
+    },
+    { run_type: "chain", name: "ChatService.processMessage" },
+  );
 }

@@ -8,7 +8,7 @@ import { traceable } from "langsmith/traceable";
 export abstract class BaseAgent implements IAgent {
   protected defaultModelName: string;
 
-  constructor(defaultModelName: string = "gemini-2.0-flash") {
+  constructor(defaultModelName: string = "gemini-2.5-flash") {
     this.defaultModelName = defaultModelName;
   }
 
@@ -18,12 +18,18 @@ export abstract class BaseAgent implements IAgent {
   /**
    * Creates and compiles the agent's graph
    */
-  protected abstract createGraph(genAI: GoogleGenAI, modelName: string): CompiledStateGraph<any, any, any>;
+  protected abstract createGraph(
+    genAI: GoogleGenAI,
+    modelName: string,
+  ): CompiledStateGraph<any, any, any>;
 
   /**
    * Creates the initial state for the agent
    */
-  protected abstract createInitialState(message: string, history: BaseMessage[]): any;
+  protected abstract createInitialState(
+    message: string,
+    history: BaseMessage[],
+  ): any;
 
   /**
    * Extracts the final response from the stream state
@@ -38,6 +44,7 @@ export abstract class BaseAgent implements IAgent {
     history: BaseMessage[],
     config?: GenAIConfig,
     modelName?: string,
+    sessionId?: string, // Add sessionId parameter
   ): Promise<string> {
     try {
       const finalModelName = modelName || this.defaultModelName;
@@ -46,17 +53,24 @@ export abstract class BaseAgent implements IAgent {
       const compiledGraph = this.createGraph(genAI, finalModelName);
       const initialState = this.createInitialState(message, history);
 
-      console.log(`[${this.getType()}] Processing message with model:`, finalModelName);
+      console.log(
+        `[${this.getType()}] Processing message with model:`,
+        finalModelName,
+      );
       console.log(`[${this.getType()}] Initial state:`, initialState);
 
-      const stream = await traceable(async () => {
-        return compiledGraph.stream(initialState, {
-          streamMode: "values",
-        });
-      }, {
-        run_type: "chain",
-        name: `${this.getType()} Agent Graph Execution`,
-      })();
+      const stream = await traceable(
+        async () => {
+          return compiledGraph.stream(initialState, {
+            streamMode: "values",
+          });
+        },
+        {
+          run_type: "chain",
+          name: `${this.getType()} Agent Graph Execution`,
+          metadata: { sessionId }, // Pass sessionId as metadata
+        },
+      )();
 
       let finalResponse = "";
 
@@ -70,7 +84,9 @@ export abstract class BaseAgent implements IAgent {
       }
 
       if (!finalResponse) {
-        console.warn(`[${this.getType()}] No response generated, returning default message`);
+        console.warn(
+          `[${this.getType()}] No response generated, returning default message`,
+        );
         return "I'm sorry, I couldn't generate a response. Please try again.";
       }
 

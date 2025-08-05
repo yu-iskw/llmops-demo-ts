@@ -20,9 +20,12 @@ export class AgentFactory {
   /**
    * Gets all available agent types with their descriptions
    */
-  public static getAvailableAgents(): Array<{ name: string; description: string }> {
+  public static getAvailableAgents(): Array<{
+    name: string;
+    description: string;
+  }> {
     const agentTypes: AgentType[] = ["default", "research"];
-    return agentTypes.map(type => {
+    return agentTypes.map((type) => {
       const agent = this.getAgent(type);
       return {
         name: agent.getType(),

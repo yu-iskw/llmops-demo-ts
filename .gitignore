@@ -144,3 +144,6 @@ packages/frontend/dist/
 .env
 
 pacckages/**/*.js
+
+packages/frontend/playwright-report/
+packages/frontend/test-results/

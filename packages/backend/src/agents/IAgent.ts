@@ -15,6 +15,7 @@ export interface IAgent {
     history: BaseMessage[],
     config?: GenAIConfig,
     modelName?: string,
+    sessionId?: string,
   ): Promise<string>;
 
   /**

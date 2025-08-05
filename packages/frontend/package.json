@@ -19,12 +19,14 @@
   },
   "dependencies": {
     "pinia": "^3.0.3",
+    "uuid": "^11.1.0",
     "vue": "^3.4.0",
     "winston": "^3.17.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
     "@types/node": "^20.0.0",
+    "@types/uuid": "^10.0.0",
     "@vitejs/plugin-vue": "^5.0.0",
     "esbuild": "^0.25.8",
     "typescript": "^5.0.0",

@@ -47,6 +47,7 @@ import MessageInput from './MessageInput.vue';
 import { ChatService, type UIChatMessage, type AgentType } from '../services/chatService';
 import { useMessageStore } from '../stores/messageStore';
 import { storeToRefs } from 'pinia';
+import { v4 as uuidv4 } from 'uuid'; // Import uuid
 
 // Debug logging utility
 const debugLog = (level: string, message: string, data?: any) => {
@@ -72,6 +73,7 @@ const { messages, isLoading } = storeToRefs(messageStore); // Use storeToRefs to
 const selectedAgentType = ref<string>('default'); // Default agent type
 const selectedModelName = ref<string>('gemini-2.5-flash'); // Default model name
 const agentTypes = ref<AgentType[]>([]); // To store fetched agent types
+const sessionId = ref<string>(uuidv4()); // Generate and store UUID for session
 
 // Fetch agent types on mount
 onMounted(async () => {
@@ -121,7 +123,7 @@ const handleSendMessage = async (message: string) => {
     });
 
     // Send message and get response with selected agent type and model name
-    const response = await ChatService.sendMessage(message, history, selectedAgentType.value, selectedModelName.value);
+    const response = await ChatService.sendMessage(message, history, selectedAgentType.value, selectedModelName.value, sessionId.value);
 
     debugLog('info', 'Received response from API', { response });
 

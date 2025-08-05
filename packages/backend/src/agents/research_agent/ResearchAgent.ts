@@ -18,11 +18,17 @@ export class ResearchAgent extends BaseAgent {
     return "An AI assistant specializing in research and information gathering.";
   }
 
-  protected createGraph(genAI: GoogleGenAI, modelName: string): CompiledStateGraph<any, any, any> {
+  protected createGraph(
+    genAI: GoogleGenAI,
+    modelName: string,
+  ): CompiledStateGraph<any, any, any> {
     return createSearchAgentGraphBuilder(genAI, modelName).compile();
   }
 
-  protected createInitialState(message: string, history: BaseMessage[]): SearchAgentState {
+  protected createInitialState(
+    message: string,
+    history: BaseMessage[],
+  ): SearchAgentState {
     return {
       user_message: message,
       response: null,
@@ -35,7 +41,10 @@ export class ResearchAgent extends BaseAgent {
 
   protected extractResponse(streamState: SearchAgentState): string | null {
     // First priority: check for the direct response field
-    if (streamState.response !== null && typeof streamState.response === "string") {
+    if (
+      streamState.response !== null &&
+      typeof streamState.response === "string"
+    ) {
       return streamState.response;
     }
 
