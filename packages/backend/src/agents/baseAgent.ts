@@ -1,6 +1,6 @@
 import { BaseMessage } from "@langchain/core/messages";
 import { GoogleGenAI } from "@google/genai";
-import { CompiledStateGraph } from "@langchain/langgraph";
+import { CompiledStateGraph, MemorySaver } from "@langchain/langgraph";
 import { GenAIConfig, createGenAIClient } from "../utils/genai";
 import { traceable } from "langsmith/traceable";
 import logger from "../utils/logger";
@@ -20,9 +20,11 @@ export interface IAgent {
 
 export abstract class BaseAgent implements IAgent {
   protected defaultModelName: string;
+  protected checkpointer: MemorySaver; // Declare checkpointer
 
   constructor(defaultModelName: string = "gemini-2.5-flash") {
     this.defaultModelName = defaultModelName;
+    this.checkpointer = new MemorySaver(); // Initialize checkpointer
   }
 
   abstract getType(): string;
@@ -75,7 +77,12 @@ export abstract class BaseAgent implements IAgent {
       const stream = await traceable(
         async () => {
           return compiledGraph.stream(initialState, {
+            // Pass sessionId as thread_id for persistence
+            configurable: { thread_id: sessionId },
             streamMode: "values",
+            // Pass the checkpointer to the stream method
+            // @ts-ignore TS2345
+            checkpointer: this.checkpointer,
           });
         },
         {
