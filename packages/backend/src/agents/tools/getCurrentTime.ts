@@ -38,7 +38,8 @@ export const getCurrentTimeReadable = (): string => {
 
 export const getCurrentTimeToolDeclaration = {
   name: "getCurrentTime",
-  description: "Get the current timestamp in ISO format. Use this function only when you need the exact current time to answer the user's request.",
+  description:
+    "Get the current timestamp in ISO format. Use this function only when you need the exact current time to answer the user's request.",
   parametersJsonSchema: {
     type: "object",
     properties: {},
@@ -51,7 +52,9 @@ export const getCurrentTimeToolDeclaration = {
  * @param toolCall The function call object containing tool name and arguments
  * @returns FunctionMessage with the tool execution result
  */
-export const executeGetCurrentTimeTool = (toolCall: FunctionCall): FunctionMessage => {
+export const executeGetCurrentTimeTool = (
+  toolCall: FunctionCall,
+): FunctionMessage => {
   const toolName = toolCall.name || "unknown";
 
   if (toolName === getCurrentTimeToolDeclaration.name) {
@@ -75,8 +78,10 @@ export const executeGetCurrentTimeTool = (toolCall: FunctionCall): FunctionMessa
  * @param toolCalls Array of function call objects
  * @returns Array of FunctionMessage objects with tool execution results
  */
-export const executeToolCalls = (toolCalls: FunctionCall[]): FunctionMessage[] => {
-  return toolCalls.map(toolCall => executeGetCurrentTimeTool(toolCall));
+export const executeToolCalls = (
+  toolCalls: FunctionCall[],
+): FunctionMessage[] => {
+  return toolCalls.map((toolCall) => executeGetCurrentTimeTool(toolCall));
 };
 
 /**

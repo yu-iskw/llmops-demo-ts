@@ -1,4 +1,5 @@
-import { IAgent } from "./iAgent";
+// Import IAgent from baseAgent where it's defined
+import { IAgent } from "./baseAgent";
 import { DefaultAgent } from "./default_agent/defaultAgent";
 import { ResearchAgent } from "./research_agent/researchAgent";
 
@@ -50,7 +51,10 @@ export class AgentFactory {
   /**
    * Creates a new agent instance based on type
    */
-  private static createAgent(agentType: AgentType, config?: AgentConfig): IAgent {
+  private static createAgent(
+    agentType: AgentType,
+    config?: AgentConfig,
+  ): IAgent {
     switch (agentType) {
       case "default":
         return new DefaultAgent(config?.messageWindowSize);

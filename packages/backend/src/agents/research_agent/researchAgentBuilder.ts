@@ -1,5 +1,9 @@
 import { StateGraph, END, START } from "@langchain/langgraph";
-import { planQueries, executeSearches, synthesizeResults } from "./researchAgentNodes";
+import {
+  planQueries,
+  executeSearches,
+  synthesizeResults,
+} from "./researchAgentNodes";
 import { SearchAgentStateAnnotation } from "./researchAgentState";
 import { GoogleGenAI } from "@google/genai";
 
@@ -21,7 +25,9 @@ export function createSearchAgentGraphBuilder(
   );
 
   // Define a router function to decide the next step after planning queries
-  const shouldExecuteSearches = (state: typeof SearchAgentStateAnnotation.State) => {
+  const shouldExecuteSearches = (
+    state: typeof SearchAgentStateAnnotation.State,
+  ) => {
     if (state.search_queries && state.search_queries.length > 0) {
       return "execute_searches";
     }
@@ -29,7 +35,9 @@ export function createSearchAgentGraphBuilder(
   };
 
   // Define a router function to decide the next step after executing searches
-  const shouldSynthesizeResults = (state: typeof SearchAgentStateAnnotation.State) => {
+  const shouldSynthesizeResults = (
+    state: typeof SearchAgentStateAnnotation.State,
+  ) => {
     if (state.search_results && state.search_results.length > 0) {
       return "synthesize_results";
     }

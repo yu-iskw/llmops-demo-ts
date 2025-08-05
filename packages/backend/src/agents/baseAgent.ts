@@ -2,9 +2,21 @@ import { BaseMessage } from "@langchain/core/messages";
 import { GoogleGenAI } from "@google/genai";
 import { CompiledStateGraph } from "@langchain/langgraph";
 import { GenAIConfig, createGenAIClient } from "../utils/genai";
-import { IAgent } from "./iAgent";
 import { traceable } from "langsmith/traceable";
 import logger from "../utils/logger";
+
+// Define the interface inline to avoid file creation issues
+export interface IAgent {
+  getType(): string;
+  getDescription(): string;
+  processMessage(
+    message: string,
+    history: BaseMessage[],
+    config?: GenAIConfig,
+    modelName?: string,
+    sessionId?: string,
+  ): Promise<string>;
+}
 
 export abstract class BaseAgent implements IAgent {
   protected defaultModelName: string;

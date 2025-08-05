@@ -70,7 +70,8 @@ export const planQueries = async (
       model: modelName,
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
-        systemInstruction: "You are a helpful assistant that generates search queries to answer a user's question.",
+        systemInstruction:
+          "You are a helpful assistant that generates search queries to answer a user's question.",
       },
     });
 
@@ -89,9 +90,10 @@ export const planQueries = async (
     logger.error("Error planning queries:", error);
 
     // Provide a fallback response
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
     const aiMessage = new AIMessage(
-      `I apologize, but I encountered an error while planning search queries: ${errorMessage}. Please try again or rephrase your question.`
+      `I apologize, but I encountered an error while planning search queries: ${errorMessage}. Please try again or rephrase your question.`,
     );
 
     return {
@@ -112,7 +114,9 @@ export const executeSearches = async (
       logger.warn("No search queries to execute");
       return {
         search_results: [],
-        messages: [new AIMessage("No search queries were generated to execute.")],
+        messages: [
+          new AIMessage("No search queries were generated to execute."),
+        ],
       };
     }
 
@@ -121,7 +125,8 @@ export const executeSearches = async (
         model: modelName,
         contents: [{ role: "user", parts: [{ text: `Search for: ${query}` }] }],
         config: {
-          systemInstruction: "You are a helpful assistant that performs web searches to find relevant information.",
+          systemInstruction:
+            "You are a helpful assistant that performs web searches to find relevant information.",
           tools: [{ googleSearch: {} }],
         },
       });
@@ -137,9 +142,10 @@ export const executeSearches = async (
     logger.error("Error executing searches:", error);
 
     // Provide a fallback response
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
     const aiMessage = new AIMessage(
-      `I apologize, but I encountered an error while executing searches: ${errorMessage}. Please try again.`
+      `I apologize, but I encountered an error while executing searches: ${errorMessage}. Please try again.`,
     );
 
     return {
@@ -159,7 +165,7 @@ export const synthesizeResults = async (
     if (!state.search_results || state.search_results.length === 0) {
       logger.warn("No search results to synthesize");
       const aiMessage = new AIMessage(
-        "I couldn't find any search results to synthesize. Please try rephrasing your question."
+        "I couldn't find any search results to synthesize. Please try rephrasing your question.",
       );
       return {
         response: aiMessage.content as string,
@@ -177,7 +183,8 @@ export const synthesizeResults = async (
       model: modelName,
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
-        systemInstruction: "You are a helpful assistant that synthesizes search results to provide comprehensive answers to user questions.",
+        systemInstruction:
+          "You are a helpful assistant that synthesizes search results to provide comprehensive answers to user questions.",
       },
     });
     const finalResponse = result.text || "";
@@ -192,9 +199,10 @@ export const synthesizeResults = async (
     logger.error("Error synthesizing results:", error);
 
     // Provide a fallback response
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
     const aiMessage = new AIMessage(
-      `I apologize, but I encountered an error while synthesizing the search results: ${errorMessage}. Please try again.`
+      `I apologize, but I encountered an error while synthesizing the search results: ${errorMessage}. Please try again.`,
     );
 
     return {
