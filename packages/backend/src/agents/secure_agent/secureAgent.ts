@@ -41,13 +41,15 @@ export class SecureAgent extends BaseAgent {
     return {
       user_message: message,
       messages: history,
-      sanitized_message: undefined, // Will be set by input_sanitizer
+      sanitized_message: undefined,
       is_suspicious: false,
+      suspicious_reason: undefined,
+      confidence: undefined,
       ai_response: undefined,
       is_sensitive: false,
       feedback_message: undefined,
       messageWindowSize: this.messageWindowSize,
-      next_step: undefined, // Not used directly by the graph, but kept for state consistency if needed elsewhere
+      next_step: undefined,
     };
   }
 
@@ -71,7 +73,10 @@ export class SecureAgent extends BaseAgent {
         // If it reaches here, it means the graph ended with a sensitive output.
         return "I cannot provide a response as it contains sensitive information even after multiple attempts. Please refine your query.";
       } else if (result.ai_response) {
-        return result.ai_response;
+        return (
+          result.ai_response ||
+          "I apologize, but I encountered an unexpected error while processing your request."
+        );
       } else {
         return "I apologize, but I encountered an unexpected error while processing your request.";
       }

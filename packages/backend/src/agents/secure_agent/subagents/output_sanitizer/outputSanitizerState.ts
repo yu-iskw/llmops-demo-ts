@@ -9,6 +9,7 @@ export interface OutputSanitizerOutput {
 export const OutputSanitizerStateAnnotation = Annotation.Root({
   ...CommonAgentStateAnnotation.spec,
   is_sensitive: Annotation<boolean>(),
+  feedback_message: Annotation<string | undefined>(),
 });
 
 export type OutputSanitizerState = typeof OutputSanitizerStateAnnotation.State;

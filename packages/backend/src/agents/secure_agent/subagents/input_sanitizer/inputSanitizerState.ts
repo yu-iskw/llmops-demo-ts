@@ -4,8 +4,8 @@ import { CommonAgentStateAnnotation } from "../../commonAgentState";
 export const InputSanitizerStateAnnotation = Annotation.Root({
   ...CommonAgentStateAnnotation.spec,
   sanitized_message: Annotation<string | undefined>(),
-  isSuspicious: Annotation<boolean>(),
-  reason: Annotation<string | undefined>(),
+  is_suspicious: Annotation<boolean>(),
+  suspicious_reason: Annotation<string | undefined>(),
   confidence: Annotation<number | undefined>(),
 });
 

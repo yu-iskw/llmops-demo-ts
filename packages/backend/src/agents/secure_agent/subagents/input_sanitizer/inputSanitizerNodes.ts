@@ -65,27 +65,17 @@ export const checkInput = async (
 
     return {
       sanitized_message: isSuspicious ? "" : state.user_message,
-      isSuspicious: isSuspicious,
+      is_suspicious: isSuspicious,
       reason: reason,
       confidence: confidence,
-      messages: [
-        ...(state.messages || []),
-        new HumanMessage(state.user_message),
-        new AIMessage(result.text || ""),
-      ],
+      messages: state.messages, // Do not add sanitizer's internal JSON to messages
     };
   } catch (error) {
     logger.error("Error checking input:", error);
     return {
       sanitized_message: "",
-      isSuspicious: true,
-      messages: [
-        ...(state.messages || []),
-        new HumanMessage(state.user_message),
-        new AIMessage(
-          "I apologize, but I encountered an error while sanitizing your request. It will be treated as suspicious.",
-        ),
-      ],
+      is_suspicious: true,
+      messages: state.messages, // Keep original messages
       reason: "Error during sanitization",
       confidence: 0,
     };
