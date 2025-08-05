@@ -12,10 +12,13 @@ The agent's core workflow is managed by a [LangGraph](https://langchain-ai.githu
 - `messages`: A history of `BaseMessage` objects, including `HumanMessage` and `AIMessage`, forming the conversation context.
 - `sanitized_message`: The user message after it has been processed by the input sanitizer.
 - `is_suspicious`: A boolean flag indicating whether the user's input was classified as suspicious.
+- `suspicious_reason`: A string providing the reason for classifying the input as suspicious.
+- `confidence`: A number representing the confidence score (0-1) of the input sanitization classification.
 - `ai_response`: The final synthesized answer provided by the agent.
 - `is_sensitive`: A boolean flag indicating whether the agent's output contains sensitive information.
 - `feedback_message`: A message used to provide feedback to the `request_answerer` sub-agent for refinement if the output is deemed sensitive.
 - `messageWindowSize`: The number of past messages to include in the conversation context for the language model.
+- `next_step`: A string indicating the next step or node to transition to within the agent's workflow (used internally for conditional routing).
 
 ### Workflow
 

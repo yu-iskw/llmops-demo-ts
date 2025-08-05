@@ -7,6 +7,7 @@ export const InputSanitizerStateAnnotation = Annotation.Root({
   is_suspicious: Annotation<boolean>(),
   suspicious_reason: Annotation<string | undefined>(),
   confidence: Annotation<number | undefined>(),
+  feedback_message: Annotation<string | undefined>(),
 });
 
 export type InputSanitizerState = typeof InputSanitizerStateAnnotation.State;
