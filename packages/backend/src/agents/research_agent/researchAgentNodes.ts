@@ -1,4 +1,4 @@
-import { SearchAgentState } from "./state";
+import { SearchAgentState } from "./researchAgentState";
 import {
   GoogleGenAI,
   FunctionDeclaration,

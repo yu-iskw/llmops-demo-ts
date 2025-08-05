@@ -3,7 +3,7 @@ import {
   FunctionMessage,
   BaseMessage,
 } from "@langchain/core/messages";
-import { DefaultAgentStateAnnotation } from "./state";
+import { DefaultAgentStateAnnotation } from "./defaultAgentState";
 import {
   GoogleGenAI,
   FunctionCall,
@@ -11,8 +11,8 @@ import {
   Content,
 } from "@google/genai";
 import {
-  getCurrentTime,
   getCurrentTimeToolDeclaration,
+  executeToolCalls,
 } from "../tools/getCurrentTime";
 import logger from "../../utils/logger";
 
@@ -54,6 +54,9 @@ export const callModel = async (
       { role: "user", parts: [{ text: state.user_message }] },
     ];
 
+    logger.info("Sending request to model with tools:", [{ functionDeclarations: [getCurrentTimeToolDeclaration] }]);
+    logger.info("Tool declaration:", getCurrentTimeToolDeclaration);
+
     const result = await genAI.models.generateContent({
       model: modelName,
       contents,
@@ -64,6 +67,9 @@ export const callModel = async (
         },
       },
     } as any); // Cast to any temporarily to bypass type error, will investigate further if this works
+
+    logger.info("Model response:", result);
+    logger.info("Function calls:", result.functionCalls);
 
     if (result.functionCalls && result.functionCalls.length > 0) {
       logger.info("Model returned function calls:", result.functionCalls);
@@ -87,28 +93,7 @@ export const callTool = async (
   state: typeof DefaultAgentStateAnnotation.State,
 ) => {
   const toolCalls = state.function_calls || [];
-  const toolOutputs = [];
-
-  for (const toolCall of toolCalls) {
-    if (toolCall.name === getCurrentTimeToolDeclaration.name) {
-      logger.info(`Calling tool: ${toolCall.name} with args:`, toolCall.args);
-      const output = getCurrentTime();
-      toolOutputs.push(
-        new FunctionMessage({
-          content: output,
-          name: toolCall.name || "",
-        }),
-      );
-    } else {
-      logger.warn(`Tool not found: ${toolCall.name}`);
-      toolOutputs.push(
-        new FunctionMessage({
-          content: `Tool not found: ${toolCall.name}`,
-          name: toolCall.name || "",
-        }),
-      );
-    }
-  }
+  const toolOutputs = executeToolCalls(toolCalls);
 
   return {
     messages: toolOutputs,

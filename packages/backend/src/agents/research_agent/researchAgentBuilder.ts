@@ -1,6 +1,6 @@
 import { StateGraph, END, START } from "@langchain/langgraph";
-import { planQueries, executeSearches, synthesizeResults } from "./nodes";
-import { SearchAgentStateAnnotation } from "./state";
+import { planQueries, executeSearches, synthesizeResults } from "./researchAgentNodes";
+import { SearchAgentStateAnnotation } from "./researchAgentState";
 import { GoogleGenAI, Tool } from "@google/genai";
 
 export function createSearchAgentGraphBuilder(

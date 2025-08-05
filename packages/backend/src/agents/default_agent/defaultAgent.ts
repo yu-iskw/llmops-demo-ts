@@ -2,8 +2,8 @@ import { BaseMessage, HumanMessage, AIMessage } from "@langchain/core/messages";
 import { GoogleGenAI } from "@google/genai";
 import { CompiledStateGraph } from "@langchain/langgraph";
 import { BaseAgent } from "../baseAgent";
-import { CreateDefaultAgentGraphBuilder } from "./agent";
-import { DefaultAgentState } from "./state";
+import { CreateDefaultAgentGraphBuilder } from "./defaultAgentBuilder";
+import { DefaultAgentState } from "./defaultAgentState";
 
 export class DefaultAgent extends BaseAgent {
   constructor() {

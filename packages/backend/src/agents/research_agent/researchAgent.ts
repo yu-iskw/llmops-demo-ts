@@ -2,8 +2,8 @@ import { BaseMessage } from "@langchain/core/messages";
 import { GoogleGenAI } from "@google/genai";
 import { CompiledStateGraph } from "@langchain/langgraph";
 import { BaseAgent } from "../baseAgent";
-import { createSearchAgentGraphBuilder } from "./agent";
-import { SearchAgentState } from "./state";
+import { createSearchAgentGraphBuilder } from "./researchAgentBuilder";
+import { SearchAgentState } from "./researchAgentState";
 
 export class ResearchAgent extends BaseAgent {
   constructor() {
