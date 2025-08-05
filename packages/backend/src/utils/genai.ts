@@ -1,4 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
+import { traceable } from "langsmith/traceable";
+import logger from "./logger";
 
 export interface GenAIConfig {
   apiKey?: string;
@@ -8,41 +10,53 @@ export interface GenAIConfig {
 }
 
 export function createGenAIClient(config: GenAIConfig = {}): GoogleGenAI {
-  // 1. Start with environment variables as the base
-  const envConfig: GenAIConfig = {
-    apiKey: process.env.GOOGLE_API_KEY,
-    project: process.env.GOOGLE_CLOUD_PROJECT,
-    location: process.env.GOOGLE_CLOUD_LOCATION,
-  };
+  const finalApiKey = config.apiKey || process.env.GOOGLE_API_KEY;
+  const finalProject = config.project || process.env.GOOGLE_CLOUD_PROJECT;
+  const finalLocation = config.location || process.env.GOOGLE_CLOUD_LOCATION;
+  const finalUseVertexAI =
+    config.vertexai !== undefined
+      ? config.vertexai // Use boolean from config if provided
+      : process.env.GOOGLE_GENAI_USE_VERTEXAI === "true"; // Otherwise, parse from env var
 
-  // 2. Filter out empty/null values from the overriding config (CLI options)
-  // so they don't incorrectly override set environment variables.
-  const overrideConfig = Object.fromEntries(
-    Object.entries(config).filter(
-      ([, v]) => v !== null && v !== undefined && v !== "",
-    ),
+  const useVertexAI = finalUseVertexAI && !!finalProject && !!finalLocation;
+
+  logger.debug("--- createGenAIClient debug ---");
+  logger.debug("config.project:", config.project);
+  logger.debug("config.location:", config.location);
+  logger.debug(
+    "process.env.GOOGLE_CLOUD_PROJECT:",
+    process.env.GOOGLE_CLOUD_PROJECT,
+  );
+  logger.debug(
+    "process.env.GOOGLE_CLOUD_LOCATION:",
+    process.env.GOOGLE_CLOUD_LOCATION,
+  );
+  logger.debug("finalProject:", finalProject);
+  logger.debug("finalLocation:", finalLocation);
+  logger.debug("finalUseVertexAI:", finalUseVertexAI);
+  logger.debug("useVertexAI:", useVertexAI);
+  logger.debug("--- end createGenAIClient debug ---");
+
+  const genAI = new GoogleGenAI({
+    apiKey: useVertexAI ? undefined : finalApiKey,
+    vertexai: useVertexAI,
+    project: finalProject,
+    location: finalLocation,
+  });
+
+  // Wrap the generateContent method for tracing
+  genAI.models.generateContent = traceable(
+    genAI.models.generateContent.bind(genAI.models),
+    {
+      run_type: "llm",
+    },
   );
 
-  // 3. Merge the cleaned override config onto the environment config
-  const mergedConfig = {
-    ...envConfig,
-    ...overrideConfig,
-  };
-
-  // 4. Determine if we should use Vertex AI.
-  // If a project is specified (either from env or CLI), we assume Vertex AI.
-  if (mergedConfig.project) {
-    mergedConfig.vertexai = true;
-  }
-
-  // 5. Final cleanup of properties before passing to the constructor.
-  const finalConfig = Object.fromEntries(
-    Object.entries(mergedConfig).filter(
-      ([, v]) => v !== null && v !== undefined && v !== "",
-    ),
-  );
-
-  return new GoogleGenAI(finalConfig);
+  return genAI;
 }
 
-export const genAI = createGenAIClient();
+export let genAI: GoogleGenAI;
+
+export function initializeGenAIClient() {
+  genAI = createGenAIClient();
+}

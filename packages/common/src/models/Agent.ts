@@ -3,8 +3,3 @@ export interface Agent {
   name: string;
   description?: string;
 }
-
-export interface AgentType {
-  name: string;
-  description: string;
-}

@@ -9,10 +9,3 @@ export interface ChatSession {
   createdAt: Date;
   updatedAt: Date;
 }
-
-export interface ChatRequest {
-  message: string;
-  history?: ChatMessage[];
-  agentType?: "default" | "research";
-  modelName?: string;
-}

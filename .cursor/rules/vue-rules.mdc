@@ -25,7 +25,7 @@ You are an expert in JavaScript, TypeScript, and the Vue.js framework for scalab
 
 For larger and more complex Vue.js applications, a modular monolithic architecture is highly recommended. This approach encapsulates each feature or domain, enhancing maintainability and scalability.
 
-```
+```bash
 src/
 ├── app.ts                 # Main application setup (Express, middleware, error handlers)
 ├── main.ts                # Main entry point for Vue application
@@ -65,35 +65,36 @@ src/
 
 **Explanation of Directories:**
 
-*   `src/`: The root directory for all source code.
-    *   `main.ts`: The main entry point of your Vue application.
-    *   `router.ts`: Where your Vue Router instance and global routes are defined.
-    *   `store.ts`: Where your global Pinia or Vuex store is initialized.
-    *   `assets/`: Contains static assets like images, fonts, and global stylesheets.
-    *   `core/`: Houses components, services, models, and utilities that are common and shared across the entire application.
-        *   `components/`: For "Base" or "common" UI components that apply app-specific styling and conventions, often prefixed with `Base` (e.g., `BaseButton.vue`).
-        *   `models/`: TypeScript interfaces/classes for global entities used throughout the application.
-        *   `store/`: Global or shared Pinia/Vuex modules.
-        *   `services/`: TypeScript classes or simple JS object exports for common business logic.
-        *   `views/`: Used to store common layout components (e.g., `DefaultLayout.vue`).
-        *   `utils/`: Contains general utility functions and helper modules.
-    *   `modules/`: Contains separate, self-contained feature modules. Each module should encapsulate its own components, models, store, services, and routes. This promotes loose coupling and independent development.
-        *   `components/`: Components that belong specifically to the module.
-        *   `models/`: TypeScript interfaces/classes mapping entities specific to the module.
-        *   `store/`: Pinia/Vuex store modules specific to the feature.
-        *   `services/`: Business logic services specific to the module.
-        *   `views/`: Routed components (pages) specific to the module.
-        *   `routes.ts`: Route definitions for the module.
-    *   `plugins/`: For Vue plugins that extend Vue's functionality.
-    *   `types/`: For custom global type definitions.
-    *   `tests/`: Contains unit and integration tests.
-    *   `scss/`: For global SCSS files.
+- `src/`: The root directory for all source code.
+  - `main.ts`: The main entry point of your Vue application.
+  - `router.ts`: Where your Vue Router instance and global routes are defined.
+  - `store.ts`: Where your global Pinia or Vuex store is initialized.
+  - `assets/`: Contains static assets like images, fonts, and global stylesheets.
+  - `core/`: Houses components, services, models, and utilities that are common and shared across the entire application.
+    - `components/`: For "Base" or "common" UI components that apply app-specific styling and conventions, often prefixed with `Base` (e.g., `BaseButton.vue`).
+    - `models/`: TypeScript interfaces/classes for global entities used throughout the application.
+    - `store/`: Global or shared Pinia/Vuex modules.
+    - `services/`: TypeScript classes or simple JS object exports for common business logic.
+    - `views/`: Used to store common layout components (e.g., `DefaultLayout.vue`).
+    - `utils/`: Contains general utility functions and helper modules.
+  - `modules/`: Contains separate, self-contained feature modules. Each module should encapsulate its own components, models, store, services, and routes. This promotes loose coupling and independent development.
+    - `components/`: Components that belong specifically to the module.
+    - `models/`: TypeScript interfaces/classes mapping entities specific to the module.
+    - `store/`: Pinia/Vuex store modules specific to the feature.
+    - `services/`: Business logic services specific to the module.
+    - `views/`: Routed components (pages) specific to the module.
+    - `routes.ts`: Route definitions for the module.
+  - `plugins/`: For Vue plugins that extend Vue's functionality.
+  - `types/`: For custom global type definitions.
+  - `tests/`: Contains unit and integration tests.
+  - `scss/`: For global SCSS files.
 
 **Conventions for file naming within modules:**
-*   **Components**: PascalCase (e.g., `MyComponent.vue`). Multi-word names are preferred to prevent conflicts with HTML elements (e.g., `TodoItem.vue`).
-*   **Services**: `<Name>.service.ts` (e.g., `UserService.service.ts`).
-*   **Models**: `<Name>.model.ts` (e.g., `UserModel.model.ts`).
-*   **Store (Pinia/Vuex)**: `<Name>.store.ts` (e.g., `UserStore.store.ts`).
+
+- **Components**: PascalCase (e.g., `MyComponent.vue`). Multi-word names are preferred to prevent conflicts with HTML elements (e.g., `TodoItem.vue`).
+- **Services**: `<Name>.service.ts` (e.g., `UserService.service.ts`).
+- **Models**: `<Name>.model.ts` (e.g., `UserModel.model.ts`).
+- **Store (Pinia/Vuex)**: `<Name>.store.ts` (e.g., `UserStore.store.ts`).
 
 By adopting this modular structure, you can manage complexity in large applications, improve maintainability, and facilitate team collaboration.
 

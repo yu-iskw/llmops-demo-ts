@@ -20,6 +20,7 @@ lint:
     - checkov
     - trufflehog
   enabled:
+    - semgrep@1.131.0
     - sort-package-json@3.4.0
     - actionlint@1.7.7
     - pre-commit-hooks@5.0.0

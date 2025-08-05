@@ -4,7 +4,7 @@
 import type { TsoaRoute } from "@tsoa/runtime";
 import { fetchMiddlewares, ExpressTemplateService } from "@tsoa/runtime";
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { ChatController } from "./../../controllers/chat.controller";
+import { ChatController } from "./../../controllers/chatController";
 import type {
   Request as ExRequest,
   Response as ExResponse,
@@ -44,9 +44,11 @@ const models: TsoaRoute.Models = {
         subSchemas: [
           { dataType: "enum", enums: ["default"] },
           { dataType: "enum", enums: ["research"] },
+          { dataType: "enum", enums: ["secure"] },
         ],
       },
       modelName: { dataType: "string" },
+      sessionId: { dataType: "string" },
     },
     additionalProperties: false,
   },
@@ -54,7 +56,15 @@ const models: TsoaRoute.Models = {
   AgentType: {
     dataType: "refObject",
     properties: {
-      name: { dataType: "string", required: true },
+      name: {
+        dataType: "union",
+        subSchemas: [
+          { dataType: "enum", enums: ["default"] },
+          { dataType: "enum", enums: ["research"] },
+          { dataType: "enum", enums: ["secure"] },
+        ],
+        required: true,
+      },
       description: { dataType: "string", required: true },
     },
     additionalProperties: false,
