@@ -20,23 +20,23 @@ The agent's core workflow is managed by a [LangGraph](https://langchain-ai.githu
 ### Workflow
 
 1. **`input_sanitizer` Node**:
-    - Receives the current state, particularly `user_message` and `messages`.
-    - Invokes the Input Sanitizer sub-agent to classify the user's input.
-    - Updates the state with `sanitized_message` (empty if suspicious) and `is_suspicious`.
-    - **Conditional Transition**: If `is_suspicious` is true, the graph ends, and an error message is returned. Otherwise, the flow proceeds to `request_answerer`.
+   - Receives the current state, particularly `user_message` and `messages`.
+   - Invokes the Input Sanitizer sub-agent to classify the user's input.
+   - Updates the state with `sanitized_message` (empty if suspicious) and `is_suspicious`.
+   - **Conditional Transition**: If `is_suspicious` is true, the graph ends, and an error message is returned. Otherwise, the flow proceeds to `request_answerer`.
 
 2. **`request_answerer` Node**:
-    - Receives the current state, including `sanitized_message` (or original `user_message` if not sanitized) and `messages`.
-    - If a `feedback_message` is present (from a previous `output_sanitizer` loop), it appends this feedback to the `user_message` to guide the model's refinement.
-    - Invokes the Request Answerer sub-agent to generate a response based on the (sanitized) user's request.
-    - Updates the state with `ai_response` and the updated `messages` history. It also clears any `feedback_message`.
-    - **Direct Transition**: Proceeds to `output_sanitizer`.
+   - Receives the current state, including `sanitized_message` (or original `user_message` if not sanitized) and `messages`.
+   - If a `feedback_message` is present (from a previous `output_sanitizer` loop), it appends this feedback to the `user_message` to guide the model's refinement.
+   - Invokes the Request Answerer sub-agent to generate a response based on the (sanitized) user's request.
+   - Updates the state with `ai_response` and the updated `messages` history. It also clears any `feedback_message`.
+   - **Direct Transition**: Proceeds to `output_sanitizer`.
 
 3. **`output_sanitizer` Node**:
-    - Receives the current state, including `ai_response` and `messages`.
-    - Invokes the Output Sanitizer sub-agent to check if the generated `ai_response` contains sensitive information.
-    - Updates the state with `is_sensitive` and `feedback_message` (if the output is sensitive).
-    - **Conditional Transition**: If `is_sensitive` is true, the graph loops back to `request_answerer` for refinement (using the `feedback_message`). Otherwise, the graph ends, and the `ai_response` is returned.
+   - Receives the current state, including `ai_response` and `messages`.
+   - Invokes the Output Sanitizer sub-agent to check if the generated `ai_response` contains sensitive information.
+   - Updates the state with `is_sensitive` and `feedback_message` (if the output is sensitive).
+   - **Conditional Transition**: If `is_sensitive` is true, the graph loops back to `request_answerer` for refinement (using the `feedback_message`). Otherwise, the graph ends, and the `ai_response` is returned.
 
 This workflow ensures that all inputs are checked for potential threats before processing, and all outputs are reviewed for sensitive content before being delivered to the user, potentially leading to refinement loops if sensitive information is detected.
 

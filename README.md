@@ -115,25 +115,25 @@ Follow these steps to get the application up and running on your local machine.
 
 1. **Clone the repository:**
 
-    ```bash
-    git clone https://github.com/your-repo/llmops-demo-ts.git
-    cd llmops-demo-ts
-    ```
+   ```bash
+   git clone https://github.com/your-repo/llmops-demo-ts.git
+   cd llmops-demo-ts
+   ```
 
 2. **Install dependencies:**
 
-    ```bash
-    pnpm install
-    ```
+   ```bash
+   pnpm install
+   ```
 
 3. **Set up environment variables:**
-    Copy the example environment file and update it with your configuration.
+   Copy the example environment file and update it with your configuration.
 
-    ```bash
-    cp .template.env .env
-    ```
+   ```bash
+   cp .template.env .env
+   ```
 
-    Edit the `.env` file to add your Google API Key, Vertex AI project details, and/or LangSmith API key.
+   Edit the `.env` file to add your Google API Key, Vertex AI project details, and/or LangSmith API key.
 
 ### Running the Application
 
@@ -141,23 +141,23 @@ To run both the frontend and backend concurrently, you can use `pnpm dev` in the
 
 1. **Start the Backend:**
 
-    ```bash
-    cd packages/backend
-    pnpm dev
-    ```
+   ```bash
+   cd packages/backend
+   pnpm dev
+   ```
 
-    The backend server will start on `http://localhost:3000`.
+   The backend server will start on `http://localhost:3000`.
 
 2. **Start the Frontend:**
 
-    ```bash
-    cd packages/frontend
-    pnpm dev
-    ```
+   ```bash
+   cd packages/frontend
+   pnpm dev
+   ```
 
-    The frontend development server will start on `http://localhost:4200`.
+   The frontend development server will start on `http://localhost:4200`.
 
-    Open your browser and navigate to `http://localhost:4200` to access the chat application.
+   Open your browser and navigate to `http://localhost:4200` to access the chat application.
 
 ## Running Tests
 
