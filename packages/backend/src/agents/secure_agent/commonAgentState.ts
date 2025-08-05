@@ -4,7 +4,6 @@ export const CommonAgentStateAnnotation = Annotation.Root({
   user_message: Annotation<string>(),
   ...MessagesAnnotation.spec,
   ai_response: Annotation<string | undefined>(),
-  feedback_message: Annotation<string | undefined>(),
   messageWindowSize: Annotation<number>(),
 });
 
