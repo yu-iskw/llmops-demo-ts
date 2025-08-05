@@ -6,6 +6,7 @@ import { RequestAnswererStateAnnotation } from "./subagents/request_answerer/req
 
 const SecureAgentSpecificAnnotations = {
   next_step: Annotation<string | undefined>(),
+  feedback_message: Annotation<string | undefined>(),
 };
 
 export const SecureAgentStateAnnotation = Annotation.Root({
