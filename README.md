@@ -1,6 +1,6 @@
 # AI Chat Web Application
 
-A modern AI chat application built with Vue.js frontend and Node.js backend, powered by Google Gemini AI.
+A modern AI chat application built with Vue.js frontend and Node.js backend, powered by Google Gemini AI to demonstrate LLMOps.
 
 ## Features
 
@@ -138,6 +138,8 @@ Follow these steps to get the application up and running on your local machine.
 ### Running the Application
 
 To run both the frontend and backend concurrently, you can use `pnpm dev` in the root directory. Alternatively, you can run them separately.
+
+![UI example](./docs/images/ui_example.png)
 
 1. **Start the Backend:**
 
