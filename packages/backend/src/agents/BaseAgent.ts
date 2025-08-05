@@ -4,6 +4,7 @@ import { CompiledStateGraph } from "@langchain/langgraph";
 import { GenAIConfig, createGenAIClient } from "../utils/genai";
 import { IAgent } from "./IAgent";
 import { traceable } from "langsmith/traceable";
+import logger from "../utils/logger";
 
 export abstract class BaseAgent implements IAgent {
   protected defaultModelName: string;
@@ -53,11 +54,11 @@ export abstract class BaseAgent implements IAgent {
       const compiledGraph = this.createGraph(genAI, finalModelName);
       const initialState = this.createInitialState(message, history);
 
-      console.log(
+      logger.info(
         `[${this.getType()}] Processing message with model:`,
         finalModelName,
       );
-      console.log(`[${this.getType()}] Initial state:`, initialState);
+      logger.info(`[${this.getType()}] Initial state:`, initialState);
 
       const stream = await traceable(
         async () => {
@@ -75,7 +76,7 @@ export abstract class BaseAgent implements IAgent {
       let finalResponse = "";
 
       for await (const streamState of stream) {
-        console.log(`[${this.getType()}] Stream state:`, streamState);
+        logger.info(`[${this.getType()}] Stream state:`, streamState);
 
         const response = this.extractResponse(streamState);
         if (response) {
@@ -84,16 +85,16 @@ export abstract class BaseAgent implements IAgent {
       }
 
       if (!finalResponse) {
-        console.warn(
+        logger.warn(
           `[${this.getType()}] No response generated, returning default message`,
         );
         return "I'm sorry, I couldn't generate a response. Please try again.";
       }
 
-      console.log(`[${this.getType()}] Final response:`, finalResponse);
+      logger.info(`[${this.getType()}] Final response:`, finalResponse);
       return finalResponse;
     } catch (error) {
-      console.error(`[${this.getType()}] Error processing message:`, error);
+      logger.error(`[${this.getType()}] Error processing message:`, error);
       return "Sorry, I encountered an error. Please try again.";
     }
   }

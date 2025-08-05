@@ -30,13 +30,15 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "langsmith": "^0.3.50"
+    "langsmith": "^0.3.50",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.3",
     "@types/jest": "^29.0.0",
     "@types/node": "^20.0.0",
+    "@types/winston": "^2.4.4",
     "jest": "^29.0.0",
     "ts-jest": "^29.0.0",
     "tsoa": "^6.0.0",

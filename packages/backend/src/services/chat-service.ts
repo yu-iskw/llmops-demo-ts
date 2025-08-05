@@ -2,6 +2,7 @@ import { HumanMessage, AIMessage, BaseMessage } from "@langchain/core/messages";
 import { GenAIConfig } from "../utils/genai";
 import { AgentFactory, AgentType } from "../agents/AgentFactory";
 import { traceable } from "langsmith/traceable";
+import logger from "../utils/logger";
 
 // Simple LangGraph-inspired implementation
 export class ChatService {
@@ -14,11 +15,11 @@ export class ChatService {
       modelName: string = "gemini-2.5-flash",
       sessionId?: string, // Add sessionId parameter
     ): Promise<string> => {
-      console.log("Processing message:", message);
-      console.log("History length:", history.length);
-      console.log("Agent type:", agentType);
-      console.log("Model name:", modelName);
-      console.log("Session ID:", sessionId); // Log session ID
+      logger.info("Processing message:", message);
+      logger.info("History length:", history.length);
+      logger.info("Agent type:", agentType);
+      logger.info("Model name:", modelName);
+      logger.info("Session ID:", sessionId); // Log session ID
 
       // Convert history to proper message format
       const initialMessages: BaseMessage[] = history.map((msg: any) => {

@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { traceable } from "langsmith/traceable";
+import logger from "./logger";
 
 export interface GenAIConfig {
   apiKey?: string;
@@ -19,22 +20,22 @@ export function createGenAIClient(config: GenAIConfig = {}): GoogleGenAI {
 
   const useVertexAI = finalUseVertexAI && !!finalProject && !!finalLocation;
 
-  console.log("--- createGenAIClient debug ---");
-  console.log("config.project:", config.project);
-  console.log("config.location:", config.location);
-  console.log(
+  logger.debug("--- createGenAIClient debug ---");
+  logger.debug("config.project:", config.project);
+  logger.debug("config.location:", config.location);
+  logger.debug(
     "process.env.GOOGLE_CLOUD_PROJECT:",
     process.env.GOOGLE_CLOUD_PROJECT,
   );
-  console.log(
+  logger.debug(
     "process.env.GOOGLE_CLOUD_LOCATION:",
     process.env.GOOGLE_CLOUD_LOCATION,
   );
-  console.log("finalProject:", finalProject);
-  console.log("finalLocation:", finalLocation);
-  console.log("finalUseVertexAI:", finalUseVertexAI);
-  console.log("useVertexAI:", useVertexAI);
-  console.log("--- end createGenAIClient debug ---");
+  logger.debug("finalProject:", finalProject);
+  logger.debug("finalLocation:", finalLocation);
+  logger.debug("finalUseVertexAI:", finalUseVertexAI);
+  logger.debug("useVertexAI:", useVertexAI);
+  logger.debug("--- end createGenAIClient debug ---");
 
   const genAI = new GoogleGenAI({
     apiKey: useVertexAI ? undefined : finalApiKey,
