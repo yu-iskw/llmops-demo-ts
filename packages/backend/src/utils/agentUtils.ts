@@ -59,3 +59,25 @@ export function createConversationContents(
 
   return contents;
 }
+
+/**
+ * Safely extracts string content from a message's content field.
+ * Handles string, array of parts (multimodal), or undefined content.
+ * Returns an empty string if no valid text content is found.
+ *
+ * @param content - The content field from a BaseMessage or similar structure.
+ * @returns The extracted string content, or an empty string if none is found.
+ */
+export function extractStringContent(content: any): string {
+  if (typeof content === "string") {
+    return content;
+  } else if (Array.isArray(content)) {
+    const textParts = content.filter(
+      (part: any): part is { text: string } => typeof part === "object" && part !== null && "text" in part && typeof part.text === "string",
+    );
+    if (textParts.length > 0) {
+      return textParts.map((part) => part.text).join(" ");
+    }
+  }
+  return "";
+}

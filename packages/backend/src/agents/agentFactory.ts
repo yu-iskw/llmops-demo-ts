@@ -1,9 +1,11 @@
 // Import IAgent from baseAgent where it's defined
-import { IAgent } from "./baseAgent";
+import { BaseAgent, IAgent } from "./baseAgent";
 import { DefaultAgent } from "./default_agent/defaultAgent";
 import { ResearchAgent } from "./research_agent/researchAgent";
+import { SecureAgent } from "./secure_agent/secureAgent";
+import logger from "@utils/logger";
 
-export type AgentType = "default" | "research";
+export type AgentType = "default" | "research" | "secure";
 
 export interface AgentConfig {
   messageWindowSize?: number;
@@ -51,17 +53,20 @@ export class AgentFactory {
   /**
    * Creates a new agent instance based on type
    */
-  private static createAgent(
+  public static createAgent(
     agentType: AgentType,
     config?: AgentConfig,
   ): IAgent {
     switch (agentType) {
-      case "default":
-        return new DefaultAgent(config?.messageWindowSize);
       case "research":
         return new ResearchAgent();
+      case "default":
+        return new DefaultAgent(config?.messageWindowSize);
+      case "secure":
+        return new SecureAgent(config?.messageWindowSize);
       default:
-        throw new Error(`Unknown agent type: ${agentType}`);
+        logger.warn(`Unknown agent type: ${agentType}. Falling back to default.`);
+        return new DefaultAgent();
     }
   }
 
