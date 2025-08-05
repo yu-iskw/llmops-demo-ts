@@ -4,17 +4,30 @@ import { ResearchAgent } from "./research_agent/researchAgent";
 
 export type AgentType = "default" | "research";
 
+export interface AgentConfig {
+  messageWindowSize?: number;
+}
+
 export class AgentFactory {
   private static agents: Map<AgentType, IAgent> = new Map();
+  private static agentConfigs: Map<AgentType, AgentConfig> = new Map();
 
   /**
    * Gets an agent instance by type. Creates one if it doesn't exist.
    */
-  public static getAgent(agentType: AgentType): IAgent {
-    if (!this.agents.has(agentType)) {
-      this.agents.set(agentType, this.createAgent(agentType));
+  public static getAgent(agentType: AgentType, config?: AgentConfig): IAgent {
+    const cacheKey = agentType;
+
+    // If config is provided, always create a new instance
+    if (config) {
+      return this.createAgent(agentType, config);
     }
-    return this.agents.get(agentType)!;
+
+    // Otherwise, use cached instance if available
+    if (!this.agents.has(cacheKey)) {
+      this.agents.set(cacheKey, this.createAgent(agentType));
+    }
+    return this.agents.get(cacheKey)!;
   }
 
   /**
@@ -37,10 +50,10 @@ export class AgentFactory {
   /**
    * Creates a new agent instance based on type
    */
-  private static createAgent(agentType: AgentType): IAgent {
+  private static createAgent(agentType: AgentType, config?: AgentConfig): IAgent {
     switch (agentType) {
       case "default":
-        return new DefaultAgent();
+        return new DefaultAgent(config?.messageWindowSize);
       case "research":
         return new ResearchAgent();
       default:

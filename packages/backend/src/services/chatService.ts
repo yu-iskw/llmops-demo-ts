@@ -1,6 +1,6 @@
 import { HumanMessage, AIMessage, BaseMessage } from "@langchain/core/messages";
 import { GenAIConfig } from "../utils/genai";
-import { AgentFactory, AgentType } from "../agents/agentFactory";
+import { AgentFactory, AgentType, AgentConfig } from "../agents/agentFactory";
 import { traceable } from "langsmith/traceable";
 import logger from "../utils/logger";
 
@@ -13,13 +13,15 @@ export class ChatService {
       agentType: AgentType = "default",
       config?: GenAIConfig,
       modelName: string = "gemini-2.5-flash",
-      sessionId?: string, // Add sessionId parameter
+      sessionId?: string,
+      agentConfig?: AgentConfig,
     ): Promise<string> => {
       logger.info("Processing message:", message);
       logger.info("History length:", history.length);
       logger.info("Agent type:", agentType);
       logger.info("Model name:", modelName);
-      logger.info("Session ID:", sessionId); // Log session ID
+      logger.info("Session ID:", sessionId);
+      logger.info("Agent config:", agentConfig);
 
       // Convert history to proper message format
       const initialMessages: BaseMessage[] = history.map((msg: any) => {
@@ -31,7 +33,7 @@ export class ChatService {
       });
 
       // Get the agent and delegate message processing
-      const agent = AgentFactory.getAgent(agentType);
+      const agent = AgentFactory.getAgent(agentType, agentConfig);
       return await agent.processMessage(
         message,
         initialMessages,

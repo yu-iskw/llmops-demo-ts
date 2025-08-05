@@ -6,8 +6,11 @@ import { CreateDefaultAgentGraphBuilder } from "./defaultAgentBuilder";
 import { DefaultAgentState } from "./defaultAgentState";
 
 export class DefaultAgent extends BaseAgent {
-  constructor() {
+  private messageWindowSize: number;
+
+  constructor(messageWindowSize: number = 3) {
     super("gemini-2.5-flash");
+    this.messageWindowSize = messageWindowSize;
   }
 
   getType(): string {
@@ -33,6 +36,7 @@ export class DefaultAgent extends BaseAgent {
       user_message: message,
       messages: history,
       function_calls: [],
+      messageWindowSize: this.messageWindowSize,
     };
   }
 
@@ -41,7 +45,7 @@ export class DefaultAgent extends BaseAgent {
       // Iterate backwards to find the last AI message
       for (let i = streamState.messages.length - 1; i >= 0; i--) {
         const message = streamState.messages[i];
-        if (message._getType() === "ai") {
+        if (message.getType() === "ai") {
           return message.content as string;
         }
       }

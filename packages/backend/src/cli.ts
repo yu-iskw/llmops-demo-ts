@@ -33,13 +33,15 @@ program
       options: { model: string; project: string; location: string },
     ) => {
       console.log(`Sending message to Default Agent: \"${message}\"`);
-      const { project, location, model } = options; // Destructure model
+      const { project, location, model } = options;
+
       const response = await chatService.processMessage(
         message,
         [],
         "default",
         { project, location },
-        model, // Pass model
+        model,
+        undefined, // sessionId
       );
       console.log("Default Agent Response:", response);
     },
