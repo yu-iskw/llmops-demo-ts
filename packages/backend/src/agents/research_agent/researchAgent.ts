@@ -1,7 +1,7 @@
 import { BaseMessage } from "@langchain/core/messages";
 import { GoogleGenAI } from "@google/genai";
 import { CompiledStateGraph } from "@langchain/langgraph";
-import { BaseAgent } from "../BaseAgent";
+import { BaseAgent } from "../baseAgent";
 import { createSearchAgentGraphBuilder } from "./agent";
 import { SearchAgentState } from "./state";
 

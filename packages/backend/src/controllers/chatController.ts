@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Route, Get, SuccessResponse } from "tsoa";
-import { ChatService } from "../services/chat-service";
+import { ChatService } from "../services/chatService";
 import { ChatRequest, ChatMessage, AgentType } from "@llmops-demo/common";
-import { AgentFactory } from "../agents/AgentFactory";
+import { AgentFactory } from "../agents/agentFactory";
 
 @Route("chat")
 export class ChatController extends Controller {

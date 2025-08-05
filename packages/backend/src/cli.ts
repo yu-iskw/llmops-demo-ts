@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { ChatService } from "./services/chat-service";
+import { ChatService } from "./services/chatService";
 import dotenv from "dotenv";
 import { getPackageRootPath } from "./utils/utils";
 import path from "path";

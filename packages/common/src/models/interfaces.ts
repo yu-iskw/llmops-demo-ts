@@ -1,3 +1,5 @@
+import { ChatMessage } from "./Chat";
+
 export interface ChatRequest {
   message: string;
   history?: ChatMessage[];

@@ -1,6 +1,6 @@
 import { HumanMessage, AIMessage, BaseMessage } from "@langchain/core/messages";
 import { GenAIConfig } from "../utils/genai";
-import { AgentFactory, AgentType } from "../agents/AgentFactory";
+import { AgentFactory, AgentType } from "../agents/agentFactory";
 import { traceable } from "langsmith/traceable";
 import logger from "../utils/logger";
 

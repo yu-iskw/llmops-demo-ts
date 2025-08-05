@@ -2,7 +2,7 @@ import { BaseMessage } from "@langchain/core/messages";
 import { GoogleGenAI } from "@google/genai";
 import { CompiledStateGraph } from "@langchain/langgraph";
 import { GenAIConfig, createGenAIClient } from "../utils/genai";
-import { IAgent } from "./IAgent";
+import { IAgent } from "./iAgent";
 import { traceable } from "langsmith/traceable";
 import logger from "../utils/logger";
 

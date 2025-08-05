@@ -1,6 +1,6 @@
-import { IAgent } from "./IAgent";
-import { DefaultAgent } from "./default_agent/DefaultAgent";
-import { ResearchAgent } from "./research_agent/ResearchAgent";
+import { IAgent } from "./iAgent";
+import { DefaultAgent } from "./default_agent/defaultAgent";
+import { ResearchAgent } from "./research_agent/researchAgent";
 
 export type AgentType = "default" | "research";
 

@@ -13,7 +13,7 @@ import {
 import {
   getCurrentTime,
   getCurrentTimeToolDeclaration,
-} from "../tools/get_current_time";
+} from "../tools/getCurrentTime";
 import logger from "../../utils/logger";
 
 // Define the function that calls the model
