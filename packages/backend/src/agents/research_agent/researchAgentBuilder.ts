@@ -1,7 +1,7 @@
 import { StateGraph, END, START } from "@langchain/langgraph";
 import { planQueries, executeSearches, synthesizeResults } from "./researchAgentNodes";
 import { SearchAgentStateAnnotation } from "./researchAgentState";
-import { GoogleGenAI, Tool } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 
 export function createSearchAgentGraphBuilder(
   genAI: GoogleGenAI,
@@ -20,14 +20,36 @@ export function createSearchAgentGraphBuilder(
     synthesizeResults(state, genAI, modelName),
   );
 
-  // Define the graph flow
+  // Define a router function to decide the next step after planning queries
+  const shouldExecuteSearches = (state: typeof SearchAgentStateAnnotation.State) => {
+    if (state.search_queries && state.search_queries.length > 0) {
+      return "execute_searches";
+    }
+    return "synthesize_results"; // Skip to synthesis if no queries
+  };
+
+  // Define a router function to decide the next step after executing searches
+  const shouldSynthesizeResults = (state: typeof SearchAgentStateAnnotation.State) => {
+    if (state.search_results && state.search_results.length > 0) {
+      return "synthesize_results";
+    }
+    return "end"; // End if no search results
+  };
+
+  // Add edges
   workflow
     // @ts-ignore TS2345
     .addEdge(START, "plan_queries")
     // @ts-ignore TS2345
-    .addEdge("plan_queries", "execute_searches")
+    .addConditionalEdges("plan_queries", shouldExecuteSearches, {
+      execute_searches: "execute_searches",
+      synthesize_results: "synthesize_results",
+    })
     // @ts-ignore TS2345
-    .addEdge("execute_searches", "synthesize_results")
+    .addConditionalEdges("execute_searches", shouldSynthesizeResults, {
+      synthesize_results: "synthesize_results",
+      end: END,
+    })
     // @ts-ignore TS2345
     .addEdge("synthesize_results", END);
 

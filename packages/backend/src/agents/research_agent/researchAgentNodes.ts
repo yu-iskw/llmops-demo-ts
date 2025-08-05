@@ -1,24 +1,17 @@
-import { SearchAgentState } from "./researchAgentState";
 import {
-  GoogleGenAI,
-  FunctionDeclaration,
-  Part,
-  Content,
-  Tool,
-  FunctionCall,
-} from "@google/genai";
-import {
-  HumanMessage,
   AIMessage,
   FunctionMessage,
   BaseMessage,
+  HumanMessage,
 } from "@langchain/core/messages";
-import { traceable } from "langsmith/traceable";
-
-interface CustomToolCall {
-  name: string;
-  args: Record<string, any>;
-}
+import { SearchAgentStateAnnotation } from "./researchAgentState";
+import {
+  GoogleGenAI,
+  FunctionCall,
+  FunctionCallingConfigMode,
+  Content,
+} from "@google/genai";
+import logger from "../../utils/logger";
 
 // Helper to run promises with a concurrency limit
 async function runWithConcurrencyLimit<T>(
@@ -66,69 +59,147 @@ async function runWithConcurrencyLimit<T>(
 
 // Node for planning search queries
 export const planQueries = async (
-  state: SearchAgentState,
+  state: typeof SearchAgentStateAnnotation.State,
   genAI: GoogleGenAI,
   modelName: string,
 ) => {
-  const prompt = `You are a helpful assistant that generates search queries to answer a user's question.\nReturn the queries as a JSON array of strings under the key "queries".\nUser question: ${state.user_message}\nExample: { "queries": ["weather in Tokyo tomorrow", "weather in London tomorrow"] }`;
+  try {
+    const prompt = `Return the queries as a JSON array of strings under the key "queries".\nUser question: ${state.user_message}\nExample: { "queries": ["weather in Tokyo tomorrow", "weather in London tomorrow"] }`;
 
-  const result = await genAI.models.generateContent({
-    model: modelName,
-    contents: [{ role: "user", parts: [{ text: prompt }] }],
-  });
+    const result = await genAI.models.generateContent({
+      model: modelName,
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      config: {
+        systemInstruction: "You are a helpful assistant that generates search queries to answer a user's question.",
+      },
+    });
 
-  let jsonString = result.text || "";
-  const match = jsonString.match(/```json\n([\s\S]*?)\n```/);
-  if (match && match[1]) {
-    jsonString = match[1];
+    let jsonString = result.text || "";
+    const match = jsonString.match(/```json\n([\s\S]*?)\n```/);
+    if (match && match[1]) {
+      jsonString = match[1];
+    }
+
+    const queries = jsonString ? JSON.parse(jsonString).queries : [];
+
+    logger.info(`Generated ${queries.length} search queries`);
+
+    return { search_queries: queries };
+  } catch (error) {
+    logger.error("Error planning queries:", error);
+
+    // Provide a fallback response
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    const aiMessage = new AIMessage(
+      `I apologize, but I encountered an error while planning search queries: ${errorMessage}. Please try again or rephrase your question.`
+    );
+
+    return {
+      search_queries: [],
+      messages: [aiMessage],
+    };
   }
-
-  const queries = jsonString ? JSON.parse(jsonString).queries : [];
-
-  return { search_queries: queries };
 };
 
 // Node for executing searches
-export const executeSearches = traceable(
-  async (state: SearchAgentState, genAI: GoogleGenAI, modelName: string) => {
+export const executeSearches = async (
+  state: typeof SearchAgentStateAnnotation.State,
+  genAI: GoogleGenAI,
+  modelName: string,
+) => {
+  try {
+    if (!state.search_queries || state.search_queries.length === 0) {
+      logger.warn("No search queries to execute");
+      return {
+        search_results: [],
+        messages: [new AIMessage("No search queries were generated to execute.")],
+      };
+    }
+
     const searchTasks = state.search_queries.map((query) => async () => {
       const response = await genAI.models.generateContent({
         model: modelName,
         contents: [{ role: "user", parts: [{ text: `Search for: ${query}` }] }],
         config: {
+          systemInstruction: "You are a helpful assistant that performs web searches to find relevant information.",
           tools: [{ googleSearch: {} }],
         },
       });
       return { query, result: response.text || "No result." };
     });
 
+    logger.info(`Executing ${state.search_queries.length} search queries`);
     const searchResults = await runWithConcurrencyLimit(searchTasks, 5);
 
+    logger.info(`Completed ${searchResults.length} searches successfully`);
     return { search_results: searchResults };
-  },
-  { run_type: "tool" },
-);
+  } catch (error) {
+    logger.error("Error executing searches:", error);
+
+    // Provide a fallback response
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    const aiMessage = new AIMessage(
+      `I apologize, but I encountered an error while executing searches: ${errorMessage}. Please try again.`
+    );
+
+    return {
+      search_results: [],
+      messages: [aiMessage],
+    };
+  }
+};
 
 // Node for synthesizing results
 export const synthesizeResults = async (
-  state: SearchAgentState,
+  state: typeof SearchAgentStateAnnotation.State,
   genAI: GoogleGenAI,
   modelName: string,
 ) => {
-  const searchResultsText = state.search_results
-    .map((res) => `Query: ${res.query}\nResult: ${res.result}`)
-    .join("\n\n");
+  try {
+    if (!state.search_results || state.search_results.length === 0) {
+      logger.warn("No search results to synthesize");
+      const aiMessage = new AIMessage(
+        "I couldn't find any search results to synthesize. Please try rephrasing your question."
+      );
+      return {
+        response: aiMessage.content as string,
+        messages: [aiMessage],
+      };
+    }
 
-  const prompt = `You are a helpful assistant. Synthesize the following search results to answer the user's original question.\nOriginal question: ${state.user_message}\nSearch results:\n${searchResultsText}\n\nSynthesized Answer:`;
+    const searchResultsText = state.search_results
+      .map((res) => `Query: ${res.query}\nResult: ${res.result}`)
+      .join("\n\n");
 
-  const result = await genAI.models.generateContent({
-    model: modelName,
-    contents: [{ role: "user", parts: [{ text: prompt }] }],
-  });
-  const finalResponse = result.text || "";
+    const prompt = `Synthesize the following search results to answer the user's original question.\nOriginal question: ${state.user_message}\nSearch results:\n${searchResultsText}\n\nSynthesized Answer:`;
 
-  return {
-    response: finalResponse,
-    messages: [new AIMessage({ content: finalResponse })],
-  };
+    const result = await genAI.models.generateContent({
+      model: modelName,
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      config: {
+        systemInstruction: "You are a helpful assistant that synthesizes search results to provide comprehensive answers to user questions.",
+      },
+    });
+    const finalResponse = result.text || "";
+
+    logger.info("Synthesis completed successfully");
+
+    return {
+      response: finalResponse,
+      messages: [new AIMessage({ content: finalResponse })],
+    };
+  } catch (error) {
+    logger.error("Error synthesizing results:", error);
+
+    // Provide a fallback response
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    const aiMessage = new AIMessage(
+      `I apologize, but I encountered an error while synthesizing the search results: ${errorMessage}. Please try again.`
+    );
+
+    return {
+      response: aiMessage.content as string,
+      messages: [aiMessage],
+    };
+  }
 };
