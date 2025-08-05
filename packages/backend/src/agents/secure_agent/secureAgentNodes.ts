@@ -27,9 +27,9 @@ export const callInputSanitizer = async (
     user_message: state.user_message,
     messages: state.messages,
     sanitized_message: state.sanitized_message,
-    isSuspicious: false,
-    reason: undefined, // Added missing property
-    confidence: undefined, // Added missing property
+    is_suspicious: false,
+    suspicious_reason: undefined,
+    confidence: undefined,
     ai_response: undefined,
     feedback_message: undefined,
     messageWindowSize: state.messageWindowSize,
@@ -39,7 +39,9 @@ export const callInputSanitizer = async (
 
   return {
     sanitized_message: result.sanitized_message,
-    is_suspicious: result.isSuspicious,
+    is_suspicious: result.is_suspicious,
+    suspicious_reason: result.suspicious_reason,
+    confidence: result.confidence,
     messages: result.messages,
   };
 };
@@ -88,11 +90,9 @@ export const callOutputSanitizer = async (
   ).compile();
 
   const initialState: OutputSanitizerState = {
-    user_message: extractStringContent(
-      state.sanitized_message || state.user_message,
-    ),
+    user_message: state.user_message,
     messages: state.messages,
-    ai_response: state.ai_response, // Now it can be undefined
+    ai_response: state.ai_response, // Pass the AI response to the sanitizer
     is_sensitive: false,
     feedback_message: undefined,
     messageWindowSize: state.messageWindowSize,
@@ -103,6 +103,16 @@ export const callOutputSanitizer = async (
   return {
     is_sensitive: result.is_sensitive,
     feedback_message: result.feedback_message,
-    messages: result.messages,
+    messages: state.messages, // Keep the existing messages, don't modify here
+    ai_response: state.ai_response, // Keep the AI response as is
+  };
+};
+
+export const extractFinalResponse = async (
+  state: typeof SecureAgentStateAnnotation.State,
+) => {
+  logger.info("Extracting final response.");
+  return {
+    ai_response: state.ai_response, // Ensure the final AI response is returned
   };
 };

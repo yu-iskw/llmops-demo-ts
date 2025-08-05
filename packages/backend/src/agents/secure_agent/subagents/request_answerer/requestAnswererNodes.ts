@@ -32,14 +32,14 @@ export const answerRequest = async (
       contents,
       config: {
         systemInstruction:
-          "You are a helpful AI assistant. Answer the user's request based on the provided context.",
+          "You are a helpful AI assistant. Answer the user\'s request in a natural, conversational tone. Avoid providing information about internal processes or classifications.",
       },
     });
 
     const aiMessage = new AIMessage(result.text || "");
 
     return {
-      ai_response: result.text,
+      ai_response: result.text || "",
       messages: [
         ...(allMessages || []),
         new HumanMessage(userMessage),

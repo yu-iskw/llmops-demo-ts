@@ -16,7 +16,7 @@ export const checkOutput = async (
   try {
     const contents = createConversationContents(
       state.messages || [],
-      state.user_message, // Use user_message as the input for sanitization
+      state.ai_response || "", // Use ai_response as the input for sanitization, with default
       state.messageWindowSize,
     );
 
@@ -57,11 +57,8 @@ export const checkOutput = async (
     return {
       is_sensitive: isSensitive,
       feedback_message: feedbackMessage,
-      messages: [
-        ...(state.messages || []),
-        new HumanMessage(state.user_message), // Use user_message for the HumanMessage
-        new AIMessage(JSON.stringify(parsedResult)),
-      ],
+      ai_response: state.ai_response, // Return original AI response
+      messages: state.messages, // Keep the existing messages, do not modify here
     };
   } catch (error) {
     logger.error("Error checking output:", error);
@@ -69,13 +66,8 @@ export const checkOutput = async (
       is_sensitive: true,
       feedback_message:
         "An error occurred while checking the output for sensitive information.",
-      messages: [
-        ...(state.messages || []),
-        new HumanMessage(state.user_message),
-        new AIMessage(
-          "I apologize, but I encountered an error while sanitizing the response. It will be treated as sensitive.",
-        ),
-      ],
+      ai_response: state.ai_response, // Return original AI response
+      messages: state.messages, // Keep original messages
     };
   }
 };

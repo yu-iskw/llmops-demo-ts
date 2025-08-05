@@ -8,6 +8,7 @@ import {
   callInputSanitizer,
   callRequestAnswerer,
   callOutputSanitizer,
+  extractFinalResponse,
 } from "./secureAgentNodes";
 import logger from "../../utils/logger";
 
@@ -25,6 +26,9 @@ export function createSecureAgentGraphBuilder(
   );
   workflow.addNode("output_sanitizer", (state: SecureAgentState) =>
     callOutputSanitizer(state, genAI, modelName),
+  );
+  workflow.addNode("extract_final_response", (state: SecureAgentState) =>
+    extractFinalResponse(state),
   );
 
   // @ts-expect-error TS2345: LangGraph type definition issue - string literal not assignable to '__start__'.
@@ -64,13 +68,17 @@ export function createSecureAgentGraphBuilder(
     },
     {
       refine_answer: "request_answerer", // Loop back for refinement
-      end_safe: END, // End the graph if output is safe
+      end_safe: "extract_final_response", // Transition to the new node if output is safe
     },
   );
 
   // Direct edge from request_answerer to output_sanitizer
   // @ts-expect-error TS2345: LangGraph type definition issue - string literal not assignable to '__start__'.
   workflow.addEdge("request_answerer", "output_sanitizer");
+
+  // Direct edge from extract_final_response to END
+  // @ts-expect-error TS2345: LangGraph type definition issue - string literal not assignable to '__start__'.
+  workflow.addEdge("extract_final_response", END);
 
   return workflow;
 }
