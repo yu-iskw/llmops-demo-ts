@@ -28,7 +28,6 @@
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",
     "eslint": "^9.32.0",
-    "typescript": "^5.9.2",
-    "zod": "^4.0.15"
+    "typescript": "^5.9.2"
   }
 }
