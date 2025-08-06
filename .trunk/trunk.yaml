@@ -19,7 +19,11 @@ lint:
   disabled:
     - checkov
     - trufflehog
+    - oxipng
   enabled:
+    - dotenv-linter@3.3.0
+    - hadolint@2.12.1-beta
+    - eslint@9.32.0
     - semgrep@1.131.0
     - sort-package-json@3.4.0
     - actionlint@1.7.7

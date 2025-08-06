@@ -6,6 +6,6 @@
     "declaration": true,
     "composite": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "../../eslint.config.js"],
   "exclude": ["node_modules", "dist"]
 }
