@@ -38,27 +38,4 @@ export class ResearchAgent extends BaseAgent {
       function_calls: [],
     };
   }
-
-  protected extractResponse(streamState: SearchAgentState): string | null {
-    // First priority: check for the direct response field
-    if (
-      streamState.response !== null &&
-      typeof streamState.response === "string"
-    ) {
-      return streamState.response;
-    }
-
-    // Fallback: check messages for AI response
-    if (streamState.messages && streamState.messages.length > 0) {
-      // Iterate backwards to find the last AI message
-      for (let i = streamState.messages.length - 1; i >= 0; i--) {
-        const message = streamState.messages[i];
-        if (message.getType() === "ai") {
-          return message.content as string;
-        }
-      }
-    }
-
-    return null;
-  }
 }

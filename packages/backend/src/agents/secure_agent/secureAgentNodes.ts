@@ -113,3 +113,24 @@ export const extractFinalResponse = async (
     ai_response: state.ai_response, // Ensure the final AI response is returned
   };
 };
+
+export const handleSuspiciousInput = async (
+  state: typeof SecureAgentStateAnnotation.State,
+) => {
+  logger.info("Handling suspicious input with appropriate response.");
+
+  const rejectionMessage =
+    "I cannot answer requests that are suspicious or contain potential prompt injections. Please rephrase your request.";
+
+  // Import AIMessage and HumanMessage to create proper messages for streaming
+  const { AIMessage, HumanMessage } = await import("@langchain/core/messages");
+
+  return {
+    ai_response: rejectionMessage,
+    messages: [
+      ...(state.messages || []),
+      new HumanMessage(state.user_message),
+      new AIMessage(rejectionMessage),
+    ],
+  };
+};

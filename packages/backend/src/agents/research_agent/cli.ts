@@ -43,14 +43,21 @@ researchAgentProgram
 
       const researchAgent = new ResearchAgent();
 
-      const response = await researchAgent.processMessage(
+      const responseStream = researchAgent.processMessage(
         message,
         [], // history
         genAIConfig,
         model,
         undefined, // sessionId
       );
-      console.log("Default Agent Response:", response);
+
+      process.stdout.write("Research Agent Response:\n");
+      for await (const chunk of responseStream) {
+        if (chunk && chunk.content && typeof chunk.content === "string") {
+          process.stdout.write(chunk.content);
+        }
+      }
+      process.stdout.write("\n");
     },
   );
 

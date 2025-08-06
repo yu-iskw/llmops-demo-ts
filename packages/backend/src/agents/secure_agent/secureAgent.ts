@@ -52,41 +52,4 @@ export class SecureAgent extends BaseAgent {
       next_step: undefined,
     };
   }
-
-  async execute(
-    userMessage: string,
-    history: BaseMessage[],
-  ): Promise<string | null> {
-    let currentState: SecureAgentState = this.createInitialState(
-      userMessage,
-      history,
-    );
-
-    try {
-      logger.info("Invoking SecureAgent graph...");
-      const result = await this.compiledGraph.invoke(currentState);
-
-      if (result.is_suspicious) {
-        return "I cannot answer requests that are suspicious or contain potential prompt injections. Please rephrase your request.";
-      } else if (result.is_sensitive) {
-        // This case should ideally be handled by the graph's internal loop.
-        // If it reaches here, it means the graph ended with a sensitive output.
-        return "I cannot provide a response as it contains sensitive information even after multiple attempts. Please refine your query.";
-      } else if (result.ai_response) {
-        return (
-          result.ai_response ||
-          "I apologize, but I encountered an unexpected error while processing your request."
-        );
-      } else {
-        return "I apologize, but I encountered an unexpected error while processing your request.";
-      }
-    } catch (error) {
-      logger.error("Error during SecureAgent execution:", error);
-      return "I apologize, but I encountered an error while trying to answer your request. Please try again.";
-    }
-  }
-
-  protected extractResponse(streamState: SecureAgentState): string | null {
-    return streamState.ai_response || null;
-  }
 }

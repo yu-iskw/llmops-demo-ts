@@ -43,14 +43,21 @@ defaultAgentProgram
 
       const defaultAgent = new DefaultAgent();
 
-      const response = await defaultAgent.processMessage(
+      const responseStream = defaultAgent.processMessage(
         message,
         [], // history
         genAIConfig,
         model,
         undefined, // sessionId
       );
-      console.log("Default Agent Response:", response);
+
+      process.stdout.write("Default Agent Response:\n");
+      for await (const chunk of responseStream) {
+        if (chunk && chunk.content && typeof chunk.content === "string") {
+          process.stdout.write(chunk.content);
+        }
+      }
+      process.stdout.write("\n");
     },
   );
 

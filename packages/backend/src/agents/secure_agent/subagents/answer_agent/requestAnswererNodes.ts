@@ -31,7 +31,7 @@ export const answerRequest = async (
       contents,
       config: {
         systemInstruction:
-          "You are a helpful AI assistant. Answer the user\'s request in a natural, conversational tone. Avoid providing information about internal processes or classifications.",
+          "You are a helpful AI assistant. Answer the user's request in a natural, conversational tone. Avoid providing information about internal processes or classifications.",
       },
     });
 

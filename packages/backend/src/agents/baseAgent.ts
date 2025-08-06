@@ -1,4 +1,4 @@
-import { BaseMessage } from "@langchain/core/messages";
+import { BaseMessage, AIMessageChunk } from "@langchain/core/messages";
 import { GoogleGenAI } from "@google/genai";
 import { CompiledStateGraph, MemorySaver } from "@langchain/langgraph";
 import { GenAIConfig, getGenAI } from "../utils/genai";
@@ -15,7 +15,7 @@ export interface IAgent {
     config?: GenAIConfig,
     modelName?: string,
     sessionId?: string,
-  ): Promise<string>;
+  ): AsyncGenerator<AIMessageChunk>;
 }
 
 export abstract class BaseAgent implements IAgent {
@@ -50,20 +50,15 @@ export abstract class BaseAgent implements IAgent {
   ): any;
 
   /**
-   * Extracts the final response from the stream state
-   */
-  protected abstract extractResponse(streamState: any): string | null;
-
-  /**
    * Processes a message using the agent's graph
    */
-  public async processMessage(
+  public async *processMessage(
     message: string,
     history: BaseMessage[],
     config?: GenAIConfig,
     modelName?: string,
     sessionId?: string, // Add sessionId parameter
-  ): Promise<string> {
+  ): AsyncGenerator<AIMessageChunk> {
     try {
       const finalModelName = modelName || this.defaultModelName;
       const genAI = getGenAI(config);
@@ -82,7 +77,7 @@ export abstract class BaseAgent implements IAgent {
           return compiledGraph.stream(initialState, {
             // Pass sessionId as thread_id for persistence
             configurable: { thread_id: sessionId },
-            streamMode: "values",
+            streamMode: "messages",
             // Pass the checkpointer to the stream method
             // @ts-ignore TS2345
             checkpointer: this.checkpointer,
@@ -95,29 +90,23 @@ export abstract class BaseAgent implements IAgent {
         },
       )();
 
-      let finalResponse = "";
+      for await (const [token] of stream) {
+        logger.debug(`[${this.getType()}] Streaming token:`, token);
 
-      for await (const streamState of stream) {
-        logger.info(`[${this.getType()}] Stream state:`, streamState);
-
-        const response = this.extractResponse(streamState);
-        if (response) {
-          finalResponse = response;
+        // The token should be an AIMessageChunk
+        if (token && typeof token === "object" && "content" in token) {
+          yield token as AIMessageChunk;
         }
       }
-
-      if (!finalResponse) {
-        logger.warn(
-          `[${this.getType()}] No response generated, returning default message`,
-        );
-        return "I'm sorry, I couldn't generate a response. Please try again.";
-      }
-
-      logger.info(`[${this.getType()}] Final response:`, finalResponse);
-      return finalResponse;
     } catch (error) {
       logger.error(`[${this.getType()}] Error processing message:`, error);
-      return "Sorry, I encountered an error. Please try again.";
+      // Import AIMessage to create a proper error chunk
+      const { AIMessage } = await import("@langchain/core/messages");
+      const errorMessage = new AIMessage(
+        "Sorry, I encountered an error. Please try again.",
+      );
+      // Convert to chunk-like structure
+      yield errorMessage as unknown as AIMessageChunk;
     }
   }
 }

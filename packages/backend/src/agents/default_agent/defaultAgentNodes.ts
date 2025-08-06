@@ -59,6 +59,7 @@ export const callModel = async (
     // Add both user message and AI response to message history
     return {
       messages: [new HumanMessage(state.user_message), aiMessage],
+      function_calls: result.functionCalls,
     };
   } catch (error) {
     logger.error("Error calling model:", error);
