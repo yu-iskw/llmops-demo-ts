@@ -1,11 +1,7 @@
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
+import path from "path";
 
 export function getPackageRootPath(): string {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = dirname(__filename);
-  let currentDir = __dirname;
-  return path.resolve(currentDir, "..", "..");
+  return path.resolve(__dirname, "..", "..");
 }
 
 export function getProjectRootPath(): string {
