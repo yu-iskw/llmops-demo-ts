@@ -6,7 +6,7 @@ import {
   sanitizedMessageAccuracy,
 } from "./evaluator";
 
-async function runEvaluation() {
+export async function runLlmJudgeEvaluation() {
   await evaluate(targetFunction, {
     data: "Input Sanitizer Dataset",
     evaluators: [

@@ -1,12 +1,9 @@
 import { Client, Dataset } from "langsmith";
-import {
-  RequestAnswererInputs,
-  RequestAnswererOutputs,
-} from "@agents/secure_agent/subagents/answer_agent/eval/types";
+import { RequestAnswererInputs, RequestAnswererOutputs } from "./types";
 
 const client = new Client();
 
-export async function createAndAddExamples() {
+export async function createAndAddExamples(): Promise<string> {
   let dataset: Dataset | undefined;
   const datasetName = "Request Answerer Dataset";
 
@@ -25,10 +22,7 @@ export async function createAndAddExamples() {
     console.log(`Dataset "${datasetName}" created with ID: ${dataset.id}.`);
   }
 
-  const examples: {
-    inputs: RequestAnswererInputs;
-    outputs: RequestAnswererOutputs;
-  }[] = [
+  const examples: { inputs: RequestAnswererInputs; outputs: RequestAnswererOutputs }[] = [
     {
       inputs: {
         user_message: "Tell me about large language models.",
@@ -48,53 +42,29 @@ export async function createAndAddExamples() {
     },
     {
       inputs: {
-        user_message: "Who developed the theory of relativity?",
-      },
-      outputs: {
-        ai_response: "Albert Einstein developed the theory of relativity.",
-      },
-    },
-    {
-      inputs: {
-        user_message: "What is the highest mountain in the world?",
-      },
-      outputs: {
-        ai_response: "Mount Everest is the highest mountain in the world.",
-      },
-    },
-    {
-      inputs: {
-        user_message: "How many planets are in our solar system?",
+        user_message: "Write a short story about a brave knight.",
       },
       outputs: {
         ai_response:
-          "There are eight planets in our solar system: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune.",
+          "In a kingdom far away, lived Sir Reginald, a knight known for his unwavering courage. One day, a dragon terrorized the village, and Reginald, with his trusty sword, faced the beast. After a fierce battle, he emerged victorious, saving his people and becoming a legend.",
       },
     },
     {
       inputs: {
-        user_message: "Explain quantum computing in simple terms.",
+        user_message: "Explain the concept of quantum entanglement.",
       },
       outputs: {
         ai_response:
-          "Quantum computing is a new type of computing that uses the principles of quantum mechanics, like superposition and entanglement, to solve complex problems that classical computers cannot. It's still in its early stages but holds great promise for fields like medicine and materials science.",
+          "Quantum entanglement is a phenomenon where two or more particles become linked in such a way that they share the same fate, no matter how far apart they are. Measuring the property of one entangled particle instantaneously influences the property of the other, even if they are light-years apart. This 'spooky action at a distance' baffled Einstein himself.",
       },
     },
     {
       inputs: {
-        user_message: "What is the main ingredient in guacamole?",
-      },
-      outputs: {
-        ai_response: "The main ingredient in guacamole is avocado.",
-      },
-    },
-    {
-      inputs: {
-        user_message: "Can you provide a brief history of the internet?",
+        user_message: "What are the benefits of artificial intelligence?",
       },
       outputs: {
         ai_response:
-          "The internet originated in the 1960s with ARPANET, a U.S. government project, and evolved significantly with the development of the World Wide Web in the late 1980s and early 1990s, becoming a global public resource.",
+          "Artificial intelligence (AI) offers numerous benefits, including automation of repetitive tasks, enhanced data analysis, improved decision-making, and the development of intelligent systems that can learn and adapt. AI is transforming industries from healthcare to finance, driving innovation and efficiency.",
       },
     },
   ];
@@ -103,6 +73,7 @@ export async function createAndAddExamples() {
     examples.map((ex) => ({ ...ex, dataset_id: dataset.id })),
   );
   console.log("Dataset and examples created successfully.");
+  return dataset.id;
 }
 
 // createAndAddExamples().catch(console.error);

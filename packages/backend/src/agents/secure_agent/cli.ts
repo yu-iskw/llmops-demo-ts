@@ -1,11 +1,13 @@
 import { Command } from "commander";
-import { SecureAgent } from "./secureAgent.js"; // Import DefaultAgent
-import { createGenAIClient, GenAIConfig } from "../../utils/genai.js"; // Import GenAI utilities
-import { runEvaluation as runInputSanitizerEvaluation } from "./subagents/input_sanitizer/eval/runEvaluation.js";
+import { SecureAgent } from "./secureAgent"; // Import DefaultAgent
+import { createGenAIClient, GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
+import { runLlmJudgeEvaluation as runInputSanitizerEvaluation } from "./subagents/input_sanitizer/eval/langsmith/llm_judge/runEvaluation";
 import dotenv from "dotenv";
 import { getProjectRootPath } from "@utils/utils";
 import path from "path";
-import { runEvaluation as runOutputSanitizerEvaluation } from "./subagents/output_sanitizer/eval/langsmith/llm_judge/runEvaluation.js";
+import { runLlmJudgeEvaluation as runOutputSanitizerEvaluation } from "./subagents/output_sanitizer/eval/langsmith/llm_judge/runEvaluation";
+import { runLlmJudgeEvaluation as runAnswerAgentEvaluation } from "./subagents/answer_agent/eval/langsmith/llm_judge/runEvaluation";
+import { runEvaluation as runMultiTurnEvaluation } from "./subagents/answer_agent/eval/langsmith/multi_turn/runEvaluation";
 
 // Load environment variables from the root of the package
 dotenv.config({
@@ -34,8 +36,6 @@ secureAgentProgram
       location: string;
       text: string;
     }) => {
-      console.log(`Sending message to Secure Agent: \"${options.text}\"`);
-      console.log(`Options received:`, options);
       const { project, location, model, text: message } = options;
 
       // Initialize GenAI client
@@ -71,6 +71,30 @@ inputSanitizerLangSmithEval
   .action(async () => {
     console.log("Evaluating Secure agent with LLM as judge");
     await runInputSanitizerEvaluation();
+  });
+
+////////////////////////////////////////////////////////////////
+// Request Answerer
+////////////////////////////////////////////////////////////////
+const answerAgentProgram = secureAgentProgram.command("answer-agent");
+
+const answerAgentLangSmithEval = answerAgentProgram.command("langsmith");
+
+answerAgentLangSmithEval
+  .command("llm-as-judge")
+  .description("Evaluate the Secure agent with LLM as judge")
+  .action(async () => {
+    console.log("Evaluating Secure agent with LLM as judge");
+    await runAnswerAgentEvaluation();
+  });
+
+// Multi-turn evaluation with LangSmith
+answerAgentLangSmithEval
+  .command("multi-turn")
+  .description("Evaluate the Secure agent with multi-turn evaluation")
+  .action(async () => {
+    console.log("Evaluating Secure agent with multi-turn evaluation");
+    await runMultiTurnEvaluation();
   });
 
 ////////////////////////////////////////////////////////////////
