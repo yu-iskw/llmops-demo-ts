@@ -27,13 +27,13 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
+          run_install: |
+            - recursive: true
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
           cache: pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
       - name: Trunk Check
         uses: trunk-io/trunk-action@v1
