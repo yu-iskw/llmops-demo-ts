@@ -57,6 +57,25 @@ secureAgentProgram
     },
   );
 
+secureAgentProgram
+  .command("eval")
+  .description("Evaluate the Secure agent")
+  .action(
+    async () => {
+      // Run the evaluation(s) of the input sanitizer
+      await runInputSanitizerEvaluation();
+
+      // Run the evaluation(s) of the output sanitizer
+      await runOutputSanitizerEvaluation();
+
+      // Run the evaluation(s) of the answer agent
+      await runAnswerAgentEvaluation();
+
+      // Run the evaluation(s) of the multi-turn answer agent
+      await runMultiTurnEvaluation();
+    },
+  );
+
 ////////////////////////////////////////////////////////////////
 // Input Sanitizer
 ////////////////////////////////////////////////////////////////
