@@ -1,5 +1,8 @@
 import { Client, Dataset } from "langsmith";
-import { RequestAnswererInputs, RequestAnswererOutputs } from "@agents/secure_agent/subagents/request_answerer/eval/types";
+import {
+  RequestAnswererInputs,
+  RequestAnswererOutputs,
+} from "@agents/secure_agent/subagents/request_answerer/eval/types";
 
 const client = new Client();
 
@@ -22,7 +25,10 @@ export async function createAndAddExamples() {
     console.log(`Dataset "${datasetName}" created with ID: ${dataset.id}.`);
   }
 
-  const examples: { inputs: RequestAnswererInputs; outputs: RequestAnswererOutputs }[] = [
+  const examples: {
+    inputs: RequestAnswererInputs;
+    outputs: RequestAnswererOutputs;
+  }[] = [
     {
       inputs: {
         user_message: "Tell me about large language models.",
@@ -61,7 +67,8 @@ export async function createAndAddExamples() {
         user_message: "How many planets are in our solar system?",
       },
       outputs: {
-        ai_response: "There are eight planets in our solar system: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune.",
+        ai_response:
+          "There are eight planets in our solar system: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune.",
       },
     },
     {
@@ -69,7 +76,8 @@ export async function createAndAddExamples() {
         user_message: "Explain quantum computing in simple terms.",
       },
       outputs: {
-        ai_response: "Quantum computing is a new type of computing that uses the principles of quantum mechanics, like superposition and entanglement, to solve complex problems that classical computers cannot. It's still in its early stages but holds great promise for fields like medicine and materials science.",
+        ai_response:
+          "Quantum computing is a new type of computing that uses the principles of quantum mechanics, like superposition and entanglement, to solve complex problems that classical computers cannot. It's still in its early stages but holds great promise for fields like medicine and materials science.",
       },
     },
     {
@@ -85,7 +93,8 @@ export async function createAndAddExamples() {
         user_message: "Can you provide a brief history of the internet?",
       },
       outputs: {
-        ai_response: "The internet originated in the 1960s with ARPANET, a U.S. government project, and evolved significantly with the development of the World Wide Web in the late 1980s and early 1990s, becoming a global public resource.",
+        ai_response:
+          "The internet originated in the 1960s with ARPANET, a U.S. government project, and evolved significantly with the development of the World Wide Web in the late 1980s and early 1990s, becoming a global public resource.",
       },
     },
   ];
