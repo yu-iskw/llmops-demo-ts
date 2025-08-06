@@ -1,13 +1,14 @@
 // @ts-check
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import tseslint from "typescript-eslint";
+import tseslint from "@typescript-eslint/eslint-plugin";
+import tseslintParser from "@typescript-eslint/parser";
 import eslintReact from "@eslint-react/eslint-plugin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export default tseslint.config(
+export default [
   {
     ignores: [
       "**/*.d.ts",
@@ -87,11 +88,11 @@ export default tseslint.config(
   {
     files: ["**/*.ts", "**/*.tsx"],
     plugins: {
-      "@typescript-eslint": tseslint.plugin,
+      "@typescript-eslint": tseslint,
       "@eslint-react": eslintReact,
     },
     languageOptions: {
-      parser: tseslint.parser,
+      parser: tseslintParser,
       parserOptions: {
         // project: ["./tsconfig.eslint.json"],
         tsconfigRootDir: __dirname,
@@ -105,4 +106,4 @@ export default tseslint.config(
       "no-unused-vars": "off",
     },
   },
-);
+];
