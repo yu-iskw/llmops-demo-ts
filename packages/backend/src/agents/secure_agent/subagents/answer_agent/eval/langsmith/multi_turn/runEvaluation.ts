@@ -1,8 +1,7 @@
 import { evaluate, EvaluateOptions } from "langsmith/evaluation";
 import { targetFunction } from "./targetFunction";
 import { createAndAddExamples } from "./dataset";
-import { createLLMAsJudge } from "openevals";
-import { Run, Example } from "langsmith";
+import { Run } from "langsmith";
 import { createGenAIClient } from "@utils/genai";
 
 const createGenAIAsJudge = (params: {
@@ -12,7 +11,7 @@ const createGenAIAsJudge = (params: {
 }) => {
   const genAI = createGenAIClient();
 
-  return async (run: Run, example?: Example) => {
+  return async (run: Run) => {
     const evaluationPrompt = params.prompt.replace(
       "{outputs}",
       JSON.stringify(run.outputs),

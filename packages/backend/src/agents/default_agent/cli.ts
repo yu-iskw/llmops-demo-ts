@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { DefaultAgent } from "../default_agent/defaultAgent"; // Import DefaultAgent
-import { createGenAIClient, GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
+import { GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
 import dotenv from "dotenv";
 import { getProjectRootPath } from "@utils/utils";
 import path from "path";
@@ -41,7 +41,6 @@ defaultAgentProgram
       if (project) genAIConfig.project = project;
       if (location) genAIConfig.location = location;
 
-      const genAI = createGenAIClient(genAIConfig);
       const defaultAgent = new DefaultAgent();
 
       const response = await defaultAgent.processMessage(

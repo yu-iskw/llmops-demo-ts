@@ -1,4 +1,4 @@
-import { Type, FunctionCall } from "@google/genai";
+import { FunctionCall } from "@google/genai";
 import { FunctionMessage } from "@langchain/core/messages";
 import logger from "../../utils/logger";
 

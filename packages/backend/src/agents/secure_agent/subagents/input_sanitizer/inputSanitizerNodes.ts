@@ -1,9 +1,7 @@
 import { InputSanitizerStateAnnotation } from "./inputSanitizerState";
 import { GoogleGenAI, Type } from "@google/genai";
 import { createConversationContents } from "@utils/agentUtils";
-import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import logger from "@utils/logger";
-import { extractStringContent } from "@utils/agentUtils";
 
 export interface InputSanitizerOutput {
   isSuspicious: boolean;
