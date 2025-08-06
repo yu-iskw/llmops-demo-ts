@@ -16,6 +16,10 @@ runtimes:
     - python@3.10.8
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
+  ignore:
+    - linters: [ALL]
+      paths:
+        - packages/backend/src/generated/**/*
   disabled:
     - checkov
     - trufflehog
@@ -35,9 +39,8 @@ lint:
     - markdownlint@0.45.0
     - prettier@3.6.2
 actions:
-  disabled:
+  enabled:
+    - trunk-upgrade-available
     - trunk-announce
     - trunk-check-pre-push
     - trunk-fmt-pre-commit
-  enabled:
-    - trunk-upgrade-available
