@@ -1,8 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import {
-  runMultiturnSimulation,
-  type ChatCompletionMessage,
-} from "openevals";
+import { runMultiturnSimulation, type ChatCompletionMessage } from "openevals";
 import { createGenAIClient } from "@utils/genai";
 import { CreateAnswerAgentGraphBuilder } from "@agents/secure_agent/subagents/answer_agent/answerAgentBuilder";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
@@ -18,7 +15,10 @@ export async function targetFunction(inputs: {
   const history: Record<string, ChatCompletionMessage[]> = {};
 
   // Your application logic - must accept params object with inputs and threadId
-  const app = async (params: { inputs: ChatCompletionMessage; threadId: string }) => {
+  const app = async (params: {
+    inputs: ChatCompletionMessage;
+    threadId: string;
+  }) => {
     const { inputs: nextMessage, threadId } = params;
     if (history[threadId] === undefined) {
       history[threadId] = [];
@@ -86,11 +86,18 @@ Based on the conversation context, respond as the user would. Keep responses nat
       model: modelName,
       contents: [
         { role: "user", parts: [{ text: systemPrompt }] },
-        ...contextMessages.map(msg => ({
+        ...contextMessages.map((msg) => ({
           role: msg.role as "user" | "model",
-          parts: [{ text: msg.content || "" }]
+          parts: [{ text: msg.content || "" }],
         })),
-        { role: "user", parts: [{ text: `The assistant just said: "${trajectory[trajectory.length - 1]?.content || ""}". How do you respond as the user?` }] }
+        {
+          role: "user",
+          parts: [
+            {
+              text: `The assistant just said: "${trajectory[trajectory.length - 1]?.content || ""}". How do you respond as the user?`,
+            },
+          ],
+        },
       ],
     });
 
