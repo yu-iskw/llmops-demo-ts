@@ -16,7 +16,7 @@ The agent's core workflow is managed by a [LangGraph](https://langchain-ai.githu
 - `confidence`: A number representing the confidence score (0-1) of the input sanitization classification.
 - `ai_response`: The final synthesized answer provided by the agent.
 - `is_sensitive`: A boolean flag indicating whether the agent's output contains sensitive information.
-- `feedback_message`: A message used to provide feedback to the `request_answerer` sub-agent for refinement if the output is deemed sensitive.
+- `feedback_message`: A message used to provide feedback to the `answer_agent` sub-agent for refinement if the output is deemed sensitive.
 - `messageWindowSize`: The number of past messages to include in the conversation context for the language model.
 - `next_step`: A string indicating the next step or node to transition to within the agent's workflow (used internally for conditional routing).
 
@@ -26,12 +26,12 @@ The agent's core workflow is managed by a [LangGraph](https://langchain-ai.githu
    - Receives the current state, particularly `user_message` and `messages`.
    - Invokes the Input Sanitizer sub-agent to classify the user's input.
    - Updates the state with `sanitized_message` (empty if suspicious) and `is_suspicious`.
-   - **Conditional Transition**: If `is_suspicious` is true, the graph ends, and an error message is returned. Otherwise, the flow proceeds to `request_answerer`.
+   - **Conditional Transition**: If `is_suspicious` is true, the graph ends, and an error message is returned. Otherwise, the flow proceeds to `answer_agent`.
 
-2. **`request_answerer` Node**:
+2. **`answer_agent` Node**:
    - Receives the current state, including `sanitized_message` (or original `user_message` if not sanitized) and `messages`.
    - If a `feedback_message` is present (from a previous `output_sanitizer` loop), it appends this feedback to the `user_message` to guide the model's refinement.
-   - Invokes the Request Answerer sub-agent to generate a response based on the (sanitized) user's request.
+   - Invokes the Answer Agent sub-agent to generate a response based on the (sanitized) user's request.
    - Updates the state with `ai_response` and the updated `messages` history. It also clears any `feedback_message`.
    - **Direct Transition**: Proceeds to `output_sanitizer`.
 
@@ -39,7 +39,7 @@ The agent's core workflow is managed by a [LangGraph](https://langchain-ai.githu
    - Receives the current state, including `ai_response` and `messages`.
    - Invokes the Output Sanitizer sub-agent to check if the generated `ai_response` contains sensitive information.
    - Updates the state with `is_sensitive` and `feedback_message` (if the output is sensitive).
-   - **Conditional Transition**: If `is_sensitive` is true, the graph loops back to `request_answerer` for refinement (using the `feedback_message`). Otherwise, the graph ends, and the `ai_response` is returned.
+   - **Conditional Transition**: If `is_sensitive` is true, the graph loops back to `answer_agent` for refinement (using the `feedback_message`). Otherwise, the graph ends, and the `ai_response` is returned.
 
 This workflow ensures that all inputs are checked for potential threats before processing, and all outputs are reviewed for sensitive content before being delivered to the user, potentially leading to refinement loops if sensitive information is detected.
 
@@ -47,7 +47,7 @@ This workflow ensures that all inputs are checked for potential threats before p
 graph TD
     A[Start] --> B(Input Sanitizer);
     B --> C{Input Suspicious?};
-    C -- No --> D(Request Answerer);
+    C -- No --> D(Answer Agent);
     D --> E(Output Sanitizer);
     E --> F{Output Sensitive?};
     F -- Yes --> D;

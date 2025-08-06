@@ -1,11 +1,11 @@
 import { Command } from "commander";
-import { SecureAgent } from "./secureAgent"; // Import DefaultAgent
-import { createGenAIClient, GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
-import { runEvaluation as runInputSanitizerEvaluation } from "./subagents/input_sanitizer/eval/runEvaluation";
+import { SecureAgent } from "./secureAgent.js"; // Import DefaultAgent
+import { createGenAIClient, GenAIConfig } from "../../utils/genai.js"; // Import GenAI utilities
+import { runEvaluation as runInputSanitizerEvaluation } from "./subagents/input_sanitizer/eval/runEvaluation.js";
 import dotenv from "dotenv";
 import { getProjectRootPath } from "@utils/utils";
 import path from "path";
-import { runEvaluation as runOutputSanitizerEvaluation } from "./subagents/output_sanitizer/eval/langsmith/llm_judge/runEvaluation";
+import { runEvaluation as runOutputSanitizerEvaluation } from "./subagents/output_sanitizer/eval/langsmith/llm_judge/runEvaluation.js";
 
 // Load environment variables from the root of the package
 dotenv.config({
@@ -53,11 +53,9 @@ secureAgentProgram
         model,
         undefined, // sessionId
       );
-      console.log("Default Agent Response:", response);
+      console.log("Secure Agent Response:", response);
     },
   );
-
-export { secureAgentProgram };
 
 ////////////////////////////////////////////////////////////////
 // Input Sanitizer
@@ -91,3 +89,5 @@ outputSanitizerLangSmithEval
     console.log("Evaluating Secure agent with LLM as judge");
     await runOutputSanitizerEvaluation();
   });
+
+export { secureAgentProgram };

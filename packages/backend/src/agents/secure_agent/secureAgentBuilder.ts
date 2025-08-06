@@ -21,7 +21,7 @@ export function createSecureAgentGraphBuilder(
   workflow.addNode("input_sanitizer", (state: SecureAgentState) =>
     callInputSanitizer(state, genAI, modelName),
   );
-  workflow.addNode("request_answerer", (state: SecureAgentState) =>
+  workflow.addNode("answer_agent", (state: SecureAgentState) =>
     callRequestAnswerer(state, genAI, modelName),
   );
   workflow.addNode("output_sanitizer", (state: SecureAgentState) =>
@@ -47,7 +47,7 @@ export function createSecureAgentGraphBuilder(
       return "continue_to_answer";
     },
     {
-      continue_to_answer: "request_answerer",
+      continue_to_answer: "answer_agent",
       end_suspicious: END, // End the graph if input is suspicious
     },
   );
@@ -59,7 +59,7 @@ export function createSecureAgentGraphBuilder(
     (state: SecureAgentState) => {
       if (state.is_sensitive) {
         logger.warn(
-          "Output is sensitive. Looping back to request_answerer for refinement.",
+          "Output is sensitive. Looping back to answer_agent for refinement.",
         );
         return "refine_answer";
       }
@@ -67,14 +67,14 @@ export function createSecureAgentGraphBuilder(
       return "end_safe";
     },
     {
-      refine_answer: "request_answerer", // Loop back for refinement
+      refine_answer: "answer_agent", // Loop back for refinement
       end_safe: "extract_final_response", // Transition to the new node if output is safe
     },
   );
 
-  // Direct edge from request_answerer to output_sanitizer
+  // Direct edge from answer_agent to output_sanitizer
   // @ts-expect-error TS2345: LangGraph type definition issue - string literal not assignable to '__start__'.
-  workflow.addEdge("request_answerer", "output_sanitizer");
+  workflow.addEdge("answer_agent", "output_sanitizer");
 
   // Direct edge from extract_final_response to END
   // @ts-expect-error TS2345: LangGraph type definition issue - string literal not assignable to '__start__'.

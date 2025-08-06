@@ -32,4 +32,4 @@ export async function runEvaluation() {
   console.log("Evaluation run initiated. Check LangSmith UI for results.");
 }
 
-runEvaluation().catch(console.error);
+// runEvaluation().catch(console.error);
