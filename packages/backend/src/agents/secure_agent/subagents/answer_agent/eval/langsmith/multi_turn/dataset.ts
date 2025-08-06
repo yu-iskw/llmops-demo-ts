@@ -5,7 +5,7 @@ const client = new Client();
 
 export async function createAndAddExamples(): Promise<string> {
   let dataset: Dataset | undefined;
-  const datasetName = "Multi-Turn Request Answerer Dataset";
+  const datasetName = "Answer Agent Dataset (Multi-turn)";
 
   for await (const existingDataset of client.listDatasets({ datasetName })) {
     dataset = existingDataset;
