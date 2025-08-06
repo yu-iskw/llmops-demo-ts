@@ -1,6 +1,6 @@
 import { createGenAIClient } from "@utils/genai";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
-import { OutputSanitizerInputs, OutputSanitizerOutputs } from "../types";
+import { OutputSanitizerInputs, OutputSanitizerOutputs } from "../../types";
 import { Run, Example } from "langsmith";
 
 interface EvaluationParams {

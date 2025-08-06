@@ -1,4 +1,3 @@
-
 export interface RequestAnswererInputs {
   user_message: string;
   feedback_message?: string;

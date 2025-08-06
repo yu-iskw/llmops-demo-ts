@@ -41,7 +41,10 @@ export async function targetFunction(inputs: {
     });
 
     // Create and compile the answer agent graph within the app function with a checkpointer
-    const answerAgentGraph = CreateAnswerAgentGraphBuilder(genAI, modelName).compile({
+    const answerAgentGraph = CreateAnswerAgentGraphBuilder(
+      genAI,
+      modelName,
+    ).compile({
       checkpointer: new MemorySaver(),
     });
 

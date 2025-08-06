@@ -9,7 +9,10 @@ const genAI = createGenAIClient();
 const modelName = "gemini-2.5-flash"; // [[memory:5194513]]
 
 // Create and compile the answer agent graph once with a checkpointer
-const answerAgentGraph = CreateAnswerAgentGraphBuilder(genAI, modelName).compile({
+const answerAgentGraph = CreateAnswerAgentGraphBuilder(
+  genAI,
+  modelName,
+).compile({
   checkpointer: new MemorySaver(),
 });
 

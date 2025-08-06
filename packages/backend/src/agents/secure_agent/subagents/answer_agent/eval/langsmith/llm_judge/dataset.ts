@@ -22,7 +22,10 @@ export async function createAndAddExamples(): Promise<string> {
     console.log(`Dataset "${datasetName}" created with ID: ${dataset.id}.`);
   }
 
-  const examples: { inputs: RequestAnswererInputs; outputs: RequestAnswererOutputs }[] = [
+  const examples: {
+    inputs: RequestAnswererInputs;
+    outputs: RequestAnswererOutputs;
+  }[] = [
     {
       inputs: {
         user_message: "Tell me about large language models.",

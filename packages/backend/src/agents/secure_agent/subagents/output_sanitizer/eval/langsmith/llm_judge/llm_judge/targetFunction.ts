@@ -2,7 +2,7 @@ import { checkOutput } from "@agents/secure_agent/subagents/output_sanitizer/out
 import { OutputSanitizerStateAnnotation } from "@agents/secure_agent/subagents/output_sanitizer/outputSanitizerState";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { createGenAIClient } from "@utils/genai";
-import { OutputSanitizerInputs, OutputSanitizerOutputs } from "../types";
+import { OutputSanitizerInputs, OutputSanitizerOutputs } from "../../types";
 
 // Initialize GoogleGenAI client using the centralized utility
 const genAI = createGenAIClient();

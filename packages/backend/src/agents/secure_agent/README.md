@@ -43,6 +43,42 @@ The agent's core workflow is managed by a [LangGraph](https://langchain-ai.githu
 
 This workflow ensures that all inputs are checked for potential threats before processing, and all outputs are reviewed for sensitive content before being delivered to the user, potentially leading to refinement loops if sensitive information is detected.
 
+## Evaluation with LangSmith
+
+The Secure Agent and its sub-agents are evaluated using [LangSmith](https://www.langchain.com/langsmith) to ensure their robustness and effectiveness. The evaluations are conducted using the CLI commands defined in `packages/backend/src/agents/secure_agent/cli.ts`.
+
+### Input Sanitizer Evaluation
+
+The `input_sanitizer` sub-agent is evaluated using an **LLM-as-a-judge** approach to assess its ability to correctly classify user inputs as `SAFE` or `SUSPICIOUS` and provide appropriate sanitized messages.
+
+```bash
+pnpm --filter @llmops-ts/backend secure-agent input-sanitizer langsmith llm-as-judge
+```
+
+### Answer Agent Evaluation
+
+The `answer_agent` sub-agent undergoes two types of evaluations:
+
+1. **LLM-as-a-judge**: This evaluation assesses the correctness and helpfulness of the agent's generated responses based on a reference output.
+
+   ```bash
+   pnpm --filter @llmops-ts/backend secure-agent answer-agent langsmith llm-as-judge
+   ```
+
+2. **Multi-turn Evaluation**: This evaluates the agent's performance in a conversational setting, simulating a user's multi-turn interaction to assess overall satisfaction and helpfulness over several exchanges.
+
+   ```bash
+   pnpm --filter @llmops-ts/backend secure-agent answer-agent langsmith multi-turn
+   ```
+
+### Output Sanitizer Evaluation
+
+The `output_sanitizer` sub-agent is evaluated using an **LLM-as-a-judge** approach to verify its capability to identify and flag sensitive information in the agent's output, and to provide a reason for the classification.
+
+```bash
+pnpm --filter @llmops-ts/backend secure-agent output-sanitizer langsmith llm-as-judge
+```
+
 ```mermaid
 graph TD
     A[Start] --> B(Input Sanitizer);

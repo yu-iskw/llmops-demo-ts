@@ -13,7 +13,10 @@ const createGenAIAsJudge = (params: {
   const genAI = createGenAIClient();
 
   return async (run: Run, example?: Example) => {
-    const evaluationPrompt = params.prompt.replace("{outputs}", JSON.stringify(run.outputs));
+    const evaluationPrompt = params.prompt.replace(
+      "{outputs}",
+      JSON.stringify(run.outputs),
+    );
 
     try {
       const result = await genAI.models.generateContent({
@@ -23,7 +26,10 @@ const createGenAIAsJudge = (params: {
       const feedback = result.text || "";
       return {
         key: params.feedbackKey,
-        score: feedback.includes("SATISFIED") && feedback.includes("HELPFUL") ? 1 : 0,
+        score:
+          feedback.includes("SATISFIED") && feedback.includes("HELPFUL")
+            ? 1
+            : 0,
       };
     } catch (error) {
       console.error("Error running GenAI evaluator:", error);
