@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { SecureAgent } from "./secureAgent"; // Import DefaultAgent
 import { createGenAIClient, GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
+import { runEvaluation } from "@agents/secure_agent/subagents/input_sanitizer/eval/runEvaluation";
 
 const secureAgentProgram = new Command();
 
@@ -45,3 +46,19 @@ secureAgentProgram
   );
 
 export { secureAgentProgram };
+
+////////////////////////////////////////////////////////////////
+// Input Sanitizer
+////////////////////////////////////////////////////////////////
+const inputSanitizerProgram = secureAgentProgram.command("input-sanitizer");
+
+const inputSanitizerLangSmithEval = inputSanitizerProgram.command("langsmith");
+
+// LLM-as-a-judge evaluation with LangSmith
+inputSanitizerLangSmithEval
+  .command("llm-as-judge")
+  .description("Evaluate the Secure agent with LLM as judge")
+  .action(async () => {
+    console.log("Evaluating Secure agent with LLM as judge");
+    await runEvaluation();
+  });

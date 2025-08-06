@@ -16,7 +16,7 @@ process.env.LANGSMITH_ENDPOINT = langsmithEndpoint;
 process.env.LANGCHAIN_TRACING_V2 = "true";
 process.env.LANGCHAIN_PROJECT = langsmithProject;
 
-async function runEvaluation() {
+export async function runEvaluation() {
   await evaluate(
     targetFunction,
     {
