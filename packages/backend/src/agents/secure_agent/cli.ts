@@ -45,14 +45,21 @@ secureAgentProgram
 
       const secureAgent = new SecureAgent();
 
-      const response = await secureAgent.processMessage(
+      const responseStream = secureAgent.processMessage(
         message,
         [], // history
         genAIConfig,
         model,
         undefined, // sessionId
       );
-      console.log("Secure Agent Response:", response);
+
+      process.stdout.write("Secure Agent Response:\n");
+      for await (const chunk of responseStream) {
+        if (chunk && chunk.content && typeof chunk.content === "string") {
+          process.stdout.write(chunk.content);
+        }
+      }
+      process.stdout.write("\n");
     },
   );
 

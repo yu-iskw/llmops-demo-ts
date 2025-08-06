@@ -119,7 +119,32 @@
 						}
 					}
 				},
-				"description": "Processes a chat message and returns a response.",
+				"description": "Processes a chat message and returns a complete response.",
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "The chat request containing message, history, and agent type.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ChatRequest",
+								"description": "The chat request containing message, history, and agent type."
+							}
+						}
+					}
+				}
+			}
+		},
+		"/chat/stream": {
+			"post": {
+				"operationId": "ProcessChatMessageStream",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"description": "Processes a chat message and streams the response using Server-Sent Events.",
 				"security": [],
 				"parameters": [],
 				"requestBody": {

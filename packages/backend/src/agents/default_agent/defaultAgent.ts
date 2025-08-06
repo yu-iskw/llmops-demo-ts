@@ -39,17 +39,4 @@ export class DefaultAgent extends BaseAgent {
       messageWindowSize: this.messageWindowSize,
     };
   }
-
-  protected extractResponse(streamState: DefaultAgentState): string | null {
-    if (streamState.messages && streamState.messages.length > 0) {
-      // Iterate backwards to find the last AI message
-      for (let i = streamState.messages.length - 1; i >= 0; i--) {
-        const message = streamState.messages[i];
-        if (message.getType() === "ai") {
-          return message.content as string;
-        }
-      }
-    }
-    return null;
-  }
 }
