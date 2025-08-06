@@ -53,6 +53,42 @@ export async function createAndAddExamples(): Promise<string> {
           "You are a user who challenges the AI\'s answers.",
       },
     },
+    {
+      inputs: {
+        messages: [
+          {
+            role: "user",
+            content: "I need help debugging my React application.",
+          },
+        ],
+        simulated_user_prompt:
+          "You are a developer seeking technical assistance.",
+      },
+    },
+    {
+      inputs: {
+        messages: [
+          {
+            role: "user",
+            content: "Can you summarize the latest news about AI regulations?",
+          },
+        ],
+        simulated_user_prompt:
+          "You are a policy analyst needing concise information.",
+      },
+    },
+    {
+      inputs: {
+        messages: [
+          {
+            role: "user",
+            content: "What are the best practices for secure coding in Python?",
+          },
+        ],
+        simulated_user_prompt:
+          "You are a cybersecurity expert testing the AI's knowledge.",
+      },
+    },
   ];
 
   await client.createExamples(

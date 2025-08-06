@@ -43,42 +43,6 @@ The agent's core workflow is managed by a [LangGraph](https://langchain-ai.githu
 
 This workflow ensures that all inputs are checked for potential threats before processing, and all outputs are reviewed for sensitive content before being delivered to the user, potentially leading to refinement loops if sensitive information is detected.
 
-## Evaluation with LangSmith
-
-The Secure Agent and its sub-agents are evaluated using [LangSmith](https://www.langchain.com/langsmith) to ensure their robustness and effectiveness. The evaluations are conducted using the CLI commands defined in `packages/backend/src/agents/secure_agent/cli.ts`.
-
-### Input Sanitizer Evaluation
-
-The `input_sanitizer` sub-agent is evaluated using an **LLM-as-a-judge** approach to assess its ability to correctly classify user inputs as `SAFE` or `SUSPICIOUS` and provide appropriate sanitized messages.
-
-```bash
-pnpm --filter @llmops-ts/backend secure-agent input-sanitizer langsmith llm-as-judge
-```
-
-### Answer Agent Evaluation
-
-The `answer_agent` sub-agent undergoes two types of evaluations:
-
-1. **LLM-as-a-judge**: This evaluation assesses the correctness and helpfulness of the agent's generated responses based on a reference output.
-
-   ```bash
-   pnpm --filter @llmops-ts/backend secure-agent answer-agent langsmith llm-as-judge
-   ```
-
-2. **Multi-turn Evaluation**: This evaluates the agent's performance in a conversational setting, simulating a user's multi-turn interaction to assess overall satisfaction and helpfulness over several exchanges.
-
-   ```bash
-   pnpm --filter @llmops-ts/backend secure-agent answer-agent langsmith multi-turn
-   ```
-
-### Output Sanitizer Evaluation
-
-The `output_sanitizer` sub-agent is evaluated using an **LLM-as-a-judge** approach to verify its capability to identify and flag sensitive information in the agent's output, and to provide a reason for the classification.
-
-```bash
-pnpm --filter @llmops-ts/backend secure-agent output-sanitizer langsmith llm-as-judge
-```
-
 ```mermaid
 graph TD
     A[Start] --> B(Input Sanitizer);
@@ -112,4 +76,64 @@ graph TD
     click E "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L79-L108" "callOutputSanitizer Node Function"
     click C "packages/backend/src/agents/secure_agent/secureAgentBuilder.ts#L34-L49" "Input Sanitizer Conditional Logic"
     click F "packages/backend/src/agents/secure_agent/secureAgentBuilder.ts#L52-L68" "Output Sanitizer Conditional Logic"
+```
+
+## Agent Evaluation with LangSmith
+
+The Secure Agent and its sub-agents are evaluated using [LangSmith](https://www.langchain.com/langsmith) to ensure their effectiveness and adherence to security protocols. The evaluation process involves:
+
+### 1. Input Sanitizer Evaluation
+
+- **Purpose**: To assess the Input Sanitizer sub-agent's ability to accurately classify user inputs as suspicious or safe, and to sanitize them appropriately.
+- **Method**: Utilizes an LLM-as-a-judge approach with LangSmith.
+  - **Evaluators**:
+    - `correctnessEvaluatorGenAI`: Judges the overall correctness of the sanitization based on reference outputs.
+    - `isSuspiciousAccuracy`: Measures the accuracy of the `is_suspicious` flag.
+    - `sanitizedMessageAccuracy`: Checks if the `sanitized_message` matches the expected output.
+
+```bash
+pnpm --filter @llmops-ts/backend secure-agent eval input-sanitizer langsmith llm-as-judge
+```
+
+### 2. Answer Agent Evaluation
+
+#### LLM-as-a-Judge Evaluation
+
+- **Purpose**: To evaluate the Answer Agent sub-agent's ability to provide correct and helpful responses based on the (sanitized) user's request.
+- **Method**: Employs an LLM-as-a-judge approach with LangSmith.
+  - **Evaluator**:
+    - `correctnessEvaluatorGenAI`: Assesses the correctness and helpfulness of the generated `ai_response` against reference outputs.
+
+```bash
+pnpm --filter @llmops-ts/backend secure-agent eval answer-agent langsmith llm-as-judge
+```
+
+#### Multi-turn Evaluation
+
+- **Purpose**: To assess the Answer Agent sub-agent's performance in multi-turn conversations, specifically focusing on user satisfaction and overall helpfulness across multiple turns.
+- **Method**: Conducts a multi-turn simulation using LangSmith's `openevals` library.
+  - **Evaluator**:
+    - `trajectoryEvaluator`: A custom LLM-as-a-judge that evaluates the entire conversation trajectory for user satisfaction and agent helpfulness.
+
+```bash
+pnpm --filter @llmops-ts/backend secure-agent eval answer-agent langsmith multi-turn
+```
+
+### 3. Output Sanitizer Evaluation
+
+- **Purpose**: To assess the Output Sanitizer sub-agent's effectiveness in identifying and flagging sensitive information within the AI-generated responses.
+- **Method**: Uses an LLM-as-a-judge approach with LangSmith.
+  - **Evaluators**:
+    - `correctnessEvaluatorGenAI`: Judges the overall correctness of the sensitive output classification based on reference outputs.
+    - `isSensitiveAccuracy`: Measures the accuracy of the `is_sensitive` flag.
+    - `outputSanitizedMessageAccuracy`: Checks if the `feedback_message` (reason for sensitivity) matches the expected output.
+
+```bash
+pnpm --filter @llmops-ts/backend secure-agent eval output-sanitizer langsmith llm-as-judge
+```
+
+All evaluations can be run simultaneously using the following command:
+
+```bash
+pnpm --filter @llmops-ts/backend secure-agent eval
 ```
