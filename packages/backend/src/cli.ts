@@ -2,7 +2,7 @@ import { Command } from "commander";
 import dotenv from "dotenv";
 import { getProjectRootPath } from "./utils/utils";
 import path from "path";
-import { initializeGenAIClient } from "./utils/genai";
+import { getGenAI } from "./utils/genai";
 // Sub commands
 import { defaultAgentProgram } from "./agents/default_agent/cli";
 import { researchAgentProgram } from "./agents/research_agent/cli";
@@ -14,7 +14,8 @@ dotenv.config({
   debug: true,
 });
 
-initializeGenAIClient();
+// Initialize the GoogleGenAI client
+getGenAI();
 
 const program = new Command();
 

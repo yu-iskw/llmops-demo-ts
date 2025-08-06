@@ -5,14 +5,15 @@ import { RegisterRoutes } from "./generated/routes/routes";
 import { ValidateError } from "tsoa";
 import { getPackageRootPath } from "./utils/utils";
 import path from "path";
-import { initializeGenAIClient } from "./utils/genai";
+import { getGenAI } from "./utils/genai";
 
 // Load environment variables from the root of the package
 dotenv.config({
   path: path.resolve(path.join(getPackageRootPath(), "..", "..", ".env")),
 });
 
-initializeGenAIClient();
+// Initialize the GoogleGenAI client
+getGenAI();
 
 const app = express();
 const port = process.env.PORT || 3000;

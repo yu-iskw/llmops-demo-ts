@@ -1,10 +1,10 @@
 import { runMultiturnSimulation, type ChatCompletionMessage } from "openevals";
-import { createGenAIClient } from "@utils/genai";
+import { getGenAI } from "@utils/genai";
 import { CreateAnswerAgentGraphBuilder } from "@agents/secure_agent/subagents/answer_agent/answerAgentBuilder";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { MemorySaver } from "@langchain/langgraph";
 
-const genAI = createGenAIClient();
+const genAI = getGenAI();
 const modelName = "gemini-2.5-flash"; // [[memory:5194513]]
 
 export async function targetFunction(inputs: {

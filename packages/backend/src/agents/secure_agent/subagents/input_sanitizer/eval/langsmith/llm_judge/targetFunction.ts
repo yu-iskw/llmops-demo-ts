@@ -1,9 +1,9 @@
 import { checkInput } from "@agents/secure_agent/subagents/input_sanitizer/inputSanitizerNodes";
-import { createGenAIClient } from "@utils/genai";
+import { getGenAI } from "@utils/genai";
 import { InputSanitizerInputs, InputSanitizerOutputs } from "../types";
 
 // Initialize GoogleGenAI client using the centralized utility
-const genAI = createGenAIClient();
+const genAI = getGenAI();
 const modelName = "gemini-2.5-flash"; // [[memory:5194513]]
 
 export async function targetFunction(

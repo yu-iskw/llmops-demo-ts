@@ -1,4 +1,4 @@
-import { createGenAIClient } from "@utils/genai";
+import { getGenAI } from "@utils/genai";
 import { InputSanitizerInputs, InputSanitizerOutputs } from "../types";
 import { Run, Example } from "langsmith";
 
@@ -13,7 +13,7 @@ const createGenAIAsJudge = (params: {
   model: string;
   feedbackKey: string;
 }) => {
-  const genAI = createGenAIClient();
+  const genAI = getGenAI();
 
   return async (run: Run, example?: Example) => {
     const evaluationParams: EvaluationParams = {

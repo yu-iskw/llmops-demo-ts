@@ -1,7 +1,7 @@
 import { BaseMessage } from "@langchain/core/messages";
 import { GoogleGenAI } from "@google/genai";
 import { CompiledStateGraph, MemorySaver } from "@langchain/langgraph";
-import { GenAIConfig, createGenAIClient } from "../utils/genai";
+import { GenAIConfig, getGenAI } from "../utils/genai";
 import { traceable } from "langsmith/traceable";
 import logger from "../utils/logger";
 
@@ -66,7 +66,7 @@ export abstract class BaseAgent implements IAgent {
   ): Promise<string> {
     try {
       const finalModelName = modelName || this.defaultModelName;
-      const genAI = createGenAIClient(config);
+      const genAI = getGenAI(config);
 
       const compiledGraph = this.createGraph(genAI, finalModelName);
       const initialState = this.createInitialState(message, history);
