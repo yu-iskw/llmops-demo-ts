@@ -33,10 +33,13 @@ const createGenAIAsJudge = (params: {
     try {
       const result = await genAI.models.generateContent({
         model: params.model,
-        contents: [{ role: 'user', parts: [{ text: evaluationPrompt }] }],
+        contents: [{ role: "user", parts: [{ text: evaluationPrompt }] }],
       });
       const feedback = result.text || ""; // Safely get text and default to empty string
-      return { key: params.feedbackKey, score: feedback.includes("CORRECT") ? 1 : 0 };
+      return {
+        key: params.feedbackKey,
+        score: feedback.includes("CORRECT") ? 1 : 0,
+      };
     } catch (error) {
       console.error("Error running GenAI evaluator:", error);
       return { key: params.feedbackKey, score: 0, comment: "Evaluator error" };
@@ -44,7 +47,10 @@ const createGenAIAsJudge = (params: {
   };
 };
 
-export const correctnessEvaluatorGenAI = async (run: Run, example?: Example) => {
+export const correctnessEvaluatorGenAI = async (
+  run: Run,
+  example?: Example,
+) => {
   const CORRECTNESS_PROMPT_GENAI = `
     Given the following input: {inputs}
     And the generated output: {outputs}

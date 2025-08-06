@@ -1,7 +1,17 @@
 import { Command } from "commander";
 import { SecureAgent } from "./secureAgent"; // Import DefaultAgent
 import { createGenAIClient, GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
-import { runEvaluation } from "@agents/secure_agent/subagents/input_sanitizer/eval/runEvaluation";
+import { runEvaluation as runInputSanitizerEvaluation } from "./subagents/input_sanitizer/eval/runEvaluation";
+import dotenv from "dotenv";
+import { getProjectRootPath } from "@utils/utils";
+import path from "path";
+import { runEvaluation as runOutputSanitizerEvaluation } from "./subagents/output_sanitizer/eval/langsmith/llm_judge/runEvaluation";
+
+// Load environment variables from the root of the package
+dotenv.config({
+  path: path.resolve(getProjectRootPath(), ".env"),
+  debug: true,
+});
 
 const secureAgentProgram = new Command();
 
@@ -9,7 +19,6 @@ secureAgentProgram
   .name("secure-agent")
   .description("CLI for interacting with the Secure Agent")
   .version("1.0.0");
-
 
 secureAgentProgram
   .command("run")
@@ -19,9 +28,12 @@ secureAgentProgram
   .option("-l, --location [location]", "Location to use")
   .requiredOption("-t, --text <message>", "The message to send to the agent")
   .action(
-    async (
-      options: { model: string; project: string; location: string; text: string },
-    ) => {
+    async (options: {
+      model: string;
+      project: string;
+      location: string;
+      text: string;
+    }) => {
       console.log(`Sending message to Secure Agent: \"${options.text}\"`);
       console.log(`Options received:`, options);
       const { project, location, model, text: message } = options;
@@ -60,5 +72,22 @@ inputSanitizerLangSmithEval
   .description("Evaluate the Secure agent with LLM as judge")
   .action(async () => {
     console.log("Evaluating Secure agent with LLM as judge");
-    await runEvaluation();
+    await runInputSanitizerEvaluation();
+  });
+
+////////////////////////////////////////////////////////////////
+// Output Sanitizer
+////////////////////////////////////////////////////////////////
+const outputSanitizerProgram = secureAgentProgram.command("output-sanitizer");
+
+const outputSanitizerLangSmithEval =
+  outputSanitizerProgram.command("langsmith");
+
+// LLM-as-a-judge evaluation with LangSmith
+outputSanitizerLangSmithEval
+  .command("llm-as-judge")
+  .description("Evaluate the Secure agent with LLM as judge")
+  .action(async () => {
+    console.log("Evaluating Secure agent with LLM as judge");
+    await runOutputSanitizerEvaluation();
   });

@@ -41,7 +41,7 @@ app.use(function errorHandler(
   next: express.NextFunction,
 ): express.Response | void {
   if (err instanceof ValidateError) {
-    console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
+    console.warn("Caught Validation Error for", req.path, ":", err.fields);
     return res.status(422).json({
       message: "Validation Failed",
       details: err?.fields,

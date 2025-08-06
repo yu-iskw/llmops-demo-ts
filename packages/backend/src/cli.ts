@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import dotenv from "dotenv";
-import { getPackageRootPath } from "./utils/utils";
+import { getProjectRootPath } from "./utils/utils";
 import path from "path";
 import { initializeGenAIClient } from "./utils/genai";
 // Sub commands
@@ -10,7 +10,7 @@ import { secureAgentProgram } from "./agents/secure_agent/cli";
 
 // Load environment variables from the root of the package
 dotenv.config({
-  path: path.resolve(getPackageRootPath(), "../../.env"),
+  path: path.resolve(getProjectRootPath(), ".env"),
   debug: true,
 });
 

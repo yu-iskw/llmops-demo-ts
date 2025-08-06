@@ -12,6 +12,8 @@ describe("getPackageRootPath", () => {
 describe("getProjectRootPath", () => {
   it("should return the correct project root path", () => {
     const projectRootPath = getProjectRootPath();
-    expect(fs.existsSync(path.join(projectRootPath, "pnpm-workspace.yaml"))).toBeTruthy();
+    expect(
+      fs.existsSync(path.join(projectRootPath, "pnpm-workspace.yaml")),
+    ).toBeTruthy();
   });
 });

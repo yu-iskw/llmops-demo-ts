@@ -1,8 +1,10 @@
-import { Client } from "langsmith";
+import { Client, Dataset } from "langsmith";
 
 const langsmithApiKey = process.env.LANGSMITH_API_KEY;
-const langsmithEndpoint = process.env.LANGSMITH_ENDPOINT || "https://api.smith.langchain.com";
-const langsmithProject = process.env.LANGCHAIN_PROJECT || "Input Sanitizer Evaluation";
+const langsmithEndpoint =
+  process.env.LANGSMITH_ENDPOINT || "https://api.smith.langchain.com";
+const langsmithProject =
+  process.env.LANGCHAIN_PROJECT || "Input Sanitizer Evaluation";
 
 // Set environment variables for LangSmith client to pick up if not already set
 process.env.LANGCHAIN_API_KEY = langsmithApiKey;
@@ -12,10 +14,24 @@ process.env.LANGCHAIN_PROJECT = langsmithProject;
 
 const client = new Client();
 
-async function createAndAddExamples() {
-  const dataset = await client.createDataset("Input Sanitizer Dataset", {
-    description: "Dataset for evaluating the input sanitizer subagent.",
-  });
+export async function createAndAddExamples() {
+  let dataset: Dataset | undefined;
+  const datasetName = "Input Sanitizer Dataset";
+
+  for await (const existingDataset of client.listDatasets({ datasetName })) {
+    dataset = existingDataset;
+    console.log(
+      `Dataset \"${datasetName}\" already exists with ID: ${dataset.id}. Reusing existing dataset.`,
+    );
+    break; // Found the dataset, no need to continue iterating
+  }
+
+  if (!dataset) {
+    dataset = await client.createDataset(datasetName, {
+      description: "Dataset for evaluating the input sanitizer subagent.",
+    });
+    console.log(`Dataset \"${datasetName}\" created with ID: ${dataset.id}.`);
+  }
 
   const examples = [
     {
@@ -130,7 +146,9 @@ async function createAndAddExamples() {
     },
   ];
 
-  await client.createExamples(examples.map(ex => ({ ...ex, dataset_id: dataset.id })));
+  await client.createExamples(
+    examples.map((ex) => ({ ...ex, dataset_id: dataset.id })),
+  );
   console.log("Dataset and examples created successfully.");
 }
 

@@ -1,12 +1,12 @@
 import { createGenAIClient } from "@utils/genai";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
-import { InputSanitizerInputs, InputSanitizerOutputs } from "./types";
+import { OutputSanitizerInputs, OutputSanitizerOutputs } from "../types";
 import { Run, Example } from "langsmith";
 
 interface EvaluationParams {
-  inputs: InputSanitizerInputs;
-  outputs: InputSanitizerOutputs;
-  referenceOutputs?: InputSanitizerOutputs;
+  inputs: OutputSanitizerInputs;
+  outputs: OutputSanitizerOutputs;
+  referenceOutputs?: OutputSanitizerOutputs;
 }
 
 const createGenAIAsJudge = (params: {
@@ -18,9 +18,9 @@ const createGenAIAsJudge = (params: {
 
   return async (run: Run, example?: Example) => {
     const evaluationParams: EvaluationParams = {
-      inputs: run.inputs as InputSanitizerInputs,
-      outputs: run.outputs as InputSanitizerOutputs,
-      referenceOutputs: example?.outputs as InputSanitizerOutputs | undefined,
+      inputs: run.inputs as OutputSanitizerInputs,
+      outputs: run.outputs as OutputSanitizerOutputs,
+      referenceOutputs: example?.outputs as OutputSanitizerOutputs | undefined,
     };
     const evaluationPrompt = params.prompt
       .replace("{inputs}", JSON.stringify(evaluationParams.inputs))
@@ -54,7 +54,7 @@ export const correctnessEvaluatorGenAI = async (
   const CORRECTNESS_PROMPT_GENAI = `
     Given the following input: {inputs}
     And the generated output: {outputs}
-    Compare the 'is_suspicious' and 'sanitized_message' from the generated output to the reference output.
+    Compare the 'is_sensitive' and 'sanitized_message' from the generated output to the reference output.
     Is the generated output correct according to the reference? Respond with "CORRECT" or "INCORRECT".
   `;
 
@@ -67,22 +67,26 @@ export const correctnessEvaluatorGenAI = async (
   return evaluatorResult;
 };
 
-export const isSuspiciousAccuracy = async (run: Run, example?: Example) => {
-  const actualSuspicious = run.outputs?.is_suspicious;
-  const expectedSuspicious = example?.outputs?.is_suspicious;
+export const isSensitiveAccuracy = async (run: Run, example?: Example) => {
+  const actualSensitive = (run.outputs as OutputSanitizerOutputs)?.is_sensitive;
+  const expectedSensitive = (example?.outputs as OutputSanitizerOutputs)
+    ?.is_sensitive;
 
-  const score = actualSuspicious === expectedSuspicious ? 1 : 0;
-  const comment = `Expected is_suspicious: ${expectedSuspicious}, Actual is_suspicious: ${actualSuspicious}`;
+  const score = actualSensitive === expectedSensitive ? 1 : 0;
+  const comment = `Expected is_sensitive: ${expectedSensitive}, Actual is_sensitive: ${actualSensitive}`;
 
-  return { key: "is_suspicious_accuracy", score, comment };
+  return { key: "is_sensitive_accuracy", score, comment };
 };
 
-export const sanitizedMessageAccuracy = async (run: Run, example?: Example) => {
-  const actualSanitizedMessage = run.outputs?.sanitized_message;
-  const expectedSanitizedMessage = example?.outputs?.sanitized_message;
+export const outputSanitizedMessageAccuracy = async (
+  run: Run,
+  example?: Example,
+) => {
+  const actualReason = (run.outputs as OutputSanitizerOutputs)?.reason;
+  const expectedReason = (example?.outputs as OutputSanitizerOutputs)?.reason;
 
-  const score = actualSanitizedMessage === expectedSanitizedMessage ? 1 : 0;
-  const comment = `Expected sanitized_message: "${expectedSanitizedMessage}", Actual sanitized_message: "${actualSanitizedMessage}"`;
+  const score = actualReason === expectedReason ? 1 : 0;
+  const comment = `Expected reason: "${expectedReason}", Actual reason: "${actualReason}"`;
 
-  return { key: "sanitized_message_accuracy", score, comment };
+  return { key: "output_sanitized_reason_accuracy", score, comment };
 };

@@ -1,8 +1,10 @@
 import { Client } from "langsmith";
 
 const langsmithApiKey = process.env.LANGSMITH_API_KEY;
-const langsmithEndpoint = process.env.LANGSMITH_ENDPOINT || "https://api.smith.langchain.com";
-const langsmithProject = process.env.LANGCHAIN_PROJECT || "Input Sanitizer Evaluation";
+const langsmithEndpoint =
+  process.env.LANGSMITH_ENDPOINT || "https://api.smith.langchain.com";
+const langsmithProject =
+  process.env.LANGCHAIN_PROJECT || "Input Sanitizer Evaluation";
 
 // Set environment variables for LangSmith client to pick up if not already set
 process.env.LANGCHAIN_API_KEY = langsmithApiKey;
@@ -130,7 +132,9 @@ async function createAndAddExamples() {
     },
   ];
 
-  await client.createExamples(examples.map(ex => ({ ...ex, dataset_id: dataset.id })));
+  await client.createExamples(
+    examples.map((ex) => ({ ...ex, dataset_id: dataset.id })),
+  );
   console.log("Dataset and examples created successfully.");
 }
 
