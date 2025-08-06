@@ -52,7 +52,8 @@ graph TD
     E --> F{Output Sensitive?};
     F -- Yes --> D;
     C -- Yes --> G[End];
-    F -- No --> G;
+    F -- No --> H(Extract Final Response);
+    H --> G;
 
     %% Node descriptions
     classDef defaultNode fill:#ECECFF,stroke:#333,stroke-width:2px;
@@ -64,6 +65,7 @@ graph TD
     style B fill:#ECECFF,stroke:#333,stroke-width:2px;
     style D fill:#ECECFF,stroke:#333,stroke-width:2px;
     style E fill:#ECECFF,stroke:#333,stroke-width:2px;
+    style H fill:#ECECFF,stroke:#333,stroke-width:2px;
     style C fill:#CCE4FF,stroke:#333,stroke-width:2px;
     style F fill:#CCE4FF,stroke:#333,stroke-width:2px;
 
@@ -74,6 +76,7 @@ graph TD
     click B "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L15-L45" "callInputSanitizer Node Function"
     click D "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L47-L77" "callRequestAnswerer Node Function"
     click E "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L79-L108" "callOutputSanitizer Node Function"
+    click H "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L111-L117" "extractFinalResponse Node Function"
     click C "packages/backend/src/agents/secure_agent/secureAgentBuilder.ts#L34-L49" "Input Sanitizer Conditional Logic"
     click F "packages/backend/src/agents/secure_agent/secureAgentBuilder.ts#L52-L68" "Output Sanitizer Conditional Logic"
 ```
