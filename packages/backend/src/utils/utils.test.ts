@@ -1,4 +1,4 @@
-import { getPackageRootPath, getProjectRootPath } from "./utils.js";
+import { getPackageRootPath, getProjectRootPath } from "./utils";
 import path from "path";
 import fs from "fs";
 

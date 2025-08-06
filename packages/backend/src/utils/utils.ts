@@ -1,5 +1,6 @@
-import path from "path";
+import path, { dirname } from "path";
 import fs from "fs";
+import { fileURLToPath } from "url";
 
 export function getPackageRootPath(): string {
   let currentDir = __dirname;
