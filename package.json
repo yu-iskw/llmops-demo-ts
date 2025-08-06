@@ -21,8 +21,7 @@
   "dependencies": {
     "@types/uuid": "^10.0.0",
     "commander": "^14.0.0",
-    "uuid": "^11.1.0",
-    "zod-to-json-schema": "^3.24.6"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint-react/eslint-plugin": "^1.52.3",
