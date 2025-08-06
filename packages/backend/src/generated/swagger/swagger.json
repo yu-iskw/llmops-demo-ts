@@ -48,10 +48,13 @@
         "additionalProperties": false
       },
       "AgentType": {
+        "type": "string",
+        "enum": ["default", "research", "secure"]
+      },
+      "AgentInfo": {
         "properties": {
           "name": {
-            "type": "string",
-            "enum": ["default", "research", "secure"]
+            "$ref": "#/components/schemas/AgentType"
           },
           "description": {
             "type": "string"
@@ -122,7 +125,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "$ref": "#/components/schemas/AgentType"
+                    "$ref": "#/components/schemas/AgentInfo"
                   },
                   "type": "array"
                 }

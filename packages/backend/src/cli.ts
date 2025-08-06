@@ -1,99 +1,30 @@
-import "module-alias/register";
 import { Command } from "commander";
-import { ChatService } from "./services/chatService";
 import dotenv from "dotenv";
-import { getPackageRootPath } from "./utils/utils";
+import { getProjectRootPath } from "./utils/utils";
 import path from "path";
 import { initializeGenAIClient } from "./utils/genai";
+// Sub commands
+import { defaultAgentProgram } from "./agents/default_agent/cli";
+import { researchAgentProgram } from "./agents/research_agent/cli";
+import { secureAgentProgram } from "./agents/secure_agent/cli";
 
 // Load environment variables from the root of the package
 dotenv.config({
-  path: path.resolve(getPackageRootPath(), "../../.env"),
+  path: path.resolve(getProjectRootPath(), ".env"),
   debug: true,
 });
 
 initializeGenAIClient();
 
 const program = new Command();
-const chatService = new ChatService();
 
 program
   .name("llmops-cli")
   .description("CLI for interacting with LangGraph agents")
   .version("1.0.0");
-
-program
-  .command("default-agent <message>")
-  .description("Interact with the Default agent")
-  .option("-m, --model [model]", "Model to use", "gemini-2.5-flash")
-  .option("-p, --project [project]", "Project to use")
-  .option("-l, --location [location]", "Location to use")
-  .action(
-    async (
-      message: string,
-      options: { model: string; project: string; location: string },
-    ) => {
-      console.log(`Sending message to Default Agent: \"${message}\"`);
-      const { project, location, model } = options;
-
-      const response = await chatService.processMessage(
-        message,
-        [],
-        "default",
-        { project, location },
-        model,
-        undefined, // sessionId
-      );
-      console.log("Default Agent Response:", response);
-    },
-  );
-
-program
-  .command("research-agent <message>")
-  .description("Interact with the Research agent")
-  .option("-m, --model [model]", "Model to use", "gemini-2.5-flash")
-  .option("-p, --project [project]", "Project to use")
-  .option("-l, --location [location]", "Location to use")
-  .action(
-    async (
-      message: string,
-      options: { model: string; project: string; location: string },
-    ) => {
-      console.log(`Sending message to Search Agent: \"${message}\"`);
-      const { project, location, model } = options; // Destructure model
-      const response = await chatService.processMessage(
-        message,
-        [],
-        "research",
-        { project, location },
-        model, // Pass model
-      );
-      console.log("Search Agent Response:", response);
-    },
-  );
-
-program
-  .command("secure-agent <message>")
-  .description("Interact with the Secure agent")
-  .option("-m, --model [model]", "Model to use", "gemini-2.5-flash")
-  .option("-p, --project [project]", "Project to use")
-  .option("-l, --location [location]", "Location to use")
-  .action(
-    async (
-      message: string,
-      options: { model: string; project: string; location: string },
-    ) => {
-      console.log(`Sending message to Secure Agent: \"${message}\"`);
-      const { project, location, model } = options;
-      const response = await chatService.processMessage(
-        message,
-        [],
-        "secure",
-        { project, location },
-        model,
-      );
-      console.log("Secure Agent Response:", response);
-    },
-  );
-
+// Add sub commands
+program.addCommand(defaultAgentProgram);
+program.addCommand(researchAgentProgram);
+program.addCommand(secureAgentProgram);
+// Parse the command line arguments
 program.parse(process.argv);

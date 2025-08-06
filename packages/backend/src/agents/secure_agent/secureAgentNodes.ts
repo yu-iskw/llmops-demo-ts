@@ -4,10 +4,10 @@ import { CompiledStateGraph } from "@langchain/langgraph";
 import { BaseAgent } from "../baseAgent";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { CreateInputSanitizerGraphBuilder } from "./subagents/input_sanitizer/inputSanitizerBuilder";
-import { CreateRequestAnswererGraphBuilder } from "./subagents/request_answerer/requestAnswererBuilder";
+import { CreateAnswerAgentGraphBuilder } from "./subagents/answer_agent/answerAgentBuilder";
 import { CreateOutputSanitizerGraphBuilder } from "./subagents/output_sanitizer/outputSanitizerBuilder";
 import { InputSanitizerState } from "./subagents/input_sanitizer/inputSanitizerState";
-import { RequestAnswererState } from "./subagents/request_answerer/requestAnswererState";
+import { RequestAnswererState } from "./subagents/answer_agent/requestAnswererState";
 import { OutputSanitizerState } from "./subagents/output_sanitizer/outputSanitizerState";
 import logger from "../../utils/logger";
 import { extractStringContent } from "../../utils/agentUtils";
@@ -52,7 +52,7 @@ export const callRequestAnswerer = async (
   modelName: string,
 ) => {
   logger.info("Calling Request Answerer Subgraph");
-  const requestAnswererGraph = CreateRequestAnswererGraphBuilder(
+  const requestAnswererGraph = CreateAnswerAgentGraphBuilder(
     genAI,
     modelName,
   ).compile();

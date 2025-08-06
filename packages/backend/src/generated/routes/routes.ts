@@ -54,17 +54,22 @@ const models: TsoaRoute.Models = {
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   AgentType: {
+    dataType: "refAlias",
+    type: {
+      dataType: "union",
+      subSchemas: [
+        { dataType: "enum", enums: ["default"] },
+        { dataType: "enum", enums: ["research"] },
+        { dataType: "enum", enums: ["secure"] },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  AgentInfo: {
     dataType: "refObject",
     properties: {
-      name: {
-        dataType: "union",
-        subSchemas: [
-          { dataType: "enum", enums: ["default"] },
-          { dataType: "enum", enums: ["research"] },
-          { dataType: "enum", enums: ["secure"] },
-        ],
-        required: true,
-      },
+      name: { ref: "AgentType", required: true },
       description: { dataType: "string", required: true },
     },
     additionalProperties: false,

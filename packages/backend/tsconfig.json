@@ -4,14 +4,16 @@
     "outDir": "./dist",
     "rootDir": "src",
     "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "baseUrl": ".",
     "paths": {
-      "@agents/*": ["src/agents/*"],
-      "@models/*": ["src/models/*"],
-      "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"],
-      "@graph": ["src/graph.ts"],
-      "@llmops-demo/common": ["../common/dist"]
+      "@agents/*": ["./src/agents/*"],
+      "@models/*": ["./src/models/*"],
+      "@services/*": ["./src/services/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@graph": ["./src/graph.ts"],
+      "@llmops-demo/common": ["../common/src/index.ts"]
     }
   },
   "references": [{ "path": "../common" }],

@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Route, Get, SuccessResponse } from "tsoa";
 import { ChatService } from "../services/chatService";
-import { ChatRequest, ChatMessage, AgentType } from "@llmops-demo/common";
-import { AgentFactory } from "../agents/agentFactory";
+import { ChatRequest, ChatMessage } from "@llmops-demo/common";
+import { AgentFactory, AgentType, AgentInfo } from "../agents/agentFactory";
 
 @Route("chat")
 export class ChatController extends Controller {
@@ -49,7 +49,7 @@ export class ChatController extends Controller {
    * Retrieves a list of available agent types.
    */
   @Get("/agent-types")
-  public async getAgentTypes(): Promise<AgentType[]> {
+  public async getAgentTypes(): Promise<AgentInfo[]> {
     return AgentFactory.getAvailableAgents();
   }
 }
