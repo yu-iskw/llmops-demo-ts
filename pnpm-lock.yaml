@@ -25,25 +25,25 @@ importers:
   packages/backend:
     dependencies:
       '@google-cloud/vertexai':
-        specifier: ^1.0.0
+        specifier: ^1.10.0
         version: 1.10.0
       '@google/genai':
-        specifier: ^0.14.0
+        specifier: ^0.14.1
         version: 0.14.1
       '@langchain/core':
         specifier: ^0.3.66
         version: 0.3.66
       '@langchain/langgraph':
-        specifier: ^0.4.1
+        specifier: ^0.4.2
         version: 0.4.2(@langchain/core@0.3.66)(zod-to-json-schema@3.24.6(zod@3.25.76))
       '@llmops-demo/common':
         specifier: workspace:*
         version: link:../common
       '@tsoa/runtime':
-        specifier: ^6.0.0
+        specifier: ^6.6.0
         version: 6.6.0
       commander:
-        specifier: ^12.0.0
+        specifier: ^12.1.0
         version: 12.1.0
       cors:
         specifier: ^2.8.5
@@ -55,8 +55,8 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0
       langsmith:
-        specifier: ^0.3.50
-        version: 0.3.50
+        specifier: ^0.3.51
+        version: 0.3.51
       module-alias:
         specifier: ^2.2.3
         version: 2.2.3
@@ -65,37 +65,40 @@ importers:
         version: 3.17.0
     devDependencies:
       '@types/cors':
-        specifier: ^2.8.17
+        specifier: ^2.8.19
         version: 2.8.19
       '@types/express':
         specifier: ^5.0.3
         version: 5.0.3
       '@types/jest':
-        specifier: ^29.0.0
+        specifier: ^29.5.14
         version: 29.5.14
       '@types/node':
-        specifier: ^20.0.0
+        specifier: ^20.19.9
         version: 20.19.9
       '@types/winston':
         specifier: ^2.4.4
         version: 2.4.4
       jest:
-        specifier: ^29.0.0
+        specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.9)(ts-node@10.9.2(@types/node@20.19.9)(typescript@5.9.2))
       ts-jest:
-        specifier: ^29.0.0
+        specifier: ^29.4.1
         version: 29.4.1(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.28.0))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.19.9)(ts-node@10.9.2(@types/node@20.19.9)(typescript@5.9.2)))(typescript@5.9.2)
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.19.9)(typescript@5.9.2)
+      tsconfig-paths:
+        specifier: ^4.2.0
+        version: 4.2.0
       tsoa:
-        specifier: ^6.0.0
+        specifier: ^6.6.0
         version: 6.6.0
       tsx:
-        specifier: ^4.0.0
+        specifier: ^4.20.3
         version: 4.20.3
       typescript:
-        specifier: ^5.0.0
+        specifier: ^5.9.2
         version: 5.9.2
 
   packages/common: {}
@@ -1878,8 +1881,8 @@ packages:
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
 
-  langsmith@0.3.50:
-    resolution: {integrity: sha512-yosW6sR0EFnMnYKKyBmcqTNknDVOs+dUfcswWk80JoRxox6WEyel7hmSkSzabP/GmTs0hXbrtc+lZwpJWSnI0w==}
+  langsmith@0.3.51:
+    resolution: {integrity: sha512-QQ+S3LTo5ZVrBs8fL8tTij38gEaKbxj9w70OVYpNCDwS9BMv4ihAxF0PlYQFXx1FBoy1irf4k5ceDCb8+WX5gQ==}
     peerDependencies:
       '@opentelemetry/api': '*'
       '@opentelemetry/exporter-trace-otlp-proto': '*'
@@ -2422,6 +2425,10 @@ packages:
     resolution: {integrity: sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==}
     engines: {node: '>=12'}
 
+  strip-bom@3.0.0:
+    resolution: {integrity: sha512-vavAMRXOgBVNF6nyEEmL3DBK19iRpDcoIwW+swQ+CbGiu7lju6t+JklA1MHweoWtadgt4ISVUsXLyDq34ddcwA==}
+    engines: {node: '>=4'}
+
   strip-bom@4.0.0:
     resolution: {integrity: sha512-3xurFv5tEgii33Zi8Jtp55wEIILR9eh34FAW00PZf+JnSsTmV/ioewSgQl97JHvgjoRGwPShsWm+IdrxB35d0w==}
     engines: {node: '>=8'}
@@ -2523,6 +2530,10 @@ packages:
         optional: true
       '@swc/wasm':
         optional: true
+
+  tsconfig-paths@4.2.0:
+    resolution: {integrity: sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg==}
+    engines: {node: '>=6'}
 
   tsoa@6.6.0:
     resolution: {integrity: sha512-7FudRojmbEpbSQ3t1pyG5EjV3scF7/X75giQt1q+tnuGjjJppB8BOEmIdCK/G8S5Dqnmpwz5Q3vxluKozpIW9A==}
@@ -3428,7 +3439,7 @@ snapshots:
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.20
-      langsmith: 0.3.50
+      langsmith: 0.3.51
       mustache: 4.2.0
       p-queue: 6.6.2
       p-retry: 4.6.2
@@ -4965,7 +4976,7 @@ snapshots:
 
   kuler@2.0.0: {}
 
-  langsmith@0.3.50:
+  langsmith@0.3.51:
     dependencies:
       '@types/uuid': 10.0.0
       chalk: 4.1.2
@@ -5486,6 +5497,8 @@ snapshots:
     dependencies:
       ansi-regex: 6.1.0
 
+  strip-bom@3.0.0: {}
+
   strip-bom@4.0.0: {}
 
   strip-final-newline@2.0.0: {}
@@ -5570,6 +5583,12 @@ snapshots:
       typescript: 5.9.2
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+
+  tsconfig-paths@4.2.0:
+    dependencies:
+      json5: 2.2.3
+      minimist: 1.2.8
+      strip-bom: 3.0.0
 
   tsoa@6.6.0:
     dependencies:

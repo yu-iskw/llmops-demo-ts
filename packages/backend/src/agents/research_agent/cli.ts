@@ -1,19 +1,19 @@
 import "module-alias/register";
 import { Command } from "commander";
-import { DefaultAgent } from "../default_agent/defaultAgent"; // Import DefaultAgent
+import { ResearchAgent } from "./researchAgent"; // Import DefaultAgent
 import { createGenAIClient, GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
 
-const defaultAgentProgram = new Command();
+const researchAgentProgram = new Command();
 
-defaultAgentProgram
-  .name("default-agent")
-  .description("CLI for interacting with the Default Agent")
+researchAgentProgram
+  .name("research-agent")
+  .description("CLI for interacting with the Research Agent")
   .version("1.0.0");
 
 
-defaultAgentProgram
+researchAgentProgram
   .command("run")
-  .description("Run the Default agent")
+  .description("Run the Research agent")
   .option("-m, --model [model]", "Model to use", "gemini-2.5-flash")
   .option("-p, --project [project]", "Project to use")
   .option("-l, --location [location]", "Location to use")
@@ -22,7 +22,7 @@ defaultAgentProgram
     async (
       options: { model: string; project: string; location: string; text: string },
     ) => {
-      console.log(`Sending message to Default Agent: \"${options.text}\"`);
+      console.log(`Sending message to Research Agent: \"${options.text}\"`);
       console.log(`Options received:`, options);
       const { project, location, model, text: message } = options;
 
@@ -32,9 +32,9 @@ defaultAgentProgram
       if (location) genAIConfig.location = location;
 
       const genAI = createGenAIClient(genAIConfig);
-      const defaultAgent = new DefaultAgent();
+      const researchAgent = new ResearchAgent();
 
-      const response = await defaultAgent.processMessage(
+      const response = await researchAgent.processMessage(
         message,
         [], // history
         genAIConfig,
@@ -45,4 +45,4 @@ defaultAgentProgram
     },
   );
 
-export { defaultAgentProgram };
+export { researchAgentProgram };

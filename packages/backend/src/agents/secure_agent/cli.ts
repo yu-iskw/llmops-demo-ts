@@ -1,19 +1,18 @@
-import "module-alias/register";
 import { Command } from "commander";
-import { DefaultAgent } from "../default_agent/defaultAgent"; // Import DefaultAgent
+import { SecureAgent } from "./secureAgent"; // Import DefaultAgent
 import { createGenAIClient, GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
 
-const defaultAgentProgram = new Command();
+const secureAgentProgram = new Command();
 
-defaultAgentProgram
-  .name("default-agent")
-  .description("CLI for interacting with the Default Agent")
+secureAgentProgram
+  .name("secure-agent")
+  .description("CLI for interacting with the Secure Agent")
   .version("1.0.0");
 
 
-defaultAgentProgram
+secureAgentProgram
   .command("run")
-  .description("Run the Default agent")
+  .description("Run the Secure agent")
   .option("-m, --model [model]", "Model to use", "gemini-2.5-flash")
   .option("-p, --project [project]", "Project to use")
   .option("-l, --location [location]", "Location to use")
@@ -22,7 +21,7 @@ defaultAgentProgram
     async (
       options: { model: string; project: string; location: string; text: string },
     ) => {
-      console.log(`Sending message to Default Agent: \"${options.text}\"`);
+      console.log(`Sending message to Secure Agent: \"${options.text}\"`);
       console.log(`Options received:`, options);
       const { project, location, model, text: message } = options;
 
@@ -32,9 +31,9 @@ defaultAgentProgram
       if (location) genAIConfig.location = location;
 
       const genAI = createGenAIClient(genAIConfig);
-      const defaultAgent = new DefaultAgent();
+      const secureAgent = new SecureAgent();
 
-      const response = await defaultAgent.processMessage(
+      const response = await secureAgent.processMessage(
         message,
         [], // history
         genAIConfig,
@@ -45,4 +44,4 @@ defaultAgentProgram
     },
   );
 
-export { defaultAgentProgram };
+export { secureAgentProgram };

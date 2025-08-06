@@ -11,6 +11,11 @@ export interface AgentConfig {
   messageWindowSize?: number;
 }
 
+export interface AgentInfo {
+  name: AgentType;
+  description: string;
+}
+
 export class AgentFactory {
   private static agents: Map<AgentType, IAgent> = new Map();
   private static agentConfigs: Map<AgentType, AgentConfig> = new Map();
@@ -36,15 +41,12 @@ export class AgentFactory {
   /**
    * Gets all available agent types with their descriptions
    */
-  public static getAvailableAgents(): Array<{
-    name: string;
-    description: string;
-  }> {
+  public static getAvailableAgents(): AgentInfo[] {
     const agentTypes: AgentType[] = ["default", "research", "secure"];
     return agentTypes.map((type) => {
       const agent = this.getAgent(type);
       return {
-        name: agent.getType(),
+        name: agent.getType() as AgentType,
         description: agent.getDescription(),
       };
     });
