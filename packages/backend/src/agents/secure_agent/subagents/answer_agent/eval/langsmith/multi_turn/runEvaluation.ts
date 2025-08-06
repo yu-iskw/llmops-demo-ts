@@ -2,14 +2,14 @@ import { evaluate, EvaluateOptions } from "langsmith/evaluation";
 import { targetFunction } from "./targetFunction";
 import { createAndAddExamples } from "./dataset";
 import { Run } from "langsmith";
-import { createGenAIClient } from "@utils/genai";
+import { getGenAI } from "@utils/genai";
 
 const createGenAIAsJudge = (params: {
   prompt: string;
   model: string;
   feedbackKey: string;
 }) => {
-  const genAI = createGenAIClient();
+  const genAI = getGenAI();
 
   return async (run: Run) => {
     const evaluationPrompt = params.prompt.replace(
