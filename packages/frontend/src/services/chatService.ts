@@ -1,4 +1,3 @@
-import { Ref } from "vue";
 import { ChatMessage as CommonChatMessage } from "@llmops-demo/common"; // Import common ChatMessage
 
 export interface UIChatMessage {

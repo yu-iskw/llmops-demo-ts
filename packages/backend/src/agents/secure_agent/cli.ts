@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { SecureAgent } from "./secureAgent"; // Import DefaultAgent
-import { createGenAIClient, GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
+import { GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
 import { runLlmJudgeEvaluation as runInputSanitizerEvaluation } from "./subagents/input_sanitizer/eval/langsmith/llm_judge/runEvaluation";
 import dotenv from "dotenv";
 import { getProjectRootPath } from "@utils/utils";
@@ -43,7 +43,6 @@ secureAgentProgram
       if (project) genAIConfig.project = project;
       if (location) genAIConfig.location = location;
 
-      const genAI = createGenAIClient(genAIConfig);
       const secureAgent = new SecureAgent();
 
       const response = await secureAgent.processMessage(

@@ -1,16 +1,10 @@
 import {
   AIMessage,
   FunctionMessage,
-  BaseMessage,
   HumanMessage,
 } from "@langchain/core/messages";
 import { DefaultAgentStateAnnotation } from "./defaultAgentState";
-import {
-  GoogleGenAI,
-  FunctionCall,
-  FunctionCallingConfigMode,
-  Content,
-} from "@google/genai";
+import { GoogleGenAI, FunctionCallingConfigMode } from "@google/genai";
 import {
   getCurrentTimeToolDeclaration,
   executeToolCalls,

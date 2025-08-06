@@ -1,4 +1,3 @@
-import { GoogleGenAI } from "@google/genai";
 import { runMultiturnSimulation, type ChatCompletionMessage } from "openevals";
 import { createGenAIClient } from "@utils/genai";
 import { CreateAnswerAgentGraphBuilder } from "@agents/secure_agent/subagents/answer_agent/answerAgentBuilder";

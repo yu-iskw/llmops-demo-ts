@@ -1,5 +1,5 @@
 // Import IAgent from baseAgent where it's defined
-import { BaseAgent, IAgent } from "./baseAgent";
+import { IAgent } from "./baseAgent";
 import { DefaultAgent } from "./default_agent/defaultAgent";
 import { ResearchAgent } from "./research_agent/researchAgent";
 import { SecureAgent } from "./secure_agent/secureAgent";

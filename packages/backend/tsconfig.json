@@ -17,6 +17,10 @@
     }
   },
   "references": [{ "path": "../common" }],
-  "include": ["src/**/*.ts", "./src/generated/routes/routes.ts"],
+  "include": [
+    "src/**/*.ts",
+    "./src/generated/routes/routes.ts",
+    "../../eslint.config.js"
+  ],
   "exclude": ["node_modules", "dist"]
 }
