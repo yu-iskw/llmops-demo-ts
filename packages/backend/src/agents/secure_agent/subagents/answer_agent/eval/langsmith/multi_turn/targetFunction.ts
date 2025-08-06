@@ -5,8 +5,9 @@ import {
   type ChatCompletionMessage,
 } from "openevals";
 import { createGenAIClient } from "@utils/genai";
-import { answerRequest } from "@agents/secure_agent/subagents/answer_agent/requestAnswererNodes";
+import { CreateAnswerAgentGraphBuilder } from "@agents/secure_agent/subagents/answer_agent/answerAgentBuilder";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
+import { MemorySaver } from "@langchain/langgraph";
 
 const genAI = createGenAIClient();
 const modelName = "gemini-2.5-flash"; // [[memory:5194513]]
@@ -39,15 +40,22 @@ export async function targetFunction(inputs: {
       return new HumanMessage(msg.content || ""); // Default or handle other roles if necessary
     });
 
+    // Create and compile the answer agent graph within the app function with a checkpointer
+    const answerAgentGraph = CreateAnswerAgentGraphBuilder(genAI, modelName).compile({
+      checkpointer: new MemorySaver(),
+    });
+
     const initialState = {
       user_message: nextMessage.content,
       feedback_message: undefined,
-      messages: langChainMessages.slice(0, langChainMessages.length - 1), // Pass previous messages
+      messages: langChainMessages.slice(0, langChainMessages.length - 1),
       messageWindowSize: 5,
       ai_response: undefined,
     };
 
-    const result = await answerRequest(initialState, genAI, modelName);
+    const result = await answerAgentGraph.invoke(initialState, {
+      configurable: { thread_id: threadId },
+    });
 
     const responseMessage: ChatCompletionMessage = {
       role: "assistant",
