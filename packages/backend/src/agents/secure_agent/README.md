@@ -26,7 +26,7 @@ The agent's core workflow is managed by a [LangGraph](https://langchain-ai.githu
    - Receives the current state, particularly `user_message` and `messages`.
    - Invokes the Input Sanitizer sub-agent to classify the user's input.
    - Updates the state with `sanitized_message` (empty if suspicious) and `is_suspicious`.
-   - **Conditional Transition**: If `is_suspicious` is true, the graph ends, and an error message is returned. Otherwise, the flow proceeds to `answer_agent`.
+   - **Conditional Transition**: If `is_suspicious` is true, the graph transitions to `handle_suspicious_input` to provide a safe response. Otherwise, it proceeds to `answer_agent`.
 
 2. **`answer_agent` Node**:
    - Receives the current state, including `sanitized_message` (or original `user_message` if not sanitized) and `messages`.
@@ -39,7 +39,15 @@ The agent's core workflow is managed by a [LangGraph](https://langchain-ai.githu
    - Receives the current state, including `ai_response` and `messages`.
    - Invokes the Output Sanitizer sub-agent to check if the generated `ai_response` contains sensitive information.
    - Updates the state with `is_sensitive` and `feedback_message` (if the output is sensitive).
-   - **Conditional Transition**: If `is_sensitive` is true, the graph loops back to `answer_agent` for refinement (using the `feedback_message`). Otherwise, the graph ends, and the `ai_response` is returned.
+   - **Conditional Transition**: If `is_sensitive` is true, the graph loops back to `answer_agent` for refinement (using the `feedback_message`). Otherwise, it transitions to `extract_final_response`.
+
+4. **`handle_suspicious_input` Node**:
+   - If the input is deemed suspicious, this node provides a standardized, safe response to the user, explaining that the request cannot be processed.
+   - **Direct Transition**: Proceeds to `END`.
+
+5. **`extract_final_response` Node**:
+   - Extracts the final `ai_response` from the state.
+   - **Direct Transition**: Proceeds to `END`.
 
 This workflow ensures that all inputs are checked for potential threats before processing, and all outputs are reviewed for sensitive content before being delivered to the user, potentially leading to refinement loops if sensitive information is detected.
 
@@ -51,9 +59,10 @@ graph TD
     D --> E(Output Sanitizer);
     E --> F{Output Sensitive?};
     F -- Yes --> D;
-    C -- Yes --> G[End];
+    C -- Yes --> G(Handle Suspicious Input);
+    G --> Z(End);
     F -- No --> H(Extract Final Response);
-    H --> G;
+    H --> Z;
 
     %% Node descriptions
     classDef defaultNode fill:#ECECFF,stroke:#333,stroke-width:2px;
@@ -61,11 +70,12 @@ graph TD
     classDef startEndNode fill:#E0FFEE,stroke:#333,stroke-width:2px;
 
     style A fill:#E0FFEE,stroke:#333,stroke-width:2px;
-    style G fill:#E0FFEE,stroke:#333,stroke-width:2px;
+    style Z fill:#E0FFEE,stroke:#333,stroke-width:2px;
     style B fill:#ECECFF,stroke:#333,stroke-width:2px;
     style D fill:#ECECFF,stroke:#333,stroke-width:2px;
     style E fill:#ECECFF,stroke:#333,stroke-width:2px;
     style H fill:#ECECFF,stroke:#333,stroke-width:2px;
+    style G fill:#ECECFF,stroke:#333,stroke-width:2px;
     style C fill:#CCE4FF,stroke:#333,stroke-width:2px;
     style F fill:#CCE4FF,stroke:#333,stroke-width:2px;
 
@@ -73,12 +83,13 @@ graph TD
     linkStyle 6 stroke:#6c6,stroke-width:2px;
 
     click A "packages/backend/src/agents/secure_agent/secureAgent.ts" "SecureAgent Entry Point"
-    click B "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L15-L45" "callInputSanitizer Node Function"
-    click D "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L47-L77" "callRequestAnswerer Node Function"
-    click E "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L79-L108" "callOutputSanitizer Node Function"
-    click H "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L111-L117" "extractFinalResponse Node Function"
-    click C "packages/backend/src/agents/secure_agent/secureAgentBuilder.ts#L34-L49" "Input Sanitizer Conditional Logic"
-    click F "packages/backend/src/agents/secure_agent/secureAgentBuilder.ts#L52-L68" "Output Sanitizer Conditional Logic"
+    click B "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L12-L44" "callInputSanitizer Node Function"
+    click D "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L46-L76" "callRequestAnswerer Node Function"
+    click E "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L78-L106" "callOutputSanitizer Node Function"
+    click H "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L108-L115" "extractFinalResponse Node Function"
+    click G "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L117-L136" "handleSuspiciousInput Node Function"
+    click C "packages/backend/src/agents/secure_agent/secureAgentBuilder.ts#L42-L57" "Input Sanitizer Conditional Logic"
+    click F "packages/backend/src/agents/secure_agent/secureAgentBuilder.ts#L60-L77" "Output Sanitizer Conditional Logic"
 ```
 
 ## Agent Evaluation with LangSmith
@@ -94,8 +105,16 @@ The Secure Agent and its sub-agents are evaluated using [LangSmith](https://www.
     - `isSuspiciousAccuracy`: Measures the accuracy of the `is_suspicious` flag.
     - `sanitizedMessageAccuracy`: Checks if the `sanitized_message` matches the expected output.
 
+To run the evaluation, first create the dataset:
+
 ```bash
-pnpm --filter @llmops-ts/backend secure-agent eval input-sanitizer langsmith llm-as-judge
+pnpm --filter @llmops-demo-ts/backend cli secure-agent input-sanitizer langsmith create-dataset-llm-as-judge
+```
+
+Then, run the evaluation:
+
+```bash
+pnpm --filter @llmops-demo-ts/backend cli secure-agent input-sanitizer langsmith eval-llm-as-judge
 ```
 
 ### 2. Answer Agent Evaluation
@@ -107,8 +126,16 @@ pnpm --filter @llmops-ts/backend secure-agent eval input-sanitizer langsmith llm
   - **Evaluator**:
     - `correctnessEvaluatorGenAI`: Assesses the correctness and helpfulness of the generated `ai_response` against reference outputs.
 
+To run the evaluation, first create the dataset:
+
 ```bash
-pnpm --filter @llmops-ts/backend secure-agent eval answer-agent langsmith llm-as-judge
+pnpm --filter @llmops-demo-ts/backend cli secure-agent answer-agent langsmith create-dataset-llm-as-judge
+```
+
+Then, run the evaluation:
+
+```bash
+pnpm --filter @llmops-demo-ts/backend cli secure-agent answer-agent langsmith eval-llm-as-judge
 ```
 
 #### Multi-turn Evaluation
@@ -118,8 +145,16 @@ pnpm --filter @llmops-ts/backend secure-agent eval answer-agent langsmith llm-as
   - **Evaluator**:
     - `trajectoryEvaluator`: A custom LLM-as-a-judge that evaluates the entire conversation trajectory for user satisfaction and agent helpfulness.
 
+To run the evaluation, first create the dataset:
+
 ```bash
-pnpm --filter @llmops-ts/backend secure-agent eval answer-agent langsmith multi-turn
+pnpm --filter @llmops-demo-ts/backend cli secure-agent answer-agent langsmith create-dataset-multi-turn
+```
+
+Then, run the evaluation:
+
+```bash
+pnpm --filter @llmops-demo-ts/backend cli secure-agent answer-agent langsmith eval-multi-turn
 ```
 
 ### 3. Output Sanitizer Evaluation
@@ -131,12 +166,20 @@ pnpm --filter @llmops-ts/backend secure-agent eval answer-agent langsmith multi-
     - `isSensitiveAccuracy`: Measures the accuracy of the `is_sensitive` flag.
     - `outputSanitizedMessageAccuracy`: Checks if the `feedback_message` (reason for sensitivity) matches the expected output.
 
+To run the evaluation, first create the dataset:
+
 ```bash
-pnpm --filter @llmops-ts/backend secure-agent eval output-sanitizer langsmith llm-as-judge
+pnpm --filter @llmops-demo-ts/backend cli secure-agent output-sanitizer langsmith create-dataset-llm-as-judge
+```
+
+Then, run the evaluation:
+
+```bash
+pnpm --filter @llmops-demo-ts/backend cli secure-agent output-sanitizer langsmith eval-llm-as-judge
 ```
 
 All evaluations can be run simultaneously using the following command:
 
 ```bash
-pnpm --filter @llmops-ts/backend secure-agent eval
+pnpm --filter @llmops-demo-ts/backend cli secure-agent eval
 ```
