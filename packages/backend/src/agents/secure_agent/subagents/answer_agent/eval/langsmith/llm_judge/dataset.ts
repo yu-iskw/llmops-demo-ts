@@ -78,5 +78,3 @@ export async function createAndAddExamples(): Promise<string> {
   console.log("Dataset and examples created successfully.");
   return dataset.id;
 }
-
-// createAndAddExamples().catch(console.error);

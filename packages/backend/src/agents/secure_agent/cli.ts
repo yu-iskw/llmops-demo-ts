@@ -8,6 +8,10 @@ import path from "path";
 import { runLlmJudgeEvaluation as runOutputSanitizerEvaluation } from "./subagents/output_sanitizer/eval/langsmith/llm_judge/runEvaluation";
 import { runLlmJudgeEvaluation as runAnswerAgentEvaluation } from "./subagents/answer_agent/eval/langsmith/llm_judge/runEvaluation";
 import { runEvaluation as runMultiTurnEvaluation } from "./subagents/answer_agent/eval/langsmith/multi_turn/runEvaluation";
+import { createAndAddExamples as createInputSanitizerExamples } from "./subagents/input_sanitizer/eval/langsmith/llm_judge/dataset";
+import { createAndAddExamples as createOutputSanitizerExamples } from "./subagents/output_sanitizer/eval/langsmith/llm_judge/dataset";
+import { createAndAddExamples as createAnswerAgentLlmJudgeExamples } from "./subagents/answer_agent/eval/langsmith/llm_judge/dataset";
+import { createAndAddExamples as createAnswerAgentMultiTurnExamples } from "./subagents/answer_agent/eval/langsmith/multi_turn/dataset";
 
 // Load environment variables from the root of the package
 dotenv.config({
@@ -89,11 +93,19 @@ const inputSanitizerLangSmithEval = inputSanitizerProgram.command("langsmith");
 
 // LLM-as-a-judge evaluation with LangSmith
 inputSanitizerLangSmithEval
-  .command("llm-as-judge")
+  .command("eval-llm-as-judge")
   .description("Evaluate the Secure agent with LLM as judge")
   .action(async () => {
     console.log("Evaluating Secure agent with LLM as judge");
     await runInputSanitizerEvaluation();
+  });
+
+inputSanitizerLangSmithEval
+  .command("create-dataset-llm-as-judge")
+  .description("Create the dataset for the LLM-as-a-judge evaluation")
+  .action(async () => {
+    console.log("Creating dataset for input sanitizer...");
+    await createInputSanitizerExamples();
   });
 
 ////////////////////////////////////////////////////////////////
@@ -104,20 +116,38 @@ const answerAgentProgram = secureAgentProgram.command("answer-agent");
 const answerAgentLangSmithEval = answerAgentProgram.command("langsmith");
 
 answerAgentLangSmithEval
-  .command("llm-as-judge")
+  .command("eval-llm-as-judge")
   .description("Evaluate the Secure agent with LLM as judge")
   .action(async () => {
     console.log("Evaluating Secure agent with LLM as judge");
     await runAnswerAgentEvaluation();
   });
 
+answerAgentLangSmithEval
+  .command("create-dataset-llm-as-judge")
+  .description(
+    "Create the dataset for the answer agent LLM-as-a-judge evaluation",
+  )
+  .action(async () => {
+    console.log("Creating dataset for answer agent LLM-as-a-judge...");
+    await createAnswerAgentLlmJudgeExamples();
+  });
+
 // Multi-turn evaluation with LangSmith
 answerAgentLangSmithEval
-  .command("multi-turn")
+  .command("eval-multi-turn")
   .description("Evaluate the Secure agent with multi-turn evaluation")
   .action(async () => {
     console.log("Evaluating Secure agent with multi-turn evaluation");
     await runMultiTurnEvaluation();
+  });
+
+answerAgentLangSmithEval
+  .command("create-dataset-multi-turn")
+  .description("Create the dataset for the answer agent multi-turn evaluation")
+  .action(async () => {
+    console.log("Creating dataset for answer agent multi-turn...");
+    await createAnswerAgentMultiTurnExamples();
   });
 
 ////////////////////////////////////////////////////////////////
@@ -130,11 +160,19 @@ const outputSanitizerLangSmithEval =
 
 // LLM-as-a-judge evaluation with LangSmith
 outputSanitizerLangSmithEval
-  .command("llm-as-judge")
+  .command("eval-llm-as-judge")
   .description("Evaluate the Secure agent with LLM as judge")
   .action(async () => {
     console.log("Evaluating Secure agent with LLM as judge");
     await runOutputSanitizerEvaluation();
+  });
+
+outputSanitizerLangSmithEval
+  .command("create-dataset-llm-as-judge")
+  .description("Create the dataset for the LLM-as-a-judge evaluation")
+  .action(async () => {
+    console.log("Creating dataset for output sanitizer...");
+    await createOutputSanitizerExamples();
   });
 
 export { secureAgentProgram };
