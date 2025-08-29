@@ -1,8 +1,4 @@
-import {
-  AIMessage,
-  FunctionMessage,
-  HumanMessage,
-} from "@langchain/core/messages";
+import { AIMessage, FunctionMessage } from "@langchain/core/messages";
 import { DefaultAgentStateAnnotation } from "./defaultAgentState";
 import { GoogleGenAI, FunctionCallingConfigMode } from "@google/genai";
 import {
@@ -56,9 +52,9 @@ export const callModel = async (
     const aiMessage = new AIMessage(result.text || "");
     logger.info("Model returned text response:", result.text);
 
-    // Add both user message and AI response to message history
+    // Add only the AI response to message history
     return {
-      messages: [new HumanMessage(state.user_message), aiMessage],
+      messages: [aiMessage],
       function_calls: result.functionCalls,
     };
   } catch (error) {
@@ -72,7 +68,7 @@ export const callModel = async (
     );
 
     return {
-      messages: [new HumanMessage(state.user_message), aiMessage],
+      messages: [aiMessage],
     };
   }
 };
