@@ -30,6 +30,6 @@
     "@vitejs/plugin-vue": "^5.0.0",
     "esbuild": "^0.25.8",
     "typescript": "^5.0.0",
-    "vite": "^6.0.0"
+    "vite": "^6.3.6"
   }
 }
