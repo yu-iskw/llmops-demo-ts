@@ -18,6 +18,14 @@ export const useMessageStore = defineStore("messageStore", {
         }
       }
     },
+    setLastMessageText(text: string) {
+      if (this.messages.length > 0) {
+        const lastMessage = this.messages[this.messages.length - 1];
+        if (!lastMessage.fromUser) {
+          lastMessage.text = text;
+        }
+      }
+    },
     setIsLoading(loading: boolean) {
       this.isLoading = loading;
     },

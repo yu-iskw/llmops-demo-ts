@@ -102,54 +102,87 @@ const handleSendMessage = async (message: string) => {
 
   // Add user message
   const userMessage: UIChatMessage = {
-    id: Date.now().toString(),
+    id: uuidv4(),
     text: message,
     fromUser: true
   };
   messageStore.addMessage(userMessage); // Use store action
 
   debugLog('debug', 'User message added', { userMessage });
+  const historyForRequest: UIChatMessage[] = messageStore.messages.map((existingMessage) => ({ ...existingMessage }));
+
+  const assistantMessage: UIChatMessage = {
+    id: uuidv4(),
+    text: '',
+    fromUser: false,
+  };
+  messageStore.addMessage(assistantMessage);
+  debugLog('debug', 'Assistant placeholder message added', { assistantMessage });
 
   // Set loading state
   messageStore.setIsLoading(true); // Use store action
 
-  try {
-    // Pass a copy of messages from the store to avoid direct mutation of store state outside of actions
-    const history = messages.value.map(m => ({ role: m.fromUser ? "user" : "assistant", content: m.text }));
+  let encounteredError = false;
 
-    debugLog('debug', 'Starting chat request', {
+  try {
+    debugLog('debug', 'Starting AG-UI chat stream', {
       message,
-      historyLength: history.length,
+      historyLength: historyForRequest.length,
       agentType: selectedAgentType.value,
-      modelName: selectedModelName.value
+      modelName: selectedModelName.value,
     });
 
-    // Send message and get response with selected agent type and model name
-    const response = await ChatService.sendMessage(message, history, selectedAgentType.value, selectedModelName.value, sessionId.value);
+    const finalResponse = await ChatService.sendMessage(
+      message,
+      historyForRequest,
+      selectedAgentType.value,
+      selectedModelName.value,
+      sessionId.value,
+      {
+        onRunStarted: (event) => {
+          debugLog('info', 'AG-UI run started', event);
+        },
+        onTextChunk: (chunk, event) => {
+          messageStore.updateLastMessage(chunk);
+          debugLog('debug', 'Received AG-UI text chunk', { chunk, event });
+        },
+        onRunFinished: (event) => {
+          debugLog('info', 'AG-UI run finished', event);
+          const finalText = event.result?.message?.content;
+          if (typeof finalText === 'string') {
+            messageStore.setLastMessageText(finalText);
+          }
+        },
+        onRunError: (event) => {
+          encounteredError = true;
+          const errorText =
+            event.error?.message ??
+            'Sorry, there was an error processing your message. Please try again.';
+          debugLog('error', 'AG-UI run error', event);
+          messageStore.setLastMessageText(errorText);
+        },
+        onEvent: (eventName, payload) => {
+          debugLog('debug', `AG-UI event received: ${eventName}`, payload);
+        },
+      },
+    );
 
-    debugLog('info', 'Received response from API', { response });
-
-    // Create AI message with the response
-    const aiMessage: UIChatMessage = {
-      id: (Date.now() + 1).toString(),
-      text: response,
-      fromUser: false
-    };
-    messageStore.addMessage(aiMessage); // Use store action
-
-    debugLog('debug', 'AI message added', { aiMessage });
+    if (!encounteredError) {
+      messageStore.setLastMessageText(finalResponse);
+    }
 
     debugLog('info', 'Chat request completed successfully');
   } catch (error) {
-    console.error('Error sending message:', error);
+    console.error('Error sending message via AG-UI stream:', error);
 
-    // Add error message
-    const errorMessage: UIChatMessage = {
-      id: (Date.now() + 1).toString(),
-      text: 'Sorry, there was an error processing your message. Please try again.',
-      fromUser: false
-    };
-    messageStore.addMessage(errorMessage); // Use store action
+    const fallbackMessage =
+      error instanceof Error
+        ? error.message
+        : 'Sorry, there was an error processing your message. Please try again.';
+
+    if (!encounteredError) {
+      messageStore.setLastMessageText(fallbackMessage);
+    }
   } finally {
     messageStore.setIsLoading(false); // Use store action
     debugLog('debug', 'Loading state set to false');
