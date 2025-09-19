@@ -8,12 +8,21 @@ import {
   Request,
 } from "tsoa";
 import { ChatService } from "../services/chatService";
-import { ChatRequest } from "@llmops-demo/common";
+import {
+  ChatRequest,
+  AGUIRunStartedEvent,
+  AGUITextMessageChunkEvent,
+  AGUIRunFinishedEvent,
+  AGUIRunErrorEvent,
+  AGUIEvent,
+} from "@llmops-demo/common";
 import { AgentFactory, AgentInfo } from "../agents/agentFactory";
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from "express";
+import { randomUUID } from "crypto";
+import type { AIMessageChunk } from "@langchain/core/messages";
 
 @Route("chat")
 export class ChatController extends Controller {
@@ -88,8 +97,96 @@ export class ChatController extends Controller {
       "Cache-Control": "no-cache",
       Connection: "keep-alive",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Cache-Control",
+      "Access-Control-Allow-Headers": "Cache-Control, Content-Type",
     });
+
+    // Flush headers immediately if supported by the underlying response
+    if (typeof (response as any).flushHeaders === "function") {
+      (response as any).flushHeaders();
+    }
+
+    const runId = randomUUID();
+    const messageId = randomUUID();
+    const buildBaseEvent = <TType extends AGUIEvent["type"]>(
+      type: TType,
+    ) => ({
+      type,
+      eventId: randomUUID(),
+      runId,
+      createdAt: new Date().toISOString(),
+    });
+
+    let clientDisconnected = false;
+    request.on("close", () => {
+      clientDisconnected = true;
+    });
+
+    const sendEvent = (event: AGUIEvent) => {
+      if (clientDisconnected) {
+        return;
+      }
+      response.write(`event: ${event.type}\n`);
+      response.write(`data: ${JSON.stringify(event)}\n\n`);
+    };
+
+    const finishStream = () => {
+      if (!clientDisconnected) {
+        clientDisconnected = true;
+        response.end();
+      }
+    };
+
+    const extractChunkText = (chunk: AIMessageChunk): string => {
+      if (!chunk) {
+        return "";
+      }
+
+      const { content } = chunk as AIMessageChunk;
+      if (typeof content === "string") {
+        return content;
+      }
+
+      if (Array.isArray(content)) {
+        return content
+          .map((part: unknown) => {
+            if (!part) {
+              return "";
+            }
+            if (typeof part === "string") {
+              return part;
+            }
+            const candidate = part as { text?: string; content?: string };
+            if (typeof candidate.text === "string") {
+              return candidate.text;
+            }
+            if (typeof candidate.content === "string") {
+              return candidate.content;
+            }
+            return "";
+          })
+          .join("");
+      }
+
+      return "";
+    };
+
+    const runStartedEvent: AGUIRunStartedEvent = {
+      ...buildBaseEvent("RUN_STARTED"),
+      run: {
+        id: runId,
+        rootId: runId,
+        name: "chat-run",
+        metadata: {
+          agentType,
+          modelName,
+          sessionId,
+        },
+      },
+    };
+
+    sendEvent(runStartedEvent);
+
+    let fullResponse = "";
 
     try {
       const responseStream = this.chatService.processMessageStream(
@@ -102,23 +199,67 @@ export class ChatController extends Controller {
       );
 
       for await (const chunk of responseStream) {
-        if (chunk && chunk.content && typeof chunk.content === "string") {
-          // Send chunk as Server-Sent Event
-          response.write(
-            `data: ${JSON.stringify({ chunk: chunk.content })}\n\n`,
-          );
+        if (clientDisconnected) {
+          break;
         }
+
+        const chunkText = extractChunkText(chunk);
+        if (!chunkText) {
+          continue;
+        }
+
+        fullResponse += chunkText;
+
+        const textChunkEvent: AGUITextMessageChunkEvent = {
+          ...buildBaseEvent("TEXT_MESSAGE_CHUNK"),
+          message: {
+            id: messageId,
+            role: "assistant",
+          },
+          delta: {
+            text: chunkText,
+          },
+        };
+
+        sendEvent(textChunkEvent);
       }
 
-      // Send end-of-stream event
-      response.write(`data: ${JSON.stringify({ done: true })}\n\n`);
-      response.end();
+      if (!clientDisconnected) {
+        const runFinishedEvent: AGUIRunFinishedEvent = {
+          ...buildBaseEvent("RUN_FINISHED"),
+          result: {
+            status: "SUCCESS",
+            message: {
+              id: messageId,
+              role: "assistant",
+              content: fullResponse,
+            },
+            metadata: {
+              agentType,
+              modelName,
+              sessionId,
+            },
+          },
+        };
+
+        sendEvent(runFinishedEvent);
+      }
     } catch (error) {
-      console.error("Streaming error:", error);
-      response.write(
-        `data: ${JSON.stringify({ error: "An error occurred while processing your request" })}\n\n`,
-      );
-      response.end();
+      if (!clientDisconnected) {
+        const runErrorEvent: AGUIRunErrorEvent = {
+          ...buildBaseEvent("RUN_ERROR"),
+          error: {
+            message:
+              error instanceof Error
+                ? error.message
+                : "An error occurred while processing your request.",
+          },
+        };
+
+        sendEvent(runErrorEvent);
+      }
+    } finally {
+      finishStream();
     }
   }
 

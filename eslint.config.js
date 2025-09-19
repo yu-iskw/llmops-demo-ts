@@ -13,6 +13,7 @@ export default [
     ignores: [
       "**/*.d.ts",
       "packages/backend/generated/**",
+      "packages/backend/src/generated/**",
       "packages/frontend/playwright.config.ts",
       "packages/frontend/vite.config.ts",
       "**/*.spec.ts",
