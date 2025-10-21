@@ -22,22 +22,20 @@ The LangGraph for the Default Agent consists of two main nodes and a conditional
 1. **`call_model` Node**:
    - Receives the current state, including the `user_message` and conversation `messages`.
    - Prepares the conversation history to be sent to the Generative AI model, considering the `messageWindowSize`.
-   - Invokes the configured Google Gen AI model (e.g., `gemini-2.5-flash`) with the conversation content and `getCurrentTimeToolDeclaration` for function calling.
-   - The model can decide to respond with text or suggest `function_calls`.
+   - Invokes the configured Google Gen AI model (e.g., `gemini-2.5-flash`) with the conversation content.
+   - The model responds with text (function calling is currently disabled).
    - Updates the state with the `HumanMessage` and the `AIMessage` from the model's response.
 
 2. **`call_tool` Node**:
-   - This node is activated only if the `call_model` node generates `function_calls`.
-   - Executes the `function_calls` (e.g., `getCurrentTime` function).
-   - Updates the state with the `FunctionMessage` results from the tool execution.
-   - Clears the `function_calls` array in the state to prevent re-execution or infinite loops.
+   - This node is currently inactive as function calling is disabled.
+   - When enabled, it would execute function calls and update the state with tool results.
 
 3. **Conditional Edge (`shouldCallTool`)**:
    - After the `call_model` node, this function checks if `function_calls` are present in the state.
-   - If `function_calls` exist, the graph transitions to the `call_tool` node.
-   - If no `function_calls` are present, the graph transitions to `END`, signifying the completion of the current turn.
+   - Currently, since function calling is disabled, the graph always transitions to `END`.
+   - When function calling is re-enabled, if `function_calls` exist, the graph would transition to the `call_tool` node.
 
-The flow is designed to allow the model to dynamically decide whether a tool needs to be called to fulfill the user's request. After a tool is called, the result is fed back to the model for further processing or to synthesize a final response.
+The current implementation focuses on text-based conversation without tool usage. Function calling infrastructure is in place but disabled in the current configuration.
 
 ```mermaid
 graph TD
@@ -58,8 +56,8 @@ graph TD
     style D fill:#ECECFF,stroke:#333,stroke-width:2px;
     style C fill:#CCE4FF,stroke:#333,stroke-width:2px;
 
-    click A "packages/backend/src/agents/default_agent/defaultAgent.ts" "DefaultAgent Entry Point"
-    click B "packages/backend/src/agents/default_agent/defaultAgentNodes.ts#L22-L82" "callModel Node Function"
-    click D "packages/backend/src/agents/default_agent/defaultAgentNodes.ts#L85-L124" "callTool Node Function"
-    click C "packages/backend/src/agents/default_agent/defaultAgentBuilder.ts#L17-L22" "shouldCallTool Conditional Logic"
+    click A "packages/agents/src/agents/default_agent/defaultAgent.ts" "DefaultAgent Entry Point"
+    click B "packages/agents/src/agents/default_agent/defaultAgentNodes.ts#L22-L82" "callModel Node Function"
+    click D "packages/agents/src/agents/default_agent/defaultAgentNodes.ts#L85-L124" "callTool Node Function"
+    click C "packages/agents/src/agents/default_agent/defaultAgentBuilder.ts#L17-L22" "shouldCallTool Conditional Logic"
 ```

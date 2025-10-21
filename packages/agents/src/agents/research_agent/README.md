@@ -67,10 +67,10 @@ graph TD
     style C fill:#CCE4FF,stroke:#333,stroke-width:2px;
     style E fill:#CCE4FF,stroke:#333,stroke-width:2px;
 
-    click A "packages/backend/src/agents/research_agent/researchAgent.ts" "ResearchAgent Entry Point"
-    click B "packages/backend/src/agents/research_agent/researchAgentNodes.ts#L61-L104" "planQueries Node Function"
-    click D "packages/backend/src/agents/research_agent/researchAgentNodes.ts#L107-L156" "executeSearches Node Function"
-    click F "packages/backend/src/agents/research_agent/researchAgentNodes.ts#L159-L212" "synthesizeResults Node Function"
-    click C "packages/backend/src/agents/research_agent/researchAgentBuilder.ts#L28-L35" "shouldExecuteSearches Conditional Logic"
-    click E "packages/backend/src/agents/research_agent/researchAgentBuilder.ts#L38-L45" "shouldSynthesizeResults Conditional Logic"
+    click A "packages/agents/src/agents/research_agent/researchAgent.ts" "ResearchAgent Entry Point"
+    click B "packages/agents/src/agents/research_agent/researchAgentNodes.ts#L61-L104" "planQueries Node Function"
+    click D "packages/agents/src/agents/research_agent/researchAgentNodes.ts#L107-L156" "executeSearches Node Function"
+    click F "packages/agents/src/agents/research_agent/researchAgentNodes.ts#L159-L212" "synthesizeResults Node Function"
+    click C "packages/agents/src/agents/research_agent/researchAgentBuilder.ts#L28-L35" "shouldExecuteSearches Conditional Logic"
+    click E "packages/agents/src/agents/research_agent/researchAgentBuilder.ts#L38-L45" "shouldSynthesizeResults Conditional Logic"
 ```

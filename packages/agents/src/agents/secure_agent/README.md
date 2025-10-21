@@ -82,14 +82,14 @@ graph TD
     linkStyle 5 stroke:#f66,stroke-width:2px;
     linkStyle 6 stroke:#6c6,stroke-width:2px;
 
-    click A "packages/backend/src/agents/secure_agent/secureAgent.ts" "SecureAgent Entry Point"
-    click B "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L12-L44" "callInputSanitizer Node Function"
-    click D "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L46-L76" "callRequestAnswerer Node Function"
-    click E "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L78-L106" "callOutputSanitizer Node Function"
-    click H "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L108-L115" "extractFinalResponse Node Function"
-    click G "packages/backend/src/agents/secure_agent/secureAgentNodes.ts#L117-L136" "handleSuspiciousInput Node Function"
-    click C "packages/backend/src/agents/secure_agent/secureAgentBuilder.ts#L42-L57" "Input Sanitizer Conditional Logic"
-    click F "packages/backend/src/agents/secure_agent/secureAgentBuilder.ts#L60-L77" "Output Sanitizer Conditional Logic"
+    click A "packages/agents/src/agents/secure_agent/secureAgent.ts" "SecureAgent Entry Point"
+    click B "packages/agents/src/agents/secure_agent/secureAgentNodes.ts#L12-L44" "callInputSanitizer Node Function"
+    click D "packages/agents/src/agents/secure_agent/secureAgentNodes.ts#L46-L76" "callRequestAnswerer Node Function"
+    click E "packages/agents/src/agents/secure_agent/secureAgentNodes.ts#L78-L106" "callOutputSanitizer Node Function"
+    click H "packages/agents/src/agents/secure_agent/secureAgentNodes.ts#L108-L115" "extractFinalResponse Node Function"
+    click G "packages/agents/src/agents/secure_agent/secureAgentNodes.ts#L117-L136" "handleSuspiciousInput Node Function"
+    click C "packages/agents/src/agents/secure_agent/secureAgentBuilder.ts#L42-L57" "Input Sanitizer Conditional Logic"
+    click F "packages/agents/src/agents/secure_agent/secureAgentBuilder.ts#L60-L77" "Output Sanitizer Conditional Logic"
 ```
 
 ## Agent Evaluation with LangSmith

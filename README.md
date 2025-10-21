@@ -130,7 +130,7 @@ Follow these steps to get the application up and running on your local machine.
    Copy the example environment file and update it with your configuration.
 
    ```bash
-   cp .template.env .env
+   cp env_template.txt .env
    ```
 
    Edit the `.env` file to add your Google API Key, Vertex AI project details, and/or LangSmith API key.
@@ -186,24 +186,24 @@ pnpm test:e2e
 The application features three distinct AI agents, each designed for specific purposes:
 
 - **Default Agent**: A general-purpose AI assistant capable of maintaining conversation history and optionally executing tools via function calls.
-  - [README](/packages/backend/src/agents/default_agent/README.md)
+  - [README](/packages/agents/src/agents/default_agent/README.md)
 
 - **Research Agent**: An AI assistant specializing in information gathering and synthesis. It plans search queries, executes web searches (via the Google Search Tool), and synthesizes results to answer user questions comprehensively.
-  - [README](/packages/backend/src/agents/research_agent/README.md)
+  - [README](/packages/agents/src/agents/research_agent/README.md)
 
 - **Secure Agent**: An AI assistant with enhanced security features to prevent prompt injections and handle sensitive information. It orchestrates input sanitization, request answering, and output sanitization through internal sub-agents.
-  - [README](/packages/backend/src/agents/secure_agent/README.md)
+  - [README](/packages/agents/src/agents/secure_agent/README.md)
 
 ## CLI Commands
 
-The backend package includes a CLI tool built with Commander.js, allowing you to interact with the different AI agents directly from your terminal.
+The agents package includes a CLI tool built with Commander.js, allowing you to interact with the different AI agents directly from your terminal.
 
-To use the CLI, navigate to the `packages/backend` directory and run the following commands:
+To use the CLI, run the following commands from the project root:
 
 - **Default Agent:**
 
   ```bash
-  pnpm cli default-agent "Your message here" --model gemini-2.5-flash
+  pnpm --filter @llmops-demo-ts/agents cli default-agent "Your message here" --model gemini-2.5-flash
   ```
 
   - Options:
@@ -214,7 +214,7 @@ To use the CLI, navigate to the `packages/backend` directory and run the followi
 - **Research Agent:**
 
   ```bash
-  pnpm cli research-agent "Your research query here" --model gemini-2.5-flash
+  pnpm --filter @llmops-demo-ts/agents cli research-agent "Your research query here" --model gemini-2.5-flash
   ```
 
   - Options:
@@ -225,7 +225,7 @@ To use the CLI, navigate to the `packages/backend` directory and run the followi
 - **Secure Agent:**
 
   ```bash
-  pnpm cli secure-agent "Your secure message here" --model gemini-2.5-flash
+  pnpm --filter @llmops-demo-ts/agents cli secure-agent "Your secure message here" --model gemini-2.5-flash
   ```
 
   - Options:
@@ -235,12 +235,12 @@ To use the CLI, navigate to the `packages/backend` directory and run the followi
 
 ## Environment Variables
 
-This project uses environment variables for configuration, which are loaded from a `.env` file in the project root. A template file, `.template.env`, is provided to help you set up your environment. To get started:
+This project uses environment variables for configuration, which are loaded from a `.env` file in the project root. A template file, `env_template.txt`, is provided to help you set up your environment. To get started:
 
-1. Copy `.template.env` to `.env` in the project root:
+1. Copy `env_template.txt` to `.env` in the project root:
 
    ```bash
-   cp .template.env .env
+   cp env_template.txt .env
    ```
 
 2. Update the `.env` file with your actual values:
