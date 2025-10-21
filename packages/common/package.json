@@ -8,9 +8,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@google/genai": "^0.14.1",
-    "@langchain/core": "^0.3.66",
-    "langsmith": "^0.3.51",
     "winston": "^3.17.0"
   },
   "devDependencies": {

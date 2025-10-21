@@ -1,7 +1,7 @@
 import { BaseMessage, AIMessageChunk } from "@langchain/core/messages";
 import { GoogleGenAI } from "@google/genai";
 import { CompiledStateGraph, MemorySaver } from "@langchain/langgraph";
-import { GenAIConfig, getGenAI } from "@llmops-demo/common";
+import { GenAIConfig, getGenAI } from "../utils/genai";
 import { traceable } from "langsmith/traceable";
 import { logger } from "@llmops-demo/common";
 
