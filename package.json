@@ -9,11 +9,17 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "pnpm --filter @llmops-demo-ts/common build && pnpm --filter @llmops-demo-ts/backend build",
+    "build": "pnpm build:common && pnpm build:agents && pnpm build:backend && pnpm build:frontend",
+    "build:agents": "pnpm --filter \"@llmops-demo-ts/agents\" build",
+    "build:backend": "pnpm --filter \"@llmops-demo-ts/backend\" build",
+    "build:common": "pnpm --filter \"@llmops-demo/common\" build",
+    "build:frontend": "pnpm --filter \"@llmops-demo-ts/frontend\" build",
     "format": "trunk fmt",
     "format:all": "trunk fmt",
     "lint": "eslint --config eslint.config.js",
+    "lint:all": "trunk check .",
     "lint:fix": "eslint --config eslint.config.js --fix",
+    "lint:security": "trunk check --ci -t=security .",
     "start:backend": "pnpm --filter @llmops-demo-ts/backend dev",
     "start:frontend": "pnpm --filter @llmops-demo-ts/frontend dev",
     "test": "pnpm --filter @llmops-demo-ts/backend test"

@@ -1,26 +1,24 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+import "dotenv/config";
 import { RegisterRoutes } from "./generated/routes/routes";
 import { ValidateError } from "tsoa";
-import { getPackageRootPath } from "./utils/utils";
-import path from "path";
-import { getGenAI } from "./utils/genai";
+import path, { dirname } from "path";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
 
-// Load environment variables from the root of the package
-dotenv.config({
-  path: path.resolve(path.join(getPackageRootPath(), "..", "..", ".env")),
-});
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
 // Initialize the GoogleGenAI client
-getGenAI();
+// getGenAI();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 // Health check endpoint
 app.get("/health", (_req, res) => {
@@ -57,5 +55,5 @@ app.use(function errorHandler(
 });
 
 app.listen(port, () => {
-  console.log(`Backend server listening at http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
