@@ -21,7 +21,7 @@
     "pinia": "^3.0.3",
     "uuid": "^11.1.0",
     "vue": "^3.4.0",
-    "winston": "^3.17.0"
+    "winston": "^3.18.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

@@ -8,7 +8,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "winston": "^3.17.0"
+    "winston": "^3.18.3"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
