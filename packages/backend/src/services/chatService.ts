@@ -4,10 +4,14 @@ import {
   BaseMessage,
   AIMessageChunk,
 } from "@langchain/core/messages";
-import { GenAIConfig } from "../utils/genai";
-import { AgentFactory, AgentType, AgentConfig } from "../agents/agentFactory";
+import {
+  AgentFactory,
+  AgentType,
+  AgentConfig,
+  GenAIConfig,
+} from "@llmops-demo-ts/agents";
 import { traceable } from "langsmith/traceable";
-import logger from "../utils/logger";
+import { logger } from "@llmops-demo/common";
 
 // Simple LangGraph-inspired implementation
 export class ChatService {

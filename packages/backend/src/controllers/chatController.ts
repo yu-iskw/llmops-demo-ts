@@ -9,7 +9,7 @@ import {
 } from "tsoa";
 import { ChatService } from "../services/chatService";
 import { ChatRequest } from "@llmops-demo/common";
-import { AgentFactory, AgentInfo } from "../agents/agentFactory";
+import { AgentFactory, AgentInfo } from "@llmops-demo-ts/agents";
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
