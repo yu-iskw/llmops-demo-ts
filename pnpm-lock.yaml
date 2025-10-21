@@ -161,15 +161,6 @@ importers:
 
   packages/common:
     dependencies:
-      '@google/genai':
-        specifier: ^0.14.1
-        version: 0.14.1
-      '@langchain/core':
-        specifier: ^0.3.66
-        version: 0.3.66(openai@5.12.0(ws@8.18.3)(zod@3.25.76))
-      langsmith:
-        specifier: ^0.3.51
-        version: 0.3.51(openai@5.12.0(ws@8.18.3)(zod@3.25.76))
       winston:
         specifier: ^3.17.0
         version: 3.17.0
