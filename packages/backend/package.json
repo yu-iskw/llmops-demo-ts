@@ -15,7 +15,6 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsoa spec-and-routes --configuration tsoa.config.json && tsc",
-    "cli": "tsx src/cli.ts",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
     "test": "jest --passWithNoTests"
