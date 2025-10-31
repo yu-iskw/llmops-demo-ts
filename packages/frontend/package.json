@@ -24,7 +24,7 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.40.0",
+    "@playwright/test": "^1.55.1",
     "@types/node": "^20.0.0",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-vue": "^5.0.0",
