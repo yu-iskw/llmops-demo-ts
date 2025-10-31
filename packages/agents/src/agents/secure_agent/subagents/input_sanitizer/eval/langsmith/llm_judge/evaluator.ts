@@ -62,8 +62,7 @@ export const correctnessEvaluatorGenAI = async (
     model: "gemini-2.5-flash", // [[memory:5194513]]
     feedbackKey: "correctness_genAI",
   });
-  const evaluatorResult = await evaluator(run, example);
-  return evaluatorResult;
+  return await evaluator(run, example);
 };
 
 export const isSuspiciousAccuracy = async (run: Run, example?: Example) => {
