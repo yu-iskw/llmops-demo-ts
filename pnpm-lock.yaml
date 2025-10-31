@@ -30,6 +30,9 @@ importers:
       eslint:
         specifier: ^9.32.0
         version: 9.32.0
+      eslint-plugin-sonarjs:
+        specifier: ^1.0.0
+        version: 1.0.4(eslint@9.32.0)
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
@@ -1829,6 +1832,12 @@ packages:
         optional: true
       typescript:
         optional: true
+
+  eslint-plugin-sonarjs@1.0.4:
+    resolution: {integrity: sha512-jF0eGCUsq/HzMub4ExAyD8x1oEgjOyB9XVytYGyWgSFvdiJQJp6IuP7RmtauCf06o6N/kZErh+zW4b10y1WZ+Q==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      eslint: ^8.0.0 || ^9.0.0
 
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
@@ -5526,6 +5535,10 @@ snapshots:
       typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
+
+  eslint-plugin-sonarjs@1.0.4(eslint@9.32.0):
+    dependencies:
+      eslint: 9.32.0
 
   eslint-scope@8.4.0:
     dependencies:

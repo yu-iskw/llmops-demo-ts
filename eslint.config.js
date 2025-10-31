@@ -4,6 +4,7 @@ import { dirname } from "path";
 import tseslint from "@typescript-eslint/eslint-plugin";
 import tseslintParser from "@typescript-eslint/parser";
 import eslintReact from "@eslint-react/eslint-plugin";
+import sonarjs from "eslint-plugin-sonarjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -85,6 +86,7 @@ export default [
       "packages/frontend/test-results/",
     ],
   },
+  sonarjs.configs.recommended,
   {
     files: ["**/*.ts", "**/*.tsx"],
     plugins: {
@@ -104,6 +106,8 @@ export default [
       "@eslint-react/no-missing-key": "warn",
       // Disable base ESLint rules that conflict with TypeScript-ESLint
       "no-unused-vars": "off",
+      // SonarJS rules
+      "sonarjs/no-duplicate-string": "off",
     },
   },
 ];
