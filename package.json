@@ -19,7 +19,11 @@
     "lint:eslint": "eslint --config eslint.config.js --fix",
     "start:backend": "pnpm --filter @llmops-demo-ts/backend dev",
     "start:frontend": "pnpm --filter @llmops-demo-ts/frontend dev",
-    "test": "pnpm --filter @llmops-demo-ts/backend test"
+    "test": "pnpm test:common && pnpm test:agents && pnpm test:backend && pnpm test:frontend",
+    "test:agents": "pnpm --filter @llmops-demo-ts/agents test",
+    "test:backend": "pnpm --filter @llmops-demo-ts/backend test",
+    "test:common": "pnpm --filter @llmops-demo/common test",
+    "test:frontend": "pnpm --filter @llmops-demo-ts/frontend test:e2e"
   },
   "dependencies": {
     "@types/uuid": "^10.0.0",
