@@ -33,11 +33,11 @@ export class ChatService {
       logger.info("Agent config:", agentConfig);
 
       // Convert history to proper message format
-      const initialMessages: BaseMessage[] = history.map((msg: any) => {
-        if (msg.role === "user") {
-          return new HumanMessage(msg.content);
+      const initialMessages: BaseMessage[] = history.map((message_: any) => {
+        if (message_.role === "user") {
+          return new HumanMessage(message_.content);
         } else {
-          return new AIMessage(msg.content);
+          return new AIMessage(message_.content);
         }
       });
 
@@ -83,11 +83,11 @@ export class ChatService {
       logger.info("Agent config:", agentConfig);
 
       // Convert history to proper message format
-      const initialMessages: BaseMessage[] = history.map((msg: any) => {
-        if (msg.role === "user") {
-          return new HumanMessage(msg.content);
+      const initialMessages: BaseMessage[] = history.map((message_: any) => {
+        if (message_.role === "user") {
+          return new HumanMessage(message_.content);
         } else {
-          return new AIMessage(msg.content);
+          return new AIMessage(message_.content);
         }
       });
 

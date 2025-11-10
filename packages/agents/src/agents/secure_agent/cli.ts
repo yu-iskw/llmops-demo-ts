@@ -3,7 +3,7 @@ import { SecureAgent } from "./secureAgent"; // Import DefaultAgent
 import { GenAIConfig } from "../../utils/genai"; // Import GenAI utilities
 import { runLlmJudgeEvaluation as runInputSanitizerEvaluation } from "./subagents/input_sanitizer/eval/langsmith/llm_judge/runEvaluation";
 import dotenv from "dotenv";
-import { getProjectRootPath } from "../../utils/utils";
+import { getProjectRootPath } from "../../utils/utilities";
 import path from "path";
 import { runLlmJudgeEvaluation as runOutputSanitizerEvaluation } from "./subagents/output_sanitizer/eval/langsmith/llm_judge/runEvaluation";
 import { runLlmJudgeEvaluation as runAnswerAgentEvaluation } from "./subagents/answer_agent/eval/langsmith/llm_judge/runEvaluation";

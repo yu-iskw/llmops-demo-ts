@@ -4,7 +4,7 @@ import { createAndAddExamples } from "./dataset";
 import { Run } from "langsmith";
 import { getGenAI } from "@utils/genai";
 
-const createGenAIAsJudge = (params: {
+const createGenAIAsJudge = (parameters: {
   prompt: string;
   model: string;
   feedbackKey: string;
@@ -12,19 +12,19 @@ const createGenAIAsJudge = (params: {
   const genAI = getGenAI();
 
   return async (run: Run) => {
-    const evaluationPrompt = params.prompt.replace(
+    const evaluationPrompt = parameters.prompt.replace(
       "{outputs}",
       JSON.stringify(run.outputs),
     );
 
     try {
       const result = await genAI.models.generateContent({
-        model: params.model,
+        model: parameters.model,
         contents: [{ role: "user", parts: [{ text: evaluationPrompt }] }],
       });
       const feedback = result.text || "";
       return {
-        key: params.feedbackKey,
+        key: parameters.feedbackKey,
         score:
           feedback.includes("SATISFIED") && feedback.includes("HELPFUL")
             ? 1
@@ -32,7 +32,11 @@ const createGenAIAsJudge = (params: {
       };
     } catch (error) {
       console.error("Error running GenAI evaluator:", error);
-      return { key: params.feedbackKey, score: 0, comment: "Evaluator error" };
+      return {
+        key: parameters.feedbackKey,
+        score: 0,
+        comment: "Evaluator error",
+      };
     }
   };
 };

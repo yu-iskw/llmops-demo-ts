@@ -3,7 +3,7 @@ import {
   OutputSanitizerOutput,
 } from "./outputSanitizerState";
 import { GoogleGenAI, Type } from "@google/genai";
-import { createConversationContents } from "../../../../utils/agentUtils";
+import { createConversationContents } from "../../../../utils/agentUtilities";
 import { logger } from "@llmops-demo/common";
 
 export const checkOutput = async (

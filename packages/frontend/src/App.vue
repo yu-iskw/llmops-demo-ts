@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <Chat />
+    <ChatMessage />
   </div>
 </template>
 
 <script setup lang="ts">
-import Chat from './components/Chat.vue';
+import ChatMessage from "./components/ChatMessage.vue";
 </script>
 
 <style>

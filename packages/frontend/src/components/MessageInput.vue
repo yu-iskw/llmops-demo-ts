@@ -4,6 +4,7 @@
       <div class="input-form">
         <div class="textarea-container">
           <textarea
+            ref="textareaRef"
             v-model="newMessage"
             placeholder="Message AI Assistant..."
             :disabled="isLoading"
@@ -11,7 +12,6 @@
             rows="1"
             @keydown="handleKeydown"
             @input="autoResize"
-            ref="textareaRef"
           ></textarea>
           <button
             type="button"
@@ -19,15 +19,25 @@
             class="send-button"
             @click="handleSubmit"
           >
-            <svg v-if="!isLoading" width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
+            <svg
+              v-if="!isLoading"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+                fill="currentColor"
+              />
             </svg>
             <div v-else class="loading-spinner"></div>
           </button>
         </div>
         <div class="input-footer">
           <p class="input-disclaimer">
-            AI Assistant can make mistakes. Consider checking important information.
+            AI Assistant can make mistakes. Consider checking important
+            information.
           </p>
         </div>
       </div>
@@ -36,39 +46,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue';
+import { ref, nextTick } from "vue";
 
 interface Props {
   isLoading: boolean;
 }
 
 interface Emits {
-  (e: 'send-message', message: string): void;
+  (e: "send-message", message: string): void;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const newMessage = ref('');
+const newMessage = ref("");
 const textareaRef = ref<HTMLTextAreaElement>();
 
-  const handleSubmit = () => {
-    if (!newMessage.value.trim() || props.isLoading) return;
+const handleSubmit = () => {
+  if (!newMessage.value.trim() || props.isLoading) return;
 
-    const message = newMessage.value;
-    newMessage.value = '';
-    emit('send-message', message);
+  const message = newMessage.value;
+  newMessage.value = "";
+  emit("send-message", message);
 
-    // Reset textarea height
-    nextTick(() => {
-      if (textareaRef.value) {
-        textareaRef.value.style.height = 'auto';
-      }
-    });
-  };
+  // Reset textarea height
+  nextTick(() => {
+    if (textareaRef.value) {
+      textareaRef.value.style.height = "auto";
+    }
+  });
+};
 
 const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === 'Enter' && !event.shiftKey) {
+  if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();
     handleSubmit();
   }
@@ -76,8 +86,9 @@ const handleKeydown = (event: KeyboardEvent) => {
 
 const autoResize = () => {
   if (textareaRef.value) {
-    textareaRef.value.style.height = 'auto';
-    textareaRef.value.style.height = Math.min(textareaRef.value.scrollHeight, 200) + 'px';
+    textareaRef.value.style.height = "auto";
+    textareaRef.value.style.height =
+      Math.min(textareaRef.value.scrollHeight, 200) + "px";
   }
 };
 </script>
@@ -171,8 +182,12 @@ const autoResize = () => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .input-footer {

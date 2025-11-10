@@ -30,7 +30,7 @@ async function runWithConcurrencyLimit<T>(
   }
 
   // Start initial tasks up to the limit
-  for (let i = 0; i < limit && i < tasks.length; i++) {
+  for (let index_ = 0; index_ < limit && index_ < tasks.length; index_++) {
     enqueue();
   }
 
@@ -164,7 +164,7 @@ export const synthesizeResults = async (
     }
 
     const searchResultsText = state.search_results
-      .map((res) => `Query: ${res.query}\nResult: ${res.result}`)
+      .map((result) => `Query: ${result.query}\nResult: ${result.result}`)
       .join("\n\n");
 
     const prompt = `Synthesize the following search results to answer the user's original question.\nOriginal question: ${state.user_message}\nSearch results:\n${searchResultsText}\n\nSynthesized Answer:`;

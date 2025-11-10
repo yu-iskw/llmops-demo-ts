@@ -6,7 +6,7 @@ import {
   executeToolCalls,
 } from "../../tools/getCurrentTime";
 import { logger } from "@llmops-demo/common";
-import { createConversationContents } from "../../utils/agentUtils";
+import { createConversationContents } from "../../utils/agentUtilities";
 
 // Define the function that calls the model
 export const callModel = async (

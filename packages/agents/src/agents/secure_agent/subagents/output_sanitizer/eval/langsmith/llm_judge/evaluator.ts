@@ -2,13 +2,13 @@ import { getGenAI } from "@utils/genai";
 import { OutputSanitizerInputs, OutputSanitizerOutputs } from "../types";
 import { Run, Example } from "langsmith";
 
-interface EvaluationParams {
+interface EvaluationParameters {
   inputs: OutputSanitizerInputs;
   outputs: OutputSanitizerOutputs;
   referenceOutputs?: OutputSanitizerOutputs;
 }
 
-const createGenAIAsJudge = (params: {
+const createGenAIAsJudge = (parameters: {
   prompt: string;
   model: string;
   feedbackKey: string;
@@ -16,32 +16,36 @@ const createGenAIAsJudge = (params: {
   const genAI = getGenAI();
 
   return async (run: Run, example?: Example) => {
-    const evaluationParams: EvaluationParams = {
+    const evaluationParameters: EvaluationParameters = {
       inputs: run.inputs as OutputSanitizerInputs,
       outputs: run.outputs as OutputSanitizerOutputs,
       referenceOutputs: example?.outputs as OutputSanitizerOutputs | undefined,
     };
-    const evaluationPrompt = params.prompt
-      .replace("{inputs}", JSON.stringify(evaluationParams.inputs))
-      .replace("{outputs}", JSON.stringify(evaluationParams.outputs))
+    const evaluationPrompt = parameters.prompt
+      .replace("{inputs}", JSON.stringify(evaluationParameters.inputs))
+      .replace("{outputs}", JSON.stringify(evaluationParameters.outputs))
       .replace(
         "{reference_outputs}",
-        JSON.stringify(evaluationParams.referenceOutputs),
+        JSON.stringify(evaluationParameters.referenceOutputs),
       );
 
     try {
       const result = await genAI.models.generateContent({
-        model: params.model,
+        model: parameters.model,
         contents: [{ role: "user", parts: [{ text: evaluationPrompt }] }],
       });
       const feedback = result.text || ""; // Safely get text and default to empty string
       return {
-        key: params.feedbackKey,
+        key: parameters.feedbackKey,
         score: feedback.includes("CORRECT") ? 1 : 0,
       };
     } catch (error) {
       console.error("Error running GenAI evaluator:", error);
-      return { key: params.feedbackKey, score: 0, comment: "Evaluator error" };
+      return {
+        key: parameters.feedbackKey,
+        score: 0,
+        comment: "Evaluator error",
+      };
     }
   };
 };

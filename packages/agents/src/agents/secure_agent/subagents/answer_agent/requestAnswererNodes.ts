@@ -1,6 +1,6 @@
 import { RequestAnswererStateAnnotation } from "./requestAnswererState";
 import { GoogleGenAI } from "@google/genai";
-import { createConversationContents } from "../../../../utils/agentUtils";
+import { createConversationContents } from "../../../../utils/agentUtilities";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { logger } from "@llmops-demo/common";
 

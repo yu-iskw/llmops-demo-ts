@@ -19,12 +19,12 @@ export function createHistoryContent(
   // Convert history messages to Google GenAI format
   // Filter out function messages to avoid API confusion
   const historyContent: Content[] = recentMessages
-    .filter((msg) => msg.getType() !== "function") // Skip function messages in history
-    .map((msg): Content | undefined => {
-      if (msg.getType() === "human") {
-        return { role: "user", parts: [{ text: msg.content as string }] };
-      } else if (msg.getType() === "ai") {
-        return { role: "model", parts: [{ text: msg.content as string }] };
+    .filter((message) => message.getType() !== "function") // Skip function messages in history
+    .map((message): Content | undefined => {
+      if (message.getType() === "human") {
+        return { role: "user", parts: [{ text: message.content as string }] };
+      } else if (message.getType() === "ai") {
+        return { role: "model", parts: [{ text: message.content as string }] };
       }
       return undefined;
     })

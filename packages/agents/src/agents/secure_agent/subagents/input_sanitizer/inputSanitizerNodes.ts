@@ -1,6 +1,6 @@
 import { InputSanitizerStateAnnotation } from "./inputSanitizerState";
 import { GoogleGenAI, Type } from "@google/genai";
-import { createConversationContents } from "../../../../utils/agentUtils";
+import { createConversationContents } from "../../../../utils/agentUtilities";
 import { logger } from "@llmops-demo/common";
 
 export interface InputSanitizerOutput {
