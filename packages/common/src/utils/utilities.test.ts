@@ -5,7 +5,10 @@ import fs from "fs";
 describe("getPackageRootPath", () => {
   it("should return the correct package root path", () => {
     const packageRootPath = getPackageRootPath();
-    expect(packageRootPath).toContain(path.join("packages", "backend"));
+    expect(packageRootPath).toContain(path.join("packages", "common"));
+    expect(
+      fs.existsSync(path.join(packageRootPath, "package.json")),
+    ).toBeTruthy();
   });
 });
 

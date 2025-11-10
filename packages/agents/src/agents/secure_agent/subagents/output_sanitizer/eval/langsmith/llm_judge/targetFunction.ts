@@ -1,5 +1,5 @@
-import { checkOutput } from "@agents/secure_agent/subagents/output_sanitizer/outputSanitizerNodes";
-import { getGenAI } from "@utils/genai";
+import { checkOutput } from "../../../outputSanitizerNodes";
+import { getGenAI } from "../../../../../../../utils/genai";
 import { OutputSanitizerInputs, OutputSanitizerOutputs } from "../types";
 
 // Initialize GoogleGenAI client using the centralized utility

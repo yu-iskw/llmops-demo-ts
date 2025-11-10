@@ -2,7 +2,7 @@ import { evaluate, EvaluateOptions } from "langsmith/evaluation";
 import { targetFunction } from "./targetFunction";
 import { createAndAddExamples } from "./dataset";
 import { Run } from "langsmith";
-import { getGenAI } from "@utils/genai";
+import { getGenAI } from "../../../../../../../utils/genai";
 
 const createGenAIAsJudge = (parameters: {
   prompt: string;
