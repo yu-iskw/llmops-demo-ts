@@ -34,5 +34,9 @@ jobs:
         with:
           node-version-file: .node-version
           cache: pnpm
+      - name: Install dependencies
+        run: |
+          pnpm install
       - name: Build all packages
-        run: pnpm build
+        run: |
+          pnpm build
