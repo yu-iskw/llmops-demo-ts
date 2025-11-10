@@ -1,4 +1,4 @@
-import { getGenAI } from "@utils/genai";
+import { getGenAI } from "../../../../../../../utils/genai";
 import { InputSanitizerInputs, InputSanitizerOutputs } from "../types";
 import { Run, Example } from "langsmith";
 
