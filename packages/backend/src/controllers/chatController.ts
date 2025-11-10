@@ -9,7 +9,7 @@ import {
 } from "tsoa";
 import { ChatService } from "../services/chatService";
 import { ChatRequest } from "@llmops-demo/common";
-import { AgentFactory, AgentInfo } from "../agents/agentFactory";
+import { AgentFactory, AgentInfo } from "@llmops-demo-ts/agents";
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
@@ -68,7 +68,7 @@ export class ChatController extends Controller {
     @Request() request: ExpressRequest,
   ): Promise<void> {
     // Access the Express response object from the request
-    const response = (request as any).res as ExpressResponse;
+    const response = request.res as ExpressResponse;
     const {
       message,
       history = [],

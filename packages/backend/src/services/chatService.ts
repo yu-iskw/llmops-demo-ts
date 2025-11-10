@@ -4,10 +4,14 @@ import {
   BaseMessage,
   AIMessageChunk,
 } from "@langchain/core/messages";
-import { GenAIConfig } from "../utils/genai";
-import { AgentFactory, AgentType, AgentConfig } from "../agents/agentFactory";
+import {
+  AgentFactory,
+  AgentType,
+  AgentConfig,
+  GenAIConfig,
+} from "@llmops-demo-ts/agents";
 import { traceable } from "langsmith/traceable";
-import logger from "../utils/logger";
+import { logger } from "@llmops-demo/common";
 
 // Simple LangGraph-inspired implementation
 export class ChatService {
@@ -29,11 +33,11 @@ export class ChatService {
       logger.info("Agent config:", agentConfig);
 
       // Convert history to proper message format
-      const initialMessages: BaseMessage[] = history.map((msg: any) => {
-        if (msg.role === "user") {
-          return new HumanMessage(msg.content);
+      const initialMessages: BaseMessage[] = history.map((message_: any) => {
+        if (message_.role === "user") {
+          return new HumanMessage(message_.content);
         } else {
-          return new AIMessage(msg.content);
+          return new AIMessage(message_.content);
         }
       });
 
@@ -79,11 +83,11 @@ export class ChatService {
       logger.info("Agent config:", agentConfig);
 
       // Convert history to proper message format
-      const initialMessages: BaseMessage[] = history.map((msg: any) => {
-        if (msg.role === "user") {
-          return new HumanMessage(msg.content);
+      const initialMessages: BaseMessage[] = history.map((message_: any) => {
+        if (message_.role === "user") {
+          return new HumanMessage(message_.content);
         } else {
-          return new AIMessage(msg.content);
+          return new AIMessage(message_.content);
         }
       });
 

@@ -2,21 +2,20 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "src",
+    "rootDir": "./src",
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "@agents/*": ["./src/agents/*"],
-      "@models/*": ["./src/models/*"],
-      "@services/*": ["./src/services/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@graph": ["./src/graph.ts"],
-      "@llmops-demo/common": ["../common/src/index.ts"]
+      "@utils/*": ["utils/*"],
+      "@agents/*": ["agents/*"],
+      "@models/*": ["models/*"],
+      "@services/*": ["services/*"],
+      "@graph/*": ["graph.js"]
     }
   },
-  "references": [{ "path": "../common" }],
+  "references": [{ "path": "../agents" }, { "path": "../common" }],
   "include": [
     "src/**/*.ts",
     "./src/generated/routes/routes.ts",

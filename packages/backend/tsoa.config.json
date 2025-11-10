@@ -7,6 +7,9 @@
     "specVersion": 3
   },
   "routes": {
-    "routesDir": "./src/generated/routes"
+    "routesDir": "src/generated/routes"
+  },
+  "compilerOptions": {
+    "esModuleInterop": true
   }
 }

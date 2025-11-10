@@ -70,7 +70,6 @@ export class ChatService {
         `Failed to fetch agent types: ${response.status} ${response.statusText} - ${errorText}`,
       );
     }
-    const data = await response.json();
-    return data;
+    return await response.json();
   }
 }
