@@ -3,6 +3,7 @@
   "compilerOptions": {
     "target": "es2022",
     "module": "commonjs",
+    "moduleResolution": "node",
     "rootDir": "src",
     "resolveJsonModule": true,
     "outDir": "./dist",
