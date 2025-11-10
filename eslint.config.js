@@ -5,6 +5,12 @@ import tseslint from "@typescript-eslint/eslint-plugin";
 import tseslintParser from "@typescript-eslint/parser";
 import eslintReact from "@eslint-react/eslint-plugin";
 import sonarjs from "eslint-plugin-sonarjs";
+import prettier from "eslint-plugin-prettier";
+import prettierConfig from "eslint-config-prettier";
+import unicorn from "eslint-plugin-unicorn";
+import vue from "eslint-plugin-vue";
+import vueParser from "vue-eslint-parser";
+import vuejsAccessibility from "eslint-plugin-vuejs-accessibility";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,7 +19,9 @@ export default [
   {
     ignores: [
       "**/*.d.ts",
-      "packages/backend/generated/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/generated/**",
       "packages/frontend/playwright.config.ts",
       "packages/frontend/vite.config.ts",
       "**/*.spec.ts",
@@ -92,6 +100,8 @@ export default [
     plugins: {
       "@typescript-eslint": tseslint,
       "@eslint-react": eslintReact,
+      prettier,
+      unicorn,
     },
     languageOptions: {
       parser: tseslintParser,
@@ -101,13 +111,34 @@ export default [
       },
     },
     rules: {
+      ...prettierConfig.rules,
       // Example rules - add more as needed
-      "@typescript-eslint/no-unused-vars": "warn",
-      "@eslint-react/no-missing-key": "warn",
+      "@typescript-eslint/no-unused-vars": "error",
+      "@eslint-react/no-missing-key": "error",
       // Disable base ESLint rules that conflict with TypeScript-ESLint
       "no-unused-vars": "off",
       // SonarJS rules
       "sonarjs/no-duplicate-string": "off",
+      "prettier/prettier": "warn",
+      "unicorn/prevent-abbreviations": "warn",
+    },
+  },
+  ...vue.configs["flat/recommended"],
+  {
+    languageOptions: {
+      parserOptions: {
+        parser: tseslintParser,
+      },
+    },
+  },
+  {
+    files: ["**/*.vue"],
+    plugins: {
+      prettier,
+    },
+    rules: {
+      ...prettierConfig.rules,
+      "prettier/prettier": "warn",
     },
   },
 ];
