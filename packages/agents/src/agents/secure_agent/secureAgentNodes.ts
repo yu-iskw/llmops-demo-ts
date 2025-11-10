@@ -7,7 +7,7 @@ import { InputSanitizerState } from "./subagents/input_sanitizer/inputSanitizerS
 import { RequestAnswererState } from "./subagents/answer_agent/requestAnswererState";
 import { OutputSanitizerState } from "./subagents/output_sanitizer/outputSanitizerState";
 import { logger } from "@llmops-demo/common";
-import { extractStringContent } from "../../utils/agentUtils";
+import { extractStringContent } from "../../utils/agentUtilities";
 
 export const callInputSanitizer = async (
   state: typeof SecureAgentStateAnnotation.State,

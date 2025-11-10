@@ -1,4 +1,4 @@
-import { getPackageRootPath, getProjectRootPath } from "./utils";
+import { getPackageRootPath, getProjectRootPath } from "./utilities";
 import path from "path";
 import fs from "fs";
 

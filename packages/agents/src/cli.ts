@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import dotenv from "dotenv";
-import { getProjectRootPath } from "./utils/utils";
+import { getProjectRootPath } from "./utils/utilities";
 import path from "path";
 // Sub commands
 import { defaultAgentProgram } from "./agents/default_agent/cli";

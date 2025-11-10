@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { ResearchAgent } from "./researchAgent"; // Import DefaultAgent
 import { GenAIConfig } from "../../utils/genai";
 import dotenv from "dotenv";
-import { getProjectRootPath } from "../../utils/utils";
+import { getProjectRootPath } from "../../utils/utilities";
 import path from "path";
 
 // Load environment variables from the root of the package

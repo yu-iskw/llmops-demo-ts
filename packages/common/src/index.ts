@@ -5,4 +5,4 @@ export type * from "./models/interfaces";
 
 // Runtime exports
 export { default as logger } from "./logger";
-export * from "./utils/utils";
+export * from "./utils/utilities";

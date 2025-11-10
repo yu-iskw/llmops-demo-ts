@@ -14,24 +14,24 @@ export async function targetFunction(inputs: {
   const history: Record<string, ChatCompletionMessage[]> = {};
 
   // Your application logic - must accept params object with inputs and threadId
-  const app = async (params: {
+  const app = async (parameters: {
     inputs: ChatCompletionMessage;
     threadId: string;
   }) => {
-    const { inputs: nextMessage, threadId } = params;
+    const { inputs: nextMessage, threadId } = parameters;
     if (history[threadId] === undefined) {
       history[threadId] = [];
     }
     history[threadId].push(nextMessage);
 
     // Convert ChatCompletionMessage to LangChain's BaseMessage format
-    const langChainMessages = history[threadId].map((msg) => {
-      if (msg.role === "user") {
-        return new HumanMessage(msg.content || "");
-      } else if (msg.role === "assistant") {
-        return new AIMessage(msg.content || "");
+    const langChainMessages = history[threadId].map((message) => {
+      if (message.role === "user") {
+        return new HumanMessage(message.content || "");
+      } else if (message.role === "assistant") {
+        return new AIMessage(message.content || "");
       }
-      return new HumanMessage(msg.content || ""); // Default or handle other roles if necessary
+      return new HumanMessage(message.content || ""); // Default or handle other roles if necessary
     });
 
     // Create and compile the answer agent graph within the app function with a checkpointer
@@ -63,11 +63,11 @@ export async function targetFunction(inputs: {
   };
 
   // Create a custom simulated user using GenAI since we don't have OpenAI configured
-  const user = async (params: {
+  const user = async (parameters: {
     trajectory: ChatCompletionMessage[];
     turnCounter: number;
   }): Promise<ChatCompletionMessage> => {
-    const { trajectory, turnCounter } = params;
+    const { trajectory, turnCounter } = parameters;
 
     // If we have fixed responses and this is within the range, use them
     if (turnCounter < inputs.messages.length) {
@@ -85,9 +85,9 @@ Based on the conversation context, respond as the user would. Keep responses nat
       model: modelName,
       contents: [
         { role: "user", parts: [{ text: systemPrompt }] },
-        ...contextMessages.map((msg) => ({
-          role: msg.role as "user" | "model",
-          parts: [{ text: msg.content || "" }],
+        ...contextMessages.map((message) => ({
+          role: message.role as "user" | "model",
+          parts: [{ text: message.content || "" }],
         })),
         {
           role: "user",
