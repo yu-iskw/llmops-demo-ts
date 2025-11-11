@@ -1,6 +1,31 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Chat Application", () => {
+  test.beforeEach(async ({ page }) => {
+    // Mock the API calls
+    await page.route("**/chat/agent-types", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(["default", "research", "secure"]),
+      });
+    });
+
+    await page.route("**/chat", async (route) => {
+      if (route.request().method() === "POST") {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            message: {
+              role: "assistant",
+              content: "This is a mocked response.",
+            },
+          }),
+        });
+      }
+    });
+  });
   test("should display chat interface", async ({ page }) => {
     await page.goto("/");
 

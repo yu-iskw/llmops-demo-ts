@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "target": "es2022",
-    "module": "es2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "rootDir": "src",
     "resolveJsonModule": true,
     "outDir": "./dist",
