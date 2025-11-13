@@ -4,7 +4,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./src",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "paths": {
       "@utils/*": ["utils/*"],
       "@agents/*": ["agents/*"]

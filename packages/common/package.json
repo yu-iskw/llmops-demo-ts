@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@google/genai": "^0.4.0",
-    "@langchain/core": "^0.3.79",
+    "@langchain/core": "^1.0.4",
     "winston": "^3.18.3"
   },
   "devDependencies": {
