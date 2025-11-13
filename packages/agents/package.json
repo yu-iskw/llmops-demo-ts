@@ -22,16 +22,18 @@
   },
   "dependencies": {
     "@google/genai": "^0.14.1",
-    "@langchain/core": "^0.3.79",
-    "@langchain/langgraph": "^0.4.9",
+    "@langchain/core": "^1.0.4",
+    "@langchain/langgraph": "^1.0.2",
     "@llmops-demo/common": "workspace:*",
     "@opentelemetry/sdk-trace-base": "^1.30.1",
     "commander": "^12.1.0",
     "dotenv": "^17.2.3",
     "langsmith": "^0.3.79",
-    "openai": "^5.23.2",
+    "openai": "^6.8.1",
     "openevals": "^0.1.2",
-    "winston": "^3.18.3"
+    "winston": "^3.18.3",
+    "zod": "^4.1.12",
+    "zod-to-json-schema": "^3.24.6"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
