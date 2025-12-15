@@ -69,19 +69,18 @@ Let's modify the Default Agent to respond like a pirate!
 6. **Rebuild the agents package**:
 
    ```bash
-   cd packages/agents
-   pnpm build
+   pnpm build:agents
    ```
 
    Or from the root directory:
 
    ```bash
-   pnpm build
+   pnpm build:agents
    ```
 
 7. **Restart the backend** (if it's running):
    - Stop the backend server (Ctrl+C)
-   - Restart it: `cd packages/backend && pnpm dev`
+   - Restart it: `pnpm start:backend`
 
 8. **Test your changes**:
    - Open `http://localhost:4200` in your browser
@@ -164,7 +163,7 @@ Currently, the Research Agent might generate only 1-2 search queries. Let's modi
 
 6. **Save the file**
 
-7. **Rebuild and restart** (same steps as Module 1)
+7. **Rebuild and restart** (same steps as Module 1, using `pnpm build:agents` and `pnpm start:backend`)
 
 8. **Test your changes**:
    - Select "Research Agent" from the dropdown
@@ -415,7 +414,7 @@ Try adding a new field to track something specific:
 
 ### Debugging Tips
 
-- **Check TypeScript compilation**: Run `pnpm build` to catch type errors
+- **Check TypeScript compilation**: Run `pnpm build:agents` to catch type errors
 - **Check runtime logs**: Backend console shows detailed execution flow
 - **Use browser DevTools**: Network tab shows API requests/responses
 - **Test in isolation**: Use the CLI to test agents directly (see below)
@@ -539,7 +538,7 @@ However, for complex, custom workflows (like the Research Agent), building the g
 
 ## Common Pitfalls
 
-1. **Forgetting to rebuild**: Always run `pnpm build` after making changes
+1. **Forgetting to rebuild**: Always run `pnpm build:agents` after making changes
 2. **Not restarting backend**: Changes require a server restart
 3. **Breaking TypeScript types**: Ensure your modifications maintain type safety
 4. **Over-complicating prompts**: Start simple, then add complexity

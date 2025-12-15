@@ -337,7 +337,7 @@ Let's add an evaluator that checks if the Input Sanitizer's rejection messages a
 5. **Rebuild and run**:
 
    ```bash
-   pnpm build
+   pnpm build:agents
    pnpm --filter @llmops-demo-ts/agents cli secure-agent input-sanitizer langsmith eval-llm-as-judge
    ```
 
@@ -414,7 +414,7 @@ graph TD
     B --> C{Performance Acceptable?}
     C -->|No| D[Identify Issues]
     D --> E[Modify Agent/Prompts]
-    E --> F[Rebuild]
+    E --> F[Rebuild (pnpm build:agents)]
     F --> A
     C -->|Yes| G[Deploy]
 

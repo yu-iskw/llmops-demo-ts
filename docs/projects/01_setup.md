@@ -97,16 +97,10 @@ This command will:
 
 ## Step 4: Launch the Backend Server
 
-1. **Navigate to the backend package**:
+1. **Start the backend development server from the root directory**:
 
    ```bash
-   cd packages/backend
-   ```
-
-2. **Start the development server**:
-
-   ```bash
-   pnpm dev
+   pnpm start:backend
    ```
 
    The backend server will start on `http://localhost:3000`.
@@ -117,7 +111,7 @@ This command will:
    Server running on port 3000
    ```
 
-3. **Verify the backend is running**:
+2. **Verify the backend is running**:
 
    Open a new terminal and test the health endpoint:
 
@@ -131,16 +125,10 @@ This command will:
 
 1. **Open a new terminal window** (keep the backend running)
 
-2. **Navigate to the frontend package**:
+2. **Start the frontend development server from the root directory**:
 
    ```bash
-   cd packages/frontend
-   ```
-
-3. **Start the frontend development server**:
-
-   ```bash
-   pnpm dev
+   pnpm start:frontend
    ```
 
    The frontend development server will start on `http://localhost:4200`.

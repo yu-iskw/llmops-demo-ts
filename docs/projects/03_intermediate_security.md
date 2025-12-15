@@ -160,10 +160,11 @@ Let's modify the Input Sanitizer to specifically block mentions of competitors.
 6. **Save and rebuild**:
 
    ```bash
-   pnpm build
+   pnpm build:agents
    ```
 
 7. **Restart the backend**
+   - If using `pnpm start:backend`, restart it by pressing Ctrl+C and running it again.
 
 8. **Test your changes**:
    - Select "Secure Agent" from the dropdown
@@ -251,7 +252,7 @@ Let's modify the Output Sanitizer to detect and redact email addresses.
    let feedbackMessage = isSensitive ? parsedResult.reason : undefined;
    ```
 
-5. **Save and rebuild**
+5. **Save and rebuild** (using `pnpm build:agents`)
 
 6. **Test your changes**:
    - Ask the Secure Agent: "What is the contact email for support?"

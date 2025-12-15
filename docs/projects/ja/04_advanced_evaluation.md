@@ -336,7 +336,7 @@ Input Sanitizer の拒否メッセージが丁寧でプロフェッショナル�
 5. **再ビルドして実行**:
 
    ```bash
-   pnpm build
+   pnpm build:agents
    pnpm --filter @llmops-demo-ts/agents cli secure-agent input-sanitizer langsmith eval-llm-as-judge
    ```
 
@@ -413,7 +413,7 @@ graph TD
     B --> C{パフォーマンスは許容範囲？}
     C -->|いいえ| D[問題特定]
     D --> E[エージェント/プロンプト変更]
-    E --> F[再ビルド]
+    E --> F[再ビルド (pnpm build:agents)]
     F --> A
     C -->|はい| G[デプロイ]
 
