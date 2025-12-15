@@ -414,7 +414,7 @@ graph TD
     B --> C{Performance Acceptable?}
     C -->|No| D[Identify Issues]
     D --> E[Modify Agent/Prompts]
-    E --> F[Rebuild (pnpm build:agents)]
+    E --> F["Rebuild (pnpm build:agents)"]
     F --> A
     C -->|Yes| G[Deploy]
 
