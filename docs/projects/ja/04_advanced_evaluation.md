@@ -409,13 +409,13 @@ export const comprehensiveEvaluator = async (run: Run, example?: Example) => {
 
 ```mermaid
 graph TD
-    A[評価実行] --> B[結果分析]
-    B --> C{パフォーマンスは許容範囲？}
-    C -->|いいえ| D[問題特定]
-    D --> E[エージェント/プロンプト変更]
+    A["評価実行"] --> B["結果分析"]
+    B --> C{"パフォーマンスは許容範囲？"}
+    C -->|"いいえ"| D["問題特定"]
+    D --> E["エージェント/プロンプト変更"]
     E --> F["再ビルド (pnpm build:agents)"]
     F --> A
-    C -->|はい| G[デプロイ]
+    C -->|"はい"| G["デプロイ"]
 
     style A fill:#FFE0E0,stroke:#333,stroke-width:2px
     style B fill:#ECECFF,stroke:#333,stroke-width:2px

@@ -46,14 +46,14 @@ Moving from "vibe checks" to **systematic evaluation** is crucial for:
 
 ```mermaid
 graph TD
-    A[Create Dataset] --> B[Define Target Function]
-    B --> C[Define Evaluators]
-    C --> D[Run Evaluation]
-    D --> E[View Results in LangSmith UI]
-    E --> F{Results Acceptable?}
-    F -->|No| G[Iterate on Model/Prompts]
+    A["Create Dataset"] --> B["Define Target Function"]
+    B --> C["Define Evaluators"]
+    C --> D["Run Evaluation"]
+    D --> E["View Results in LangSmith UI"]
+    E --> F{"Results Acceptable?"}
+    F -->|"No"| G["Iterate on Model/Prompts"]
     G --> D
-    F -->|Yes| H[Deploy]
+    F -->|"Yes"| H["Deploy"]
 
     style A fill:#E0FFEE,stroke:#333,stroke-width:2px
     style B fill:#ECECFF,stroke:#333,stroke-width:2px
@@ -410,13 +410,13 @@ When an example fails:
 
 ```mermaid
 graph TD
-    A[Run Evaluation] --> B[Analyze Results]
+    A["Run Evaluation"] --> B["Analyze Results"]
     B --> C{Performance Acceptable?}
-    C -->|No| D[Identify Issues]
-    D --> E[Modify Agent/Prompts]
+    C -->|"No"| D["Identify Issues"]
+    D -->|"No"| E["Modify Agent/Prompts"]
     E --> F["Rebuild (pnpm build:agents)"]
     F --> A
-    C -->|Yes| G[Deploy]
+    C -->|"Yes"| G["Deploy"]
 
     style A fill:#FFE0E0,stroke:#333,stroke-width:2px
     style B fill:#ECECFF,stroke:#333,stroke-width:2px
