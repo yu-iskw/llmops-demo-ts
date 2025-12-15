@@ -14,6 +14,12 @@ Vue.js フロントエンド、Node.js バックエンド、そして Google Gem
 - 🔧 **モジュラーアーキテクチャ**: バックエンドとフロントエンドのパッケージを分離し、LangGraph にインスパイアされたロジックフローを採用
 - 📱 **モバイルフレンドリー**: 全デバイスで動作するレスポンシブデザイン
 
+## 📚 LLM アプリ開発コース
+
+本リポジトリを使用して、LLM アプリケーションの構築と LLMOps の実践を学ぶ包括的なコースを提供しています。環境構築、エージェント開発、セキュリティ、評価について学ぶことができます。
+
+👉 **[コースを開始する](./docs/projects/ja/README.md)**
+
 ## 技術スタック
 
 ### フロントエンド (`packages/frontend`)
@@ -265,19 +271,19 @@ pnpm test:e2e
 - **Default Agent:**
 
   ```bash
-  pnpm --filter @llmops-demo-ts/agents cli default-agent run -t "Your message here" --model gemini-1.5-flash-latest
+  pnpm --filter @llmops-demo-ts/agents cli default-agent run -t "Your message here" --model gemini-2.5-flash
   ```
 
 - **Research Agent:**
 
   ```bash
-  pnpm --filter @llmops-demo-ts/agents cli research-agent run -t "Your research query here" --model gemini-1.5-flash-latest
+  pnpm --filter @llmops-demo-ts/agents cli research-agent run -t "Your research query here" --model gemini-2.5-flash
   ```
 
 - **Secure Agent:**
 
   ```bash
-  pnpm --filter @llmops-demo-ts/agents cli secure-agent run -t "Your secure message here" --model gemini-1.5-flash-latest
+  pnpm --filter @llmops-demo-ts/agents cli secure-agent run -t "Your secure message here" --model gemini-2.5-flash
   ```
 
 ### 評価コマンド

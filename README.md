@@ -12,6 +12,12 @@ A modular monorepo demonstrating LLMOps practices with Vue.js frontend, Node.js 
 - 🔧 **Modular Architecture**: Separate backend and frontend packages, with a LangGraph-inspired logic flow
 - 📱 **Mobile-Friendly**: Responsive design that works on all devices
 
+## 📚 LLM App Development Course
+
+We offer a comprehensive course on building LLM applications and applying LLMOps practices using this repository. It covers environment setup, agent development, security, and evaluation.
+
+👉 **[Start the Course](./docs/projects/README.md)**
+
 ## Tech Stack
 
 ### Frontend (`packages/frontend`)
@@ -245,12 +251,15 @@ The application features three distinct AI agents, each designed for specific pu
 
 - **Default Agent**: A general-purpose AI assistant capable of maintaining conversation history and optionally executing tools via function calls.
   - [README](/packages/agents/src/agents/default_agent/README.md)
+  - [日本語](/packages/agents/src/agents/default_agent/README.ja.md)
 
 - **Research Agent**: An AI assistant specializing in information gathering and synthesis. It plans search queries, executes web searches (via the Google Search Tool), and synthesizes results to answer user questions comprehensively.
   - [README](/packages/agents/src/agents/research_agent/README.md)
+  - [日本語](/packages/agents/src/agents/research_agent/README.ja.md)
 
 - **Secure Agent**: An AI assistant with enhanced security features to prevent prompt injections and handle sensitive information. It orchestrates input sanitization, request answering, and output sanitization through internal sub-agents.
   - [README](/packages/agents/src/agents/secure_agent/README.md)
+  - [日本語](/packages/agents/src/agents/secure_agent/README.ja.md)
 
 ## CLI Commands
 
@@ -263,19 +272,19 @@ Run AI agents directly from the command line:
 - **Default Agent:**
 
   ```bash
-  pnpm --filter @llmops-demo-ts/agents cli default-agent run -t "Your message here" --model gemini-1.5-flash-latest
+  pnpm --filter @llmops-demo-ts/agents cli default-agent run -t "Your message here" --model gemini-2.5-flash
   ```
 
 - **Research Agent:**
 
   ```bash
-  pnpm --filter @llmops-demo-ts/agents cli research-agent run -t "Your research query here" --model gemini-1.5-flash-latest
+  pnpm --filter @llmops-demo-ts/agents cli research-agent run -t "Your research query here" --model gemini-2.5-flash
   ```
 
 - **Secure Agent:**
 
   ```bash
-  pnpm --filter @llmops-demo-ts/agents cli secure-agent run -t "Your secure message here" --model gemini-1.5-flash-latest
+  pnpm --filter @llmops-demo-ts/agents cli secure-agent run -t "Your secure message here" --model gemini-2.5-flash
   ```
 
 ### Evaluation Commands
