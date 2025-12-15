@@ -7,7 +7,7 @@ import { SearchAgentState } from "./researchAgentState";
 
 export class ResearchAgent extends BaseAgent {
   constructor() {
-    super("gemini-1.5-flash-latest");
+    super("gemini-2.5-flash");
   }
 
   getType(): string {

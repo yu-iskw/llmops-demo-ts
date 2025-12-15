@@ -9,7 +9,7 @@ export class DefaultAgent extends BaseAgent {
   private messageWindowSize: number;
 
   constructor(messageWindowSize: number = 3) {
-    super("gemini-1.5-flash-latest");
+    super("gemini-2.5-flash");
     this.messageWindowSize = messageWindowSize;
   }
 

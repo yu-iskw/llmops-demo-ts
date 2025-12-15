@@ -3,13 +3,6 @@ import cors from "cors";
 import "dotenv/config";
 import { RegisterRoutes } from "../src/generated/routes/routes";
 import { ValidateError } from "tsoa";
-import path, { dirname } from "path";
-import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
 // Initialize the GoogleGenAI client
 // getGenAI();
@@ -17,8 +10,10 @@ dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json());
+// NOTE If we implement production-grade security, we should restrict the CORS to only the frontend domain.
+// eslint-disable-next-line sonarjs/cors
 app.use(cors());
+app.use(express.json());
 
 // Health check endpoint
 app.get("/health", (_request, response) => {

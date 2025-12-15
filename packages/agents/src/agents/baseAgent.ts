@@ -23,7 +23,7 @@ export abstract class BaseAgent implements IAgent {
   protected checkpointer: MemorySaver; // Declare checkpointer
 
   constructor(
-    defaultModelName: string = "gemini-1.5-flash-latest",
+    defaultModelName: string = "gemini-2.5-flash",
     checkpointer?: MemorySaver,
   ) {
     this.defaultModelName = defaultModelName;

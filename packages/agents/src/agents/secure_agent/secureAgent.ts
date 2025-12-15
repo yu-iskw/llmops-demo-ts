@@ -11,7 +11,7 @@ export class SecureAgent extends BaseAgent {
   private compiledGraph: any;
 
   constructor(messageWindowSize: number = 3, checkpointer?: MemorySaver) {
-    super("gemini-1.5-flash-latest", checkpointer);
+    super("gemini-2.5-flash", checkpointer);
     this.messageWindowSize = messageWindowSize;
     const genAI = new GoogleGenAI({});
     this.compiledGraph = this.createGraph(genAI);
