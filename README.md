@@ -174,6 +174,7 @@ Follow these steps to get the application up and running on your local machine.
 
 - [Node.js](https://nodejs.org/en/) (v20 or higher)
 - [pnpm](https://pnpm.io/)
+- [Trunk IO](https://trunk.io/) (via Homebrew: `brew install trunk-io`)
 
 ### Installation
 

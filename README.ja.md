@@ -176,6 +176,7 @@ graph TD
 
 - [Node.js](https://nodejs.org/en/) (v20 以上)
 - [pnpm](https://pnpm.io/)
+- [Trunk IO](https://trunk.io/) (Homebrew経由: `brew install trunk-io`)
 
 ### インストール
 

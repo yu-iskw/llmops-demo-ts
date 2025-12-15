@@ -12,6 +12,8 @@
 - **pnpm**: パッケージマネージャー ([インストールガイド](https://pnpm.io/installation))
   - npm を使用してインストールする場合: `npm install -g pnpm`
   - corepack を使用してインストールする場合: `corepack enable pnpm`
+- **Trunk IO**: コードリンターとフォーマッター ([インストール](https://trunk.io/))
+  - Homebrew を使用してインストールする場合 (macOS): `brew install trunk-io`
 - **Google Cloud アカウント** (Vertex AI 用) または **Google Gemini API キー** (直接 API アクセス用)
   - Vertex AI の場合: Vertex AI API が有効化された Google Cloud プロジェクト
   - Gemini API の場合: [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-keys) から取得した API キー
