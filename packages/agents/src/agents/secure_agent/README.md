@@ -1,5 +1,7 @@
 # Secure Agent
 
+- [日本語](./README.ja.md)
+
 The Secure Agent is an AI assistant with enhanced security features, specializing in preventing prompt injections and handling sensitive information. It leverages the Google Gen AI model and the LangGraph framework to orchestrate input sanitization, request answering, and output sanitization.
 
 ## Architecture

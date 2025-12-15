@@ -1,5 +1,7 @@
 # LLMOps Demo TypeScript
 
+- [日本語](./README.ja.md)
+
 A modular monorepo demonstrating LLMOps practices with Vue.js frontend, Node.js backend, and LangGraph-based AI agents powered by Google Gemini AI.
 
 ## Features
