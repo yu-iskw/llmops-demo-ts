@@ -1,5 +1,7 @@
 # Research Agent
 
+- [日本語](./README.ja.md)
+
 The Research Agent is an AI assistant specializing in information gathering and synthesis. It leverages the Google Gen AI model and the LangGraph framework to plan search queries, execute web searches (via Google Search Tool), and synthesize the results to answer user questions comprehensively.
 
 ## Architecture
