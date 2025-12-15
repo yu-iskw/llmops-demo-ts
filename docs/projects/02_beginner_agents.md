@@ -442,6 +442,8 @@ While LangGraph gives you full control over the graph structure, LangChain provi
 
 ### Hands-on Exercise: Build a Simple ReAct Agent
 
+> **Note:** This exercise uses `@langchain/google-vertexai`, which requires the **Vertex AI** configuration (Option B in Module 01). Ensure you have set up `GOOGLE_CLOUD_PROJECT` and authenticated with `gcloud`.
+
 In this exercise, we'll create a standalone script to demonstrate `createAgent`. Note that this uses the **LangChain** wrapper libraries (`@langchain/google-vertexai` and `langchain`), which provide a higher-level abstraction than the core `@google/genai` SDK used in other modules.
 
 1. **Create a new file**: `packages/agents/src/simple-react-agent.ts`

@@ -442,6 +442,8 @@ LangGraph はグラフ構造を完全に制御できますが、LangChain は `c
 
 ### ハンズオン演習: シンプルな ReAct エージェントの構築
 
+> **注意:** この演習では `@langchain/google-vertexai` を使用するため、**Vertex AI** の設定（モジュール 01 のオプション B）が必要です。`GOOGLE_CLOUD_PROJECT` が設定され、`gcloud` で認証されていることを確認してください。
+
 この演習では、`createAgent` をデモンストレーションするためのスタンドアロンスクリプトを作成します。ここでは、他のモジュールで使用されているコアの `@google/genai` SDK ではなく、より抽象度の高い **LangChain** ラッパーライブラリ（`@langchain/google-vertexai` と `langchain`）を使用していることに注意してください。
 
 1. **新しいファイルを作成**: `packages/agents/src/simple-react-agent.ts`
