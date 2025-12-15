@@ -3,13 +3,6 @@ import cors from "cors";
 import "dotenv/config";
 import { RegisterRoutes } from "../src/generated/routes/routes";
 import { ValidateError } from "tsoa";
-import path, { dirname } from "path";
-import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
 // Initialize the GoogleGenAI client
 // getGenAI();
