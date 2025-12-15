@@ -12,6 +12,8 @@ Before starting, ensure you have the following installed:
 - **pnpm**: Package manager ([Installation Guide](https://pnpm.io/installation))
   - To install pnpm using npm: `npm install -g pnpm`
   - To install pnpm using corepack: `corepack enable pnpm`
+- **Trunk IO**: Code linting and formatting tool ([Installation](https://trunk.io/))
+  - To install Trunk IO using Homebrew (macOS): `brew install trunk-io`
 - **Google Cloud Account** (for Vertex AI) OR **Google Gemini API Key** (for direct API access)
   - For Vertex AI: A Google Cloud Project with Vertex AI API enabled
   - For Gemini API: An API key from [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-keys)

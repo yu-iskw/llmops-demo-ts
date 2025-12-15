@@ -9,6 +9,8 @@ This guide provides instructions for setting up your development environment and
 - Node.js (v18 or higher)
 - pnpm package manager
 - Google Gemini API key
+- Trunk IO (for linting and formatting)
+  - macOS: `brew install trunk-io`
 
 ### Installation
 
