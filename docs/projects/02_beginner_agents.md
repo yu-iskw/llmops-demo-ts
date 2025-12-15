@@ -472,7 +472,7 @@ In this exercise, we'll create a standalone script to demonstrate `createAgent`.
    async function main() {
      // 2. Initialize the model
      const model = new ChatGoogleVertexAI({
-       model: "gemini-1.5-flash",
+       model: "gemini-2.5-flash",
        temperature: 0,
      });
 

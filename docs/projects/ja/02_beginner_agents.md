@@ -472,7 +472,7 @@ LangGraph はグラフ構造を完全に制御できますが、LangChain は `c
    async function main() {
      // 2. モデルの初期化
      const model = new ChatGoogleVertexAI({
-       model: "gemini-1.5-flash",
+       model: "gemini-2.5-flash",
        temperature: 0,
      });
 

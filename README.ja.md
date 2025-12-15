@@ -271,19 +271,19 @@ pnpm test:e2e
 - **Default Agent:**
 
   ```bash
-  pnpm --filter @llmops-demo-ts/agents cli default-agent run -t "Your message here" --model gemini-1.5-flash-latest
+  pnpm --filter @llmops-demo-ts/agents cli default-agent run -t "Your message here" --model gemini-2.5-flash
   ```
 
 - **Research Agent:**
 
   ```bash
-  pnpm --filter @llmops-demo-ts/agents cli research-agent run -t "Your research query here" --model gemini-1.5-flash-latest
+  pnpm --filter @llmops-demo-ts/agents cli research-agent run -t "Your research query here" --model gemini-2.5-flash
   ```
 
 - **Secure Agent:**
 
   ```bash
-  pnpm --filter @llmops-demo-ts/agents cli secure-agent run -t "Your secure message here" --model gemini-1.5-flash-latest
+  pnpm --filter @llmops-demo-ts/agents cli secure-agent run -t "Your secure message here" --model gemini-2.5-flash
   ```
 
 ### 評価コマンド
