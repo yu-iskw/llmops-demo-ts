@@ -1,5 +1,7 @@
 # Default Agent
 
+- [日本語](./README.ja.md)
+
 The Default Agent is a general-purpose AI assistant built using LangGraph. It leverages the Google Gen AI model to process user messages, maintain conversation history, and optionally execute tools via function calls.
 
 ## Architecture
