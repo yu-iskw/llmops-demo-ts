@@ -56,6 +56,8 @@
    ```
 
    > **注意:** `your-gemini-api-key-here` を [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-keys) から取得した実際の Gemini API キーに置き換えてください。
+   >
+   > **警告:** 直接 Gemini API のレート制限は比較的小さいため、広範なテストや開発作業には不十分な場合があります。より良いレート制限と本番環境対応のため、Vertex AI（オプション B）の使用をお勧めします。
 
    ### オプション B: Vertex AI を使用する場合 (本番環境に推奨)
 

@@ -56,6 +56,8 @@ Before starting, ensure you have the following installed:
    ```
 
    > **Note:** Replace `your-gemini-api-key-here` with your actual Gemini API key from [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-keys).
+   >
+   > **Warning:** The direct Gemini API has relatively small rate limits, which may not be sufficient for extensive testing or development work. We recommend using Vertex AI (Option B) for better rate limits and production readiness.
 
    ### Option B: Using Vertex AI (Recommended for production)
 
