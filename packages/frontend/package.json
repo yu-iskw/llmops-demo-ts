@@ -29,6 +29,6 @@
     "@types/node": "^20.19.27",
     "@vitejs/plugin-vue": "^5.2.4",
     "typescript": "^5.9.3",
-    "vite": "^6.4.1"
+    "vite": "^7.3.0"
   }
 }
