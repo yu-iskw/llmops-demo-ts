@@ -1,4 +1,4 @@
-name: Build Check
+name: Test Check
 
 on:
   workflow_dispatch:
@@ -14,15 +14,15 @@ concurrency:
 permissions: read-all
 
 jobs:
-  build:
-    name: Build Packages
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
     permissions:
       contents: read # For repo checkout
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
       - uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.10.3
         with:
           egress-policy: audit
@@ -31,13 +31,16 @@ jobs:
         with:
           version: 10
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
           cache: pnpm
       - name: Install dependencies
         run: |
           pnpm install
-      - name: Build all packages
+      - name: Install Playwright browsers
         run: |
-          pnpm build
+          pnpm --filter @llmops-demo-ts/frontend install playwright
+      - name: Run tests
+        run: |
+          pnpm test
