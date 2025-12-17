@@ -27,7 +27,7 @@
     "test:backend": "pnpm --filter @llmops-demo-ts/backend test",
     "test:common": "pnpm --filter @llmops-demo/common test",
     "test:frontend": "pnpm --filter @llmops-demo-ts/frontend test:e2e",
-    "upgrade": "pnpm up -r"
+    "upgrade": "pnpm up --recursive --latest"
   },
   "dependencies": {
     "commander": "^14.0.2",
@@ -35,8 +35,8 @@
   },
   "devDependencies": {
     "@eslint-react/eslint-plugin": "^2.3.13",
-    "@typescript-eslint/eslint-plugin": "^8.49.0",
-    "@typescript-eslint/parser": "^8.49.0",
+    "@typescript-eslint/eslint-plugin": "^8.50.0",
+    "@typescript-eslint/parser": "^8.50.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
