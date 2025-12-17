@@ -20,7 +20,7 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "@langchain/core": "^1.1.5",
+    "@langchain/core": "^1.1.6",
     "@llmops-demo-ts/agents": "workspace:*",
     "@llmops-demo/common": "workspace:*",
     "@tsoa/runtime": "^6.6.0",
