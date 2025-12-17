@@ -23,8 +23,6 @@
             <select id="model-select" v-model="selectedModelName">
               <option value="gemini-2.5-flash">gemini-2.5-flash</option>
               <option value="gemini-2.5-pro">gemini-2.5-pro</option>
-              <option value="gemini-1.5-flash-002">gemini-1.5-flash-002</option>
-              <option value="gemini-1.5-pro-002">gemini-1.5-pro-002</option>
             </select>
           </div>
         </div>
