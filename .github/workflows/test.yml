@@ -40,7 +40,7 @@ jobs:
           pnpm install
       - name: Install Playwright browsers
         run: |
-          pnpm --filter @llmops-demo-ts/frontend install playwright
+          pnpm --filter @llmops-demo-ts/frontend exec playwright install --with-deps
       - name: Run tests
         run: |
           pnpm test
