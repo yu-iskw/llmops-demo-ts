@@ -21,7 +21,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@google/genai": "^0.14.1",
+    "@google/genai": "^1.33.0",
     "@langchain/core": "^1.1.5",
     "@langchain/langgraph": "^1.0.4",
     "@llmops-demo/common": "workspace:*",
