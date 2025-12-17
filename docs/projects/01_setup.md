@@ -48,18 +48,9 @@ Before starting, ensure you have the following installed:
 
 2. **Open `.env` in your editor** and configure the following variables:
 
-   ### Option A: Using Gemini API (Simpler for beginners)
+   ### Option A: Using Vertex AI (Recommended)
 
-   ```bash
-   GOOGLE_API_KEY=your-gemini-api-key-here
-   GOOGLE_GENAI_USE_VERTEXAI=false
-   ```
-
-   > **Note:** Replace `your-gemini-api-key-here` with your actual Gemini API key from [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-keys).
-   >
-   > **Warning:** The direct Gemini API has relatively small rate limits, which may not be sufficient for extensive testing or development work. We recommend using Vertex AI (Option B) for better rate limits and production readiness.
-
-   ### Option B: Using Vertex AI (Recommended for production)
+   We recommend using this option whenever possible as Vertex AI offers higher rate limits and enterprise-grade features.
 
    ```bash
    GOOGLE_GENAI_USE_VERTEXAI=true
@@ -73,7 +64,22 @@ Before starting, ensure you have the following installed:
    > - Ensure Vertex AI API is enabled in your GCP project
    > - Set up authentication: `gcloud auth application-default login`
 
+   ### Option B: Using Gemini API (Fallback if Vertex AI is not available)
+
+   If you cannot use Vertex AI, you can use the Gemini API.
+
+   ```bash
+   GOOGLE_API_KEY=your-gemini-api-key-here
+   GOOGLE_GENAI_USE_VERTEXAI=false
+   ```
+
+   > **Note:** Replace `your-gemini-api-key-here` with your actual Gemini API key from [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-keys).
+   >
+   > **Warning:** The direct Gemini API has relatively small rate limits, which may not be sufficient for extensive testing or development work.
+
    ### Optional: LangSmith Configuration (Recommended for observability)
+
+   For details on creating a LangSmith account and obtaining an API key, please refer to the [official documentation](https://docs.langchain.com/langsmith/create-account-api-key).
 
    ```bash
    LANGSMITH_TRACING=true
