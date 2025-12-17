@@ -1,4 +1,4 @@
-name: Trunk Check
+name: Test Check
 
 on:
   workflow_dispatch:
@@ -8,22 +8,21 @@ on:
       - main
 
 concurrency:
-  group: "trunk-check-${{ github.head_ref || github.run_id }}"
+  group: "test-${{ github.head_ref || github.run_id }}"
   cancel-in-progress: true
 
 permissions: read-all
 
 jobs:
-  trunk_check:
-    name: Trunk Check Runner
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
     permissions:
-      checks: write # For trunk to post annotations
       contents: read # For repo checkout
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
       - uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.10.3
         with:
           egress-policy: audit
@@ -31,12 +30,17 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10
-          run_install: |
-            - recursive: true
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
           cache: pnpm
-      - name: Trunk Check
-        uses: trunk-io/trunk-action@v1
+      - name: Install dependencies
+        run: |
+          pnpm install
+      - name: Install Playwright browsers
+        run: |
+          pnpm --filter @llmops-demo-ts/frontend exec playwright install --with-deps
+      - name: Run tests
+        run: |
+          pnpm test

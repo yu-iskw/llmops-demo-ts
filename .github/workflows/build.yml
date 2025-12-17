@@ -1,11 +1,14 @@
 name: Build Check
 
 on:
-  pull_request:
   workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
 
 concurrency:
-  group: ${{ github.head_ref || github.run_id }}
+  group: "build-${{ github.head_ref || github.run_id }}"
   cancel-in-progress: true
 
 permissions: read-all
@@ -19,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.10.3
         with:
           egress-policy: audit
@@ -28,7 +31,7 @@ jobs:
         with:
           version: 10
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
           cache: pnpm
