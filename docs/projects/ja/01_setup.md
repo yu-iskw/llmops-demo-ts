@@ -48,18 +48,9 @@
 
 2. **エディタで `.env` を開き**、以下の変数を設定します:
 
-   ### オプション A: Gemini API を使用する場合 (初心者向け)
+   ### オプション A: Vertex AI を使用する場合 (推奨)
 
-   ```bash
-   GOOGLE_API_KEY=your-gemini-api-key-here
-   GOOGLE_GENAI_USE_VERTEXAI=false
-   ```
-
-   > **注意:** `your-gemini-api-key-here` を [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-keys) から取得した実際の Gemini API キーに置き換えてください。
-   >
-   > **警告:** 直接 Gemini API のレート制限は比較的小さいため、広範なテストや開発作業には不十分な場合があります。より良いレート制限と本番環境対応のため、Vertex AI（オプション B）の使用をお勧めします。
-
-   ### オプション B: Vertex AI を使用する場合 (本番環境に推奨)
+   可能な限り、このオプションの使用をお勧めします。Vertex AI はより高いレート制限とエンタープライズグレードの機能を提供します。
 
    ```bash
    GOOGLE_GENAI_USE_VERTEXAI=true
@@ -73,7 +64,22 @@
    > - GCP プロジェクトで Vertex AI API が有効になっていることを確認してください。
    > - 認証の設定を行ってください: `gcloud auth application-default login`
 
+   ### オプション B: Gemini API を使用する場合 (Vertex AI が使用できない場合)
+
+   Vertex AI を使用できない場合は、Gemini API を使用できます。
+
+   ```bash
+   GOOGLE_API_KEY=your-gemini-api-key-here
+   GOOGLE_GENAI_USE_VERTEXAI=false
+   ```
+
+   > **注意:** `your-gemini-api-key-here` を [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-keys) から取得した実際の Gemini API キーに置き換えてください。
+   >
+   > **警告:** 直接 Gemini API のレート制限は比較的小さいため、広範なテストや開発作業には不十分な場合があります。
+
    ### オプション: LangSmith の設定 (可観測性のために推奨)
+
+   LangSmith のアカウント作成と API キーの取得については、[公式ドキュメント](https://docs.langchain.com/langsmith/create-account-api-key)を参照してください。
 
    ```bash
    LANGSMITH_TRACING=true
