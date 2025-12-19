@@ -195,26 +195,26 @@ The `DefaultAgent` has a `call_tool` node, but it might be inactive. Let's enabl
    Create `packages/agents/src/tools/calculator.ts`:
 
    ```typescript
-   import { FunctionDeclaration, SchemaType } from "@google/genai";
+   import { FunctionDeclaration, Type } from "@google/genai";
 
    export const calculatorToolDeclaration: FunctionDeclaration = {
      name: "calculator",
      description:
        "Perform basic arithmetic operations (add, subtract, multiply, divide).",
      parameters: {
-       type: SchemaType.OBJECT,
+       type: Type.OBJECT,
        properties: {
          operation: {
-           type: SchemaType.STRING,
+           type: Type.STRING,
            description:
              "The operation to perform: 'add', 'subtract', 'multiply', 'divide'.",
          },
          a: {
-           type: SchemaType.NUMBER,
+           type: Type.NUMBER,
            description: "The first number.",
          },
          b: {
-           type: SchemaType.NUMBER,
+           type: Type.NUMBER,
            description: "The second number.",
          },
        },
@@ -292,10 +292,10 @@ Let's modify the Default Agent (or create a temporary test function) to extract 
 
    In `packages/agents/src/agents/default_agent/defaultAgentNodes.ts`.
 
-   Import `SchemaType`:
+   Import `Type`:
 
    ```typescript
-   import { SchemaType } from "@google/genai";
+   import { Type } from "@google/genai";
    ```
 
 2. **Update the Config**:
@@ -309,15 +309,15 @@ Let's modify the Default Agent (or create a temporary test function) to extract 
      config: {
        responseMimeType: "application/json",
        responseSchema: {
-         type: SchemaType.OBJECT,
+         type: Type.OBJECT,
          properties: {
-           name: { type: SchemaType.STRING, description: "User's name" },
+           name: { type: Type.STRING, description: "User's name" },
            intent: {
-             type: SchemaType.STRING,
+             type: Type.STRING,
              description: "User's intent or goal",
            },
            sentiment: {
-             type: SchemaType.STRING,
+             type: Type.STRING,
              description:
                "Sentiment of the message (positive, negative, neutral)",
            },
