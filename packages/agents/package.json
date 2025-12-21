@@ -21,16 +21,16 @@
     "test": "jest"
   },
   "dependencies": {
-    "@google/genai": "^1.33.0",
-    "@langchain/core": "^1.1.6",
-    "@langchain/langgraph": "^1.0.5",
+    "@google/genai": "^1.34.0",
+    "@langchain/core": "^1.1.7",
+    "@langchain/langgraph": "^1.0.7",
     "@llmops-demo/common": "workspace:*",
     "@opentelemetry/sdk-trace-base": "^2.2.0",
     "commander": "^14.0.2",
     "dotenv": "^17.2.3",
     "langsmith": "^0.4.0",
-    "openai": "^6.14.0",
-    "openevals": "^0.1.3",
+    "openai": "^6.15.0",
+    "openevals": "^0.1.4",
     "winston": "^3.19.0",
     "zod": "^4.2.1",
     "zod-to-json-schema": "^3.25.0"
