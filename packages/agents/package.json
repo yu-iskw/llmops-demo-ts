@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.33.0",
-    "@langchain/core": "^1.1.6",
+    "@langchain/core": "^1.1.8",
     "@langchain/langgraph": "^1.0.5",
     "@llmops-demo/common": "workspace:*",
     "@opentelemetry/sdk-trace-base": "^2.2.0",
