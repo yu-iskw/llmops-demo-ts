@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@google/genai": "^1.33.0",
+    "@google/genai": "^1.34.0",
     "@langchain/core": "^1.1.8",
     "winston": "^3.19.0"
   },
