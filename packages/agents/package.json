@@ -29,7 +29,7 @@
     "commander": "^14.0.2",
     "dotenv": "^17.2.3",
     "langsmith": "^0.4.4",
-    "openai": "^6.15.0",
+    "openai": "^6.17.0",
     "openevals": "^0.1.4",
     "winston": "^3.19.0",
     "zod": "^4.3.4",
