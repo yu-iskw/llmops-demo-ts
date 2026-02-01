@@ -24,7 +24,7 @@
     "@llmops-demo-ts/agents": "workspace:*",
     "@llmops-demo/common": "workspace:*",
     "@tsoa/runtime": "7.0.0-alpha.0",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "langsmith": "^0.4.4",
