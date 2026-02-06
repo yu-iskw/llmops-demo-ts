@@ -1,0 +1,59 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Skill(plan-task *)",
+      "Skill(orchestrate *)",
+      "Skill(write-requirements *)",
+      "Skill(design-component *)",
+      "Skill(implement-feature *)",
+      "Skill(review-code *)",
+      "Skill(write-tests *)",
+      "Skill(security-audit *)",
+      "Skill(compliance-check *)"
+    ]
+  },
+  "hooks": {
+    "SubagentStart": [
+      {
+        "matcher": "software-engineer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[agent-team] Software engineer agent started' >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "code-reviewer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[agent-team] Code reviewer agent started' >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "qa",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[agent-team] QA agent started' >> /tmp/agent-team.log"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[agent-team] Agent stopped at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      }
+    ]
+  }
+}
