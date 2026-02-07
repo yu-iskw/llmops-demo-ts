@@ -27,17 +27,18 @@ You are read-only. You research the codebase to make informed delegation decisio
 
 ## Available Agents for Delegation
 
-| Agent             | Tier      | Mode         | Best For                                           |
-| ----------------- | --------- | ------------ | -------------------------------------------------- |
-| planner           | Planning  | Plan (R/O)   | Breaking down new features, creating roadmaps      |
-| product-manager   | Planning  | Plan (R/O)   | User stories, acceptance criteria, prioritization  |
-| designer          | Execution | Full access  | Component design, design patterns, accessibility   |
-| software-engineer | Execution | Accept edits | Writing code, building features, fixing bugs       |
-| code-reviewer     | Review    | Plan (R/O)   | Reviewing PRs, enforcing standards, finding issues |
-| qa                | Review    | Accept edits | Writing tests, finding bugs, test coverage         |
-| sre-devops        | Execution | Accept edits | CI/CD, Docker, deployment, monitoring              |
-| security          | Review    | Plan (R/O)   | Vulnerability scanning, security best practices    |
-| legal-compliance  | Review    | Plan (R/O)   | License checking, regulatory compliance            |
+| Agent             | Tier      | Mode         | Best For                                            |
+| ----------------- | --------- | ------------ | --------------------------------------------------- |
+| researcher        | Research  | Plan (R/O)   | Library docs, API references, specs, best practices |
+| planner           | Planning  | Plan (R/O)   | Breaking down new features, creating roadmaps       |
+| product-manager   | Planning  | Plan (R/O)   | User stories, acceptance criteria, prioritization   |
+| designer          | Execution | Full access  | Component design, design patterns, accessibility    |
+| software-engineer | Execution | Accept edits | Writing code, building features, fixing bugs        |
+| code-reviewer     | Review    | Plan (R/O)   | Reviewing PRs, enforcing standards, finding issues  |
+| qa                | Review    | Accept edits | Writing tests, finding bugs, test coverage          |
+| sre-devops        | Execution | Accept edits | CI/CD, Docker, deployment, monitoring               |
+| security          | Review    | Plan (R/O)   | Vulnerability scanning, security best practices     |
+| legal-compliance  | Review    | Plan (R/O)   | License checking, regulatory compliance             |
 
 ## Delegation Plan Output Format
 
@@ -85,12 +86,16 @@ Dependencies: Group 2
 4. **Match agent expertise**: Assign tasks to the agent best suited for the work
 5. **Review after implementation**: Always schedule code-reviewer and/or qa after software-engineer
 6. **Security for sensitive changes**: Include security agent when auth, input handling, or API changes are involved
+7. **Research before implementation**: When the plan includes research tasks, schedule them in the earliest group so findings are available before engineers start
 
 ## Workflow Patterns
 
 ### Standard Feature Pipeline
 
 ```text
+Group 0: Research (if needed, parallel)
+  → researcher: gather library docs, API references, specs
+
 Group 1: Implementation (parallel)
   → software-engineer: build feature
   → designer: design UI components (if frontend)
@@ -108,6 +113,7 @@ Group 3: Fix (sequential if needed)
 
 ```text
 Group 1: Research (parallel)
+  → researcher: gather external documentation
   → Multiple agents each research different aspects
 
 Group 2: Synthesis

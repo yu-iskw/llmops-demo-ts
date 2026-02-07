@@ -140,6 +140,7 @@ This project uses a **3-tier agent architecture** with a streamlined pipeline wo
 ┌─────────────────────────────────────────────────────────────┐
 │  Tier 1: Planning (read-only)                               │
 │  /plan-task → planner agent → structured task plan          │
+│  /research → researcher agent → docs, APIs, specs           │
 │  /write-requirements → product-manager → user stories       │
 ├─────────────────────────────────────────────────────────────┤
 │  Tier 2: Orchestration (read-only)                          │
@@ -148,7 +149,8 @@ This project uses a **3-tier agent architecture** with a streamlined pipeline wo
 ├─────────────────────────────────────────────────────────────┤
 │  Tier 3: Execution (parallel)                               │
 │  Main session spawns agents per delegation plan             │
-│  Group 1: [engineer, designer] → Group 2: [reviewer, qa]   │
+│  Group 0: [researcher] → Group 1: [engineer, designer] →   │
+│  Group 2: [reviewer, qa]                                    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -162,8 +164,11 @@ Agent teams require Claude Code with the experimental agent teams feature. The p
 # Step 1: Plan — creates a structured task breakdown
 /plan-task Add WebSocket support to the chat backend
 
+# Step 1.5 (if plan includes research): Gather external information
+/research WebSocket support in Express 5 with TypeScript
+
 # Step 2: Orchestrate — creates a delegation plan with parallel groups
-/orchestrate [paste the plan output from Step 1]
+/orchestrate [paste the plan output from Step 1, include research findings]
 
 # Step 3: Execute — tell Claude to execute the delegation plan
 Execute the delegation plan above, spawning agents in parallel per group
@@ -172,6 +177,7 @@ Execute the delegation plan above, spawning agents in parallel per group
 #### Direct Agent Invocation (for focused tasks)
 
 ```text
+Use the researcher agent to gather LangGraph documentation for the new feature
 Use the security agent to audit the authentication module
 Use the qa agent to write tests for the research agent nodes
 ```
@@ -179,6 +185,7 @@ Use the qa agent to write tests for the research agent nodes
 #### Direct Skill Invocation
 
 ```text
+/research LangGraph StateGraph conditional edges
 /review-code packages/agents/src/agents/default_agent/
 /write-tests packages/backend/src/services/chatService.ts
 /security-audit full
@@ -188,12 +195,15 @@ Use the qa agent to write tests for the research agent nodes
 
 #### Tier 1 — Planning (read-only)
 
-These agents research the codebase and produce structured plans. They cannot modify files.
+These agents research the codebase and external sources, and produce structured plans. They cannot modify files.
 
 | Agent             | Role                       | Skill (Slash Command) |
 | ----------------- | -------------------------- | --------------------- |
 | `planner`         | Task breakdown, roadmaps   | `/plan-task`          |
+| `researcher`      | Library docs, APIs, specs  | `/research`           |
 | `product-manager` | Requirements, user stories | `/write-requirements` |
+
+The **researcher** is a key Tier 1 agent. When the planner identifies tasks involving unfamiliar libraries, APIs, or specifications, it assigns research tasks to the researcher. The orchestrator then schedules research in the earliest parallel group so findings are available before implementation begins.
 
 #### Tier 2 — Orchestration (read-only)
 
@@ -257,13 +267,17 @@ The standard workflow for complex features:
 
 ```text
 /plan-task Add a new "summarizer" agent type
-  → Returns task plan with 6 tasks
+  → Returns task plan with 7 tasks (including research on summarization APIs)
 
-/orchestrate [task plan]
-  → Returns delegation plan: Group 1 (engineer + designer), Group 2 (reviewer + qa + security)
+/research Google Gemini summarization capabilities and LangGraph patterns
+  → Returns structured report with API docs, code patterns, and recommendations
+
+/orchestrate [task plan + research findings]
+  → Returns delegation plan: Group 0 (researcher), Group 1 (engineer + designer),
+    Group 2 (reviewer + qa + security)
 
 Execute the delegation plan
-  → Spawns Group 1 agents in parallel, then Group 2 after completion
+  → Spawns groups in order, each group's agents run in parallel
 ```
 
 #### Iterative
@@ -280,6 +294,8 @@ Iterate until there are no critical issues remaining.
 **Why is the orchestrator read-only?** The orchestrator uses `permissionMode: plan` so it can only research and produce plans — never execute. This enforces the separation between planning delegation and executing it. The main session is the only entity that spawns parallel agents.
 
 **Why are planning and orchestration separate?** The planner focuses on _what_ needs to be done (task breakdown). The orchestrator focuses on _who_ does it and _when_ (agent assignment, parallelism, dependencies). This separation allows you to skip orchestration for simple tasks or re-orchestrate the same plan differently.
+
+**Why a dedicated researcher?** Implementation quality depends on understanding the libraries and APIs being used. The researcher gathers this information upfront — reading official documentation, checking version compatibility, and identifying best practices — so engineers don't have to context-switch between coding and research. Research tasks run in the earliest parallel group, making findings available before implementation begins.
 
 **Why does the main session execute?** Claude Code subagents cannot spawn other subagents. Only the main conversation can spawn parallel workers. The delegation plan gives the main session a clear, structured blueprint to follow.
 

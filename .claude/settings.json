@@ -12,6 +12,7 @@
       "Skill(review-code *)",
       "Skill(write-tests *)",
       "Skill(security-audit *)",
+      "Skill(research *)",
       "Skill(compliance-check *)"
     ]
   },
@@ -23,6 +24,15 @@
           {
             "type": "command",
             "command": "echo \"[pipeline] Planner agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "researcher",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Researcher agent started at $(date)\" >> /tmp/agent-team.log"
           }
         ]
       },

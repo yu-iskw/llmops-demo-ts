@@ -20,10 +20,23 @@ Create detailed, actionable implementation plans. You do NOT implement code — 
 ## Planning Process
 
 1. **Understand the request**: Clarify what needs to be built or changed
-2. **Research the codebase**: Explore relevant files, patterns, and dependencies
-3. **Identify scope**: Determine which packages (common, agents, backend, frontend) are affected
-4. **Break down tasks**: Create specific, ordered tasks with dependencies
-5. **Identify risks**: Note potential blockers, breaking changes, or architectural concerns
+2. **Identify research needs**: Determine if external documentation, library APIs, or specifications need to be researched first. If so, include a research task assigned to the `researcher` agent as an early dependency.
+3. **Research the codebase**: Explore relevant files, patterns, and dependencies
+4. **Identify scope**: Determine which packages (common, agents, backend, frontend) are affected
+5. **Break down tasks**: Create specific, ordered tasks with dependencies
+6. **Identify risks**: Note potential blockers, breaking changes, or architectural concerns
+
+## When to Include Research Tasks
+
+Add a `researcher` task when the plan involves:
+
+- Libraries or APIs the team hasn't used before
+- Version upgrades with potential breaking changes
+- New protocols, standards, or specifications
+- External service integrations
+- Unfamiliar patterns that need documentation review
+
+Research tasks should be in the **earliest parallel group** so their findings are available before implementation begins.
 
 ## Output Format
 
@@ -41,7 +54,7 @@ Numbered list of tasks with:
 - **Package/files affected**: Which files will change
 - **Dependencies**: Which tasks must complete first
 - **Estimated complexity**: Low / Medium / High
-- **Assigned role**: Which agent type should execute (software-engineer, designer, qa, etc.)
+- **Assigned role**: Which agent type should execute (researcher, software-engineer, designer, qa, etc.)
 
 ### Risks & Considerations
 
