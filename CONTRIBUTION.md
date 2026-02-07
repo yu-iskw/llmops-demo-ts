@@ -132,102 +132,116 @@ pnpm run test:e2e # Run E2E tests
 
 ## Claude Code Agent Teams
 
-This project is configured with **Claude Code agent teams** — a set of 10 specialized AI agents that can work independently or in parallel to handle complex development workflows. Each agent has a focused role, scoped permissions, and a corresponding skill (slash command).
+This project uses a **3-tier agent architecture** with a streamlined pipeline workflow for complex tasks. Agents are organized into Planning, Orchestration, and Execution tiers, each with enforced permission boundaries.
 
-### Getting Started with Agent Teams
+### Architecture Overview
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│  Tier 1: Planning (read-only)                               │
+│  /plan-task → planner agent → structured task plan          │
+│  /write-requirements → product-manager → user stories       │
+├─────────────────────────────────────────────────────────────┤
+│  Tier 2: Orchestration (read-only)                          │
+│  /orchestrate → orchestrator agent → delegation plan        │
+│  (assigns agents, groups for parallelism, orders by deps)   │
+├─────────────────────────────────────────────────────────────┤
+│  Tier 3: Execution (parallel)                               │
+│  Main session spawns agents per delegation plan             │
+│  Group 1: [engineer, designer] → Group 2: [reviewer, qa]   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Getting Started
 
 Agent teams require Claude Code with the experimental agent teams feature. The project's `.claude/settings.json` already enables this via `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`.
 
-To use agents, simply describe your task in Claude Code and reference the agent or skill you want:
+#### Standard Pipeline (recommended for complex tasks)
 
-```text
-Use the planner agent to break down the authentication feature
-```
-
-Or invoke a skill directly with a slash command:
-
-```text
+```bash
+# Step 1: Plan — creates a structured task breakdown
 /plan-task Add WebSocket support to the chat backend
+
+# Step 2: Orchestrate — creates a delegation plan with parallel groups
+/orchestrate [paste the plan output from Step 1]
+
+# Step 3: Execute — tell Claude to execute the delegation plan
+Execute the delegation plan above, spawning agents in parallel per group
 ```
 
-### Available Agents
-
-| Agent               | Role                                           | Permission Mode  | Skill (Slash Command) |
-| ------------------- | ---------------------------------------------- | ---------------- | --------------------- |
-| `planner`           | Strategic planning, task breakdown, roadmaps   | Plan (read-only) | `/plan-task`          |
-| `orchestrator`      | Multi-agent coordination, workflow management  | Full access      | `/orchestrate`        |
-| `product-manager`   | Requirements, user stories, prioritization     | Plan (read-only) | `/write-requirements` |
-| `designer`          | UI/UX design, component specs, accessibility   | Full access      | `/design-component`   |
-| `software-engineer` | Implementation, coding, bug fixes              | Accept edits     | `/implement-feature`  |
-| `code-reviewer`     | Code quality, security, pattern review         | Plan (read-only) | `/review-code`        |
-| `qa`                | Testing, bug finding, coverage validation      | Accept edits     | `/write-tests`        |
-| `sre-devops`        | Docker, CI/CD, deployment, monitoring          | Accept edits     | `/deploy`             |
-| `security`          | OWASP audits, AI-specific vulnerability review | Plan (read-only) | `/security-audit`     |
-| `legal-compliance`  | License compatibility, data privacy, AI ethics | Plan (read-only) | `/compliance-check`   |
-
-**Permission modes** control what each agent can do:
-
-- **Plan (read-only)**: Can read and analyze code, but cannot make changes. Produces reports and recommendations.
-- **Accept edits**: Can read code and propose file edits, which require approval.
-- **Full access**: Can read, write, and execute commands.
-
-### Using Individual Agents
-
-Delegate specific tasks to the most appropriate agent:
+#### Direct Agent Invocation (for focused tasks)
 
 ```text
-# Planning
-Use the planner agent to create an implementation plan for adding a new agent type
-
-# Requirements
-Use the product-manager agent to write user stories for the admin dashboard
-
-# Design
-Use the designer agent to design a settings panel component
-
-# Implementation
-Use the software-engineer agent to implement the new API endpoint
-
-# Code Review
-Use the code-reviewer agent to review the changes in the last 3 commits
-
-# Testing
+Use the security agent to audit the authentication module
 Use the qa agent to write tests for the research agent nodes
-
-# Infrastructure
-Use the sre-devops agent to optimize the Dockerfile for production
-
-# Security
-Use the security agent to audit the input sanitization in the secure agent
-
-# Compliance
-Use the legal-compliance agent to check license compatibility of all dependencies
 ```
 
-### Using Skills (Slash Commands)
-
-Skills are a shorthand way to invoke an agent's primary capability:
+#### Direct Skill Invocation
 
 ```text
-/plan-task Add rate limiting to the chat API
-/write-requirements User profile feature with avatar upload
-/design-component Dark mode toggle in the settings panel
-/implement-feature Add a /health endpoint that returns agent status
 /review-code packages/agents/src/agents/default_agent/
 /write-tests packages/backend/src/services/chatService.ts
-/security-audit ai-agents
-/compliance-check full
+/security-audit full
 ```
 
-The `/deploy` skill is restricted to manual invocation only — agents cannot trigger it automatically.
+### Agent Tiers
+
+#### Tier 1 — Planning (read-only)
+
+These agents research the codebase and produce structured plans. They cannot modify files.
+
+| Agent             | Role                       | Skill (Slash Command) |
+| ----------------- | -------------------------- | --------------------- |
+| `planner`         | Task breakdown, roadmaps   | `/plan-task`          |
+| `product-manager` | Requirements, user stories | `/write-requirements` |
+
+#### Tier 2 — Orchestration (read-only)
+
+The orchestrator analyzes a plan and produces a **delegation plan** — which agents should do what, grouped for parallel execution, ordered by dependencies. It does NOT execute tasks.
+
+| Agent          | Role                                           | Skill          |
+| -------------- | ---------------------------------------------- | -------------- |
+| `orchestrator` | Delegation planning, parallel group assignment | `/orchestrate` |
+
+The orchestrator outputs a structured format:
+
+```text
+## Delegation Plan
+### Parallel Group 1: Implementation
+Dependencies: none
+| Task | Agent             | Description              |
+|------|-------------------|--------------------------|
+| 1.1  | software-engineer | Build the new API        |
+| 1.2  | designer          | Design the settings UI   |
+
+### Parallel Group 2: Review
+Dependencies: Group 1
+| Task | Agent          | Description              |
+|------|----------------|--------------------------|
+| 2.1  | code-reviewer  | Review implementation    |
+| 2.2  | qa             | Write and run tests      |
+| 2.3  | security       | Security audit           |
+```
+
+#### Tier 3 — Execution (parallel)
+
+These agents do the actual work. The main session spawns them based on the delegation plan.
+
+| Agent               | Role                               | Permission Mode |
+| ------------------- | ---------------------------------- | --------------- |
+| `designer`          | UI/UX design, component specs      | Full access     |
+| `software-engineer` | Implementation, coding, bug fixes  | Accept edits    |
+| `code-reviewer`     | Code quality, security review      | Plan (R/O)      |
+| `qa`                | Testing, bug finding, coverage     | Accept edits    |
+| `sre-devops`        | Docker, CI/CD, deployment          | Accept edits    |
+| `security`          | OWASP audits, vulnerability review | Plan (R/O)      |
+| `legal-compliance`  | License, privacy, AI ethics        | Plan (R/O)      |
 
 ### Parallel Execution Patterns
 
-Agent teams support three orchestration patterns for complex tasks:
-
 #### Fan-out / Fan-in
 
-Spawn multiple agents in parallel, then collect and synthesize their results. Best for independent review or research tasks.
+Spawn multiple agents in parallel, then collect and synthesize their results.
 
 ```text
 Create an agent team to review this PR:
@@ -237,45 +251,41 @@ Create an agent team to review this PR:
 Run all three in parallel and summarize findings.
 ```
 
-#### Pipeline
+#### Pipeline (Plan → Orchestrate → Execute)
 
-Chain agents sequentially with quality gates between stages. Best for feature implementation with verification.
+The standard workflow for complex features:
 
 ```text
-Pipeline for the new feature:
-1. planner breaks down the work
-2. software-engineer implements each task
-3. code-reviewer reviews the implementation
-4. qa writes and runs tests
+/plan-task Add a new "summarizer" agent type
+  → Returns task plan with 6 tasks
+
+/orchestrate [task plan]
+  → Returns delegation plan: Group 1 (engineer + designer), Group 2 (reviewer + qa + security)
+
+Execute the delegation plan
+  → Spawns Group 1 agents in parallel, then Group 2 after completion
 ```
 
 #### Iterative
 
-Loop between agents until quality criteria are met. Best for refinement workflows.
+Loop between agents until quality criteria are met.
 
 ```text
 Have the software-engineer implement the feature and code-reviewer review it.
 Iterate until there are no critical issues remaining.
 ```
 
-### Orchestrating Complex Workflows
+### Key Design Decisions
 
-For tasks that span multiple agents, use the orchestrator:
+**Why is the orchestrator read-only?** The orchestrator uses `permissionMode: plan` so it can only research and produce plans — never execute. This enforces the separation between planning delegation and executing it. The main session is the only entity that spawns parallel agents.
 
-```text
-/orchestrate Build a new "summarizer" agent type:
-- Plan the implementation
-- Write requirements and acceptance criteria
-- Implement the agent following the BaseAgent pattern
-- Write unit tests
-- Review for code quality and security
-```
+**Why are planning and orchestration separate?** The planner focuses on _what_ needs to be done (task breakdown). The orchestrator focuses on _who_ does it and _when_ (agent assignment, parallelism, dependencies). This separation allows you to skip orchestration for simple tasks or re-orchestrate the same plan differently.
 
-The orchestrator will automatically delegate to the appropriate agents and coordinate their work.
+**Why does the main session execute?** Claude Code subagents cannot spawn other subagents. Only the main conversation can spawn parallel workers. The delegation plan gives the main session a clear, structured blueprint to follow.
 
 ### Agent Memory
 
-All agents have **project-scoped persistent memory**. This means they remember patterns, decisions, and context from previous sessions. Agents automatically:
+All agents have **project-scoped persistent memory**. They remember patterns, decisions, and context from previous sessions:
 
 - Record architectural decisions they encounter
 - Track recurring patterns in the codebase

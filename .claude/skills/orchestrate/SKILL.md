@@ -1,42 +1,56 @@
 ---
 name: orchestrate
-description: Orchestrate a complex multi-agent workflow. Coordinates planning, implementation, review, and testing across specialized agents. Use for tasks requiring multiple agents working together.
-argument-hint: "[workflow description]"
+description: Produce a structured delegation plan for parallel agent execution. Takes a task description or plan output, analyzes dependencies, assigns agents, and groups tasks for parallel execution. Use after /plan-task or when you need to plan how to delegate work across agents.
+argument-hint: "[task description or plan output]"
+context: fork
+agent: orchestrator
 ---
 
 # Orchestrate
 
-Orchestrate the following multi-agent workflow:
+Produce a structured delegation plan for the following:
 
 $ARGUMENTS
 
-## Orchestration Process
+## Instructions
 
-1. **Analyze the task** to determine which agents are needed
-2. **Create an execution plan** with task ordering and dependencies
-3. **Delegate tasks to agents** — launch independent tasks in parallel where possible:
-   - Use the **planner** agent for initial planning
-   - Use the **software-engineer** agent for implementation
-   - Use the **code-reviewer** agent to review changes
-   - Use the **qa** agent to write and run tests
-   - Use other agents as needed (designer, security, sre-devops, legal-compliance)
-4. **Coordinate handoffs** between agents
-5. **Synthesize results** into a final summary
+1. **Read the input**: If a task plan is provided, analyze its tasks and dependencies. If only a description is provided, first break down the work, then plan delegation.
+2. **Research the codebase**: Explore relevant files to understand what agents will need to work with.
+3. **Assign agents**: Match each task to the best-suited agent based on expertise.
+4. **Group for parallelism**: Identify which tasks can run in parallel (no shared file edits, no dependencies between them).
+5. **Order by dependencies**: Tasks that depend on others go in later groups.
+6. **Output the delegation plan**: Use the structured format below.
 
-## Parallel Execution
+## Output Format
 
-Launch independent agents simultaneously using background tasks:
+```text
+## Delegation Plan
 
-- Research tasks that don't depend on each other
-- Independent module implementations
-- Code review and security audit (can run in parallel)
-- Test writing and documentation (can run in parallel)
+### Overview
+[One sentence summary]
 
-## Quality Gates
+### Parallel Group 1: [Name]
+Dependencies: none
 
-Before marking the workflow complete:
+| Task | Agent | Description | Files |
+|------|-------|-------------|-------|
+| 1.1 | [agent-name] | [What to do] | [Which files] |
 
-- [ ] All planned tasks are implemented
-- [ ] Code review passes with no critical issues
-- [ ] Tests pass
-- [ ] Security review (if applicable) passes
+### Parallel Group 2: [Name]
+Dependencies: Group 1
+
+| Task | Agent | Description | Files |
+|------|-------|-------------|-------|
+| 2.1 | [agent-name] | [What to do] | [Which files] |
+
+### Quality Gates
+- [ ] [What must pass]
+```
+
+## Rules
+
+- NEVER execute tasks — only plan the delegation
+- Maximize parallelism by grouping independent tasks
+- Never assign two agents to edit the same file in the same parallel group
+- Always schedule review agents (code-reviewer, qa, security) after implementation agents
+- Be specific about which files each agent should work with

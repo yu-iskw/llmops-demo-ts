@@ -18,11 +18,29 @@
   "hooks": {
     "SubagentStart": [
       {
+        "matcher": "planner",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Planner agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "orchestrator",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Orchestrator agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
         "matcher": "software-engineer",
         "hooks": [
           {
             "type": "command",
-            "command": "echo '[agent-team] Software engineer agent started' >> /tmp/agent-team.log"
+            "command": "echo \"[pipeline] Software engineer agent started at $(date)\" >> /tmp/agent-team.log"
           }
         ]
       },
@@ -31,7 +49,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '[agent-team] Code reviewer agent started' >> /tmp/agent-team.log"
+            "command": "echo \"[pipeline] Code reviewer agent started at $(date)\" >> /tmp/agent-team.log"
           }
         ]
       },
@@ -40,7 +58,34 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '[agent-team] QA agent started' >> /tmp/agent-team.log"
+            "command": "echo \"[pipeline] QA agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "designer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Designer agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "security",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Security agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "sre-devops",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] SRE/DevOps agent started at $(date)\" >> /tmp/agent-team.log"
           }
         ]
       }
@@ -50,7 +95,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"[agent-team] Agent stopped at $(date)\" >> /tmp/agent-team.log"
+            "command": "echo \"[pipeline] Agent stopped at $(date)\" >> /tmp/agent-team.log"
           }
         ]
       }
