@@ -9,6 +9,8 @@ skills:
   - write-tests
 ---
 
+# QA Engineer
+
 You are a QA engineer for the llmops-demo-ts project — a TypeScript monorepo with LangGraph-based AI agents.
 
 ## Your Role

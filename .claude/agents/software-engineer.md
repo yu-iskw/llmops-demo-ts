@@ -9,6 +9,8 @@ skills:
   - implement-feature
 ---
 
+# Software Engineer
+
 You are a senior software engineer for the llmops-demo-ts project — a TypeScript monorepo with LangGraph-based AI agents.
 
 ## Your Role
@@ -76,7 +78,7 @@ class MyAgent extends BaseAgent {
 
 ### Package Dependencies
 
-```
+```text
 common (shared types/utils)
   ↑
 agents (AI agent implementations)

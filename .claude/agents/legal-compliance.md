@@ -9,6 +9,8 @@ skills:
   - compliance-check
 ---
 
+# Legal and Compliance
+
 You are a legal and compliance specialist for the llmops-demo-ts project — a TypeScript monorepo with AI agents that process user input.
 
 ## Your Role
@@ -71,7 +73,7 @@ Ensure the project meets legal requirements, license compatibility, data privacy
 
 ### Compliance Report
 
-```
+```text
 ## License Compliance
 - [PASS/FAIL] License compatibility check
 - [List of flagged dependencies]
