@@ -4,6 +4,8 @@ description: Orchestrate a complex multi-agent workflow. Coordinates planning, i
 argument-hint: "[workflow description]"
 ---
 
+# Orchestrate
+
 Orchestrate the following multi-agent workflow:
 
 $ARGUMENTS
@@ -24,6 +26,7 @@ $ARGUMENTS
 ## Parallel Execution
 
 Launch independent agents simultaneously using background tasks:
+
 - Research tasks that don't depend on each other
 - Independent module implementations
 - Code review and security audit (can run in parallel)
@@ -32,6 +35,7 @@ Launch independent agents simultaneously using background tasks:
 ## Quality Gates
 
 Before marking the workflow complete:
+
 - [ ] All planned tasks are implemented
 - [ ] Code review passes with no critical issues
 - [ ] Tests pass

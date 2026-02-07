@@ -28,12 +28,14 @@ Review code changes for quality, security, performance, and adherence to project
 ## Review Checklist
 
 ### Correctness
+
 - [ ] Logic is sound and handles all cases
 - [ ] Edge cases are handled (empty arrays, null values, etc.)
 - [ ] Error handling is appropriate
 - [ ] Async operations are properly awaited
 
 ### Security
+
 - [ ] No hardcoded secrets or API keys
 - [ ] Input validation at system boundaries
 - [ ] No SQL/command injection vectors
@@ -41,18 +43,21 @@ Review code changes for quality, security, performance, and adherence to project
 - [ ] Proper sanitization of user input (especially for AI agents)
 
 ### TypeScript Quality
+
 - [ ] Proper type annotations (no unnecessary `any`)
 - [ ] Interfaces defined for data structures
 - [ ] Generics used appropriately
 - [ ] Strict null checks handled
 
 ### Performance
+
 - [ ] No unnecessary re-renders in Vue components
 - [ ] Efficient data structures and algorithms
 - [ ] No memory leaks (event listeners, subscriptions cleaned up)
 - [ ] Streaming used appropriately for AI responses
 
 ### Architecture
+
 - [ ] Follows existing patterns (BaseAgent, StateGraph, etc.)
 - [ ] Proper separation of concerns
 - [ ] Changes in correct package (common vs agents vs backend vs frontend)
@@ -63,15 +68,19 @@ Review code changes for quality, security, performance, and adherence to project
 Organize findings by severity:
 
 ### 🔴 Critical (must fix)
+
 Issues that would cause bugs, security vulnerabilities, or data loss.
 
 ### 🟡 Warning (should fix)
+
 Issues that affect maintainability, performance, or could cause future problems.
 
 ### 🔵 Suggestion (consider)
+
 Improvements for readability, consistency, or best practices.
 
 For each finding:
+
 - **File:Line**: Where the issue is
 - **Issue**: What's wrong
 - **Why**: Why it matters

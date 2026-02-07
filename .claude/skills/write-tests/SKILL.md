@@ -4,6 +4,8 @@ description: Write unit tests, integration tests, or E2E tests for code. Use aft
 argument-hint: "[file paths or feature to test]"
 ---
 
+# Write Tests
+
 Write tests for the following:
 
 $ARGUMENTS
@@ -18,6 +20,7 @@ $ARGUMENTS
 3. **Write tests** following project patterns:
 
 ### Jest Test Template
+
 ```typescript
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 
@@ -43,6 +46,7 @@ describe("FunctionName", () => {
    - `pnpm test:frontend` — E2E tests
 
 ## Test Coverage Goals
+
 - Utility functions: 90%+
 - Agent nodes: 80%+
 - API endpoints: 80%+

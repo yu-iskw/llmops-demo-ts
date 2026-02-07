@@ -140,32 +140,33 @@ Agent teams require Claude Code with the experimental agent teams feature. The p
 
 To use agents, simply describe your task in Claude Code and reference the agent or skill you want:
 
-```
+```text
 Use the planner agent to break down the authentication feature
 ```
 
 Or invoke a skill directly with a slash command:
 
-```
+```text
 /plan-task Add WebSocket support to the chat backend
 ```
 
 ### Available Agents
 
-| Agent | Role | Permission Mode | Skill (Slash Command) |
-|-------|------|----------------|----------------------|
-| `planner` | Strategic planning, task breakdown, roadmaps | Plan (read-only) | `/plan-task` |
-| `orchestrator` | Multi-agent coordination, workflow management | Full access | `/orchestrate` |
-| `product-manager` | Requirements, user stories, prioritization | Plan (read-only) | `/write-requirements` |
-| `designer` | UI/UX design, component specs, accessibility | Full access | `/design-component` |
-| `software-engineer` | Implementation, coding, bug fixes | Accept edits | `/implement-feature` |
-| `code-reviewer` | Code quality, security, pattern review | Plan (read-only) | `/review-code` |
-| `qa` | Testing, bug finding, coverage validation | Accept edits | `/write-tests` |
-| `sre-devops` | Docker, CI/CD, deployment, monitoring | Accept edits | `/deploy` |
-| `security` | OWASP audits, AI-specific vulnerability review | Plan (read-only) | `/security-audit` |
-| `legal-compliance` | License compatibility, data privacy, AI ethics | Plan (read-only) | `/compliance-check` |
+| Agent               | Role                                           | Permission Mode  | Skill (Slash Command) |
+| ------------------- | ---------------------------------------------- | ---------------- | --------------------- |
+| `planner`           | Strategic planning, task breakdown, roadmaps   | Plan (read-only) | `/plan-task`          |
+| `orchestrator`      | Multi-agent coordination, workflow management  | Full access      | `/orchestrate`        |
+| `product-manager`   | Requirements, user stories, prioritization     | Plan (read-only) | `/write-requirements` |
+| `designer`          | UI/UX design, component specs, accessibility   | Full access      | `/design-component`   |
+| `software-engineer` | Implementation, coding, bug fixes              | Accept edits     | `/implement-feature`  |
+| `code-reviewer`     | Code quality, security, pattern review         | Plan (read-only) | `/review-code`        |
+| `qa`                | Testing, bug finding, coverage validation      | Accept edits     | `/write-tests`        |
+| `sre-devops`        | Docker, CI/CD, deployment, monitoring          | Accept edits     | `/deploy`             |
+| `security`          | OWASP audits, AI-specific vulnerability review | Plan (read-only) | `/security-audit`     |
+| `legal-compliance`  | License compatibility, data privacy, AI ethics | Plan (read-only) | `/compliance-check`   |
 
 **Permission modes** control what each agent can do:
+
 - **Plan (read-only)**: Can read and analyze code, but cannot make changes. Produces reports and recommendations.
 - **Accept edits**: Can read code and propose file edits, which require approval.
 - **Full access**: Can read, write, and execute commands.
@@ -174,7 +175,7 @@ Or invoke a skill directly with a slash command:
 
 Delegate specific tasks to the most appropriate agent:
 
-```
+```text
 # Planning
 Use the planner agent to create an implementation plan for adding a new agent type
 
@@ -207,7 +208,7 @@ Use the legal-compliance agent to check license compatibility of all dependencie
 
 Skills are a shorthand way to invoke an agent's primary capability:
 
-```
+```text
 /plan-task Add rate limiting to the chat API
 /write-requirements User profile feature with avatar upload
 /design-component Dark mode toggle in the settings panel
@@ -228,7 +229,7 @@ Agent teams support three orchestration patterns for complex tasks:
 
 Spawn multiple agents in parallel, then collect and synthesize their results. Best for independent review or research tasks.
 
-```
+```text
 Create an agent team to review this PR:
 - code-reviewer checks code quality
 - security agent checks for vulnerabilities
@@ -240,7 +241,7 @@ Run all three in parallel and summarize findings.
 
 Chain agents sequentially with quality gates between stages. Best for feature implementation with verification.
 
-```
+```text
 Pipeline for the new feature:
 1. planner breaks down the work
 2. software-engineer implements each task
@@ -252,7 +253,7 @@ Pipeline for the new feature:
 
 Loop between agents until quality criteria are met. Best for refinement workflows.
 
-```
+```text
 Have the software-engineer implement the feature and code-reviewer review it.
 Iterate until there are no critical issues remaining.
 ```
@@ -261,7 +262,7 @@ Iterate until there are no critical issues remaining.
 
 For tasks that span multiple agents, use the orchestrator:
 
-```
+```text
 /orchestrate Build a new "summarizer" agent type:
 - Plan the implementation
 - Write requirements and acceptance criteria
@@ -275,6 +276,7 @@ The orchestrator will automatically delegate to the appropriate agents and coord
 ### Agent Memory
 
 All agents have **project-scoped persistent memory**. This means they remember patterns, decisions, and context from previous sessions. Agents automatically:
+
 - Record architectural decisions they encounter
 - Track recurring patterns in the codebase
 - Learn from past review findings and test failures

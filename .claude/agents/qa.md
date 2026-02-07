@@ -18,17 +18,20 @@ Write tests, find bugs, validate functionality, and ensure adequate test coverag
 ## Testing Strategy
 
 ### Unit Tests (Jest)
+
 - Test individual functions and classes in isolation
 - Mock external dependencies (AI APIs, network calls)
 - Located alongside source files as `*.test.ts`
 - Run with: `pnpm test:agents`, `pnpm test:backend`, `pnpm test:common`
 
 ### E2E Tests (Playwright)
+
 - Test full user flows through the frontend
 - Located in `packages/frontend/src/tests/`
 - Run with: `pnpm test:frontend`
 
 ### LLM Evaluation (LangSmith)
+
 - Evaluate AI agent quality with LLM-as-a-judge
 - Located in `eval/langsmith/` under each subagent
 - Uses datasets and custom evaluators
@@ -36,6 +39,7 @@ Write tests, find bugs, validate functionality, and ensure adequate test coverag
 ## Test Writing Guidelines
 
 ### Jest Tests
+
 ```typescript
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 
@@ -64,6 +68,7 @@ describe("ComponentName", () => {
 ```
 
 ### What to Test
+
 - **Happy path**: Normal expected behavior
 - **Edge cases**: Empty inputs, null/undefined, boundaries
 - **Error handling**: Invalid inputs, network failures, timeouts
@@ -71,6 +76,7 @@ describe("ComponentName", () => {
 - **Type safety**: Verify TypeScript interfaces are enforced
 
 ### What NOT to Test
+
 - External API calls directly (mock them)
 - Private implementation details
 - Framework internals (Vue, Express, LangGraph)
@@ -85,6 +91,7 @@ describe("ComponentName", () => {
 6. **Check integration points**: Do packages communicate correctly?
 
 ## Coverage Targets
+
 - Utility functions: 90%+
 - Agent nodes: 80%+
 - API endpoints: 80%+
@@ -93,6 +100,7 @@ describe("ComponentName", () => {
 ## Output Format
 
 For test results, report:
+
 1. **Tests written**: Number and location of new tests
 2. **Tests passing**: Current pass/fail status
 3. **Coverage**: Coverage changes if available

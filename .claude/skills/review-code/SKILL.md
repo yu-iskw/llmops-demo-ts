@@ -6,6 +6,8 @@ context: fork
 agent: code-reviewer
 ---
 
+# Review Code
+
 Review the following code:
 
 $ARGUMENTS
@@ -19,26 +21,31 @@ $ARGUMENTS
 ## Review Checklist
 
 ### Correctness
+
 - Logic handles all cases including edge cases
 - Async operations properly awaited
 - Error handling is appropriate
 
 ### Security
+
 - No hardcoded secrets
 - Input validation at boundaries
 - No injection vectors (command, XSS, prompt)
 
 ### TypeScript Quality
+
 - Proper type annotations
 - No unnecessary `any` types
 - Interfaces defined for data structures
 
 ### Performance
+
 - No unnecessary re-renders (Vue components)
 - Efficient algorithms and data structures
 - Streaming used for AI responses
 
 ### Architecture
+
 - Follows project patterns (BaseAgent, StateGraph, tsoa)
 - Correct package boundaries
 - No circular dependencies
@@ -46,6 +53,7 @@ $ARGUMENTS
 ## Output
 
 Provide findings as:
+
 - 🔴 **Critical**: Must fix before merge
 - 🟡 **Warning**: Should fix
 - 🔵 **Suggestion**: Consider improving

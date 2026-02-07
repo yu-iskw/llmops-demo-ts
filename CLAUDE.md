@@ -4,7 +4,7 @@ TypeScript monorepo demonstrating LLMOps practices with LangGraph-based AI agent
 
 ## Project Structure
 
-```
+```text
 packages/
   common/     — Shared types, interfaces, utilities (Logger, Agent, ChatRequest)
   agents/     — LangGraph AI agents (default, research, secure) with BaseAgent pattern
@@ -39,54 +39,57 @@ This project has agent teams enabled with 10 specialized agents and correspondin
 
 ### Available Agents (`.claude/agents/`)
 
-| Agent | Role | Mode | Skills |
-|-------|------|------|--------|
-| `planner` | Strategic planning, task breakdown | Plan (read-only) | plan-task |
-| `orchestrator` | Multi-agent coordination | Full access | orchestrate |
-| `product-manager` | Requirements, user stories | Plan (read-only) | write-requirements |
-| `designer` | UI/UX design, component specs | Full access | design-component |
-| `software-engineer` | Implementation, coding | Accept edits | implement-feature |
-| `code-reviewer` | Code quality review | Plan (read-only) | review-code |
-| `qa` | Testing, bug finding | Accept edits | write-tests |
-| `sre-devops` | Infrastructure, CI/CD, Docker | Accept edits | deploy |
-| `security` | Security audits, vulnerability review | Plan (read-only) | security-audit |
-| `legal-compliance` | License, privacy, AI ethics | Plan (read-only) | compliance-check |
+| Agent               | Role                                  | Mode             | Skills             |
+| ------------------- | ------------------------------------- | ---------------- | ------------------ |
+| `planner`           | Strategic planning, task breakdown    | Plan (read-only) | plan-task          |
+| `orchestrator`      | Multi-agent coordination              | Full access      | orchestrate        |
+| `product-manager`   | Requirements, user stories            | Plan (read-only) | write-requirements |
+| `designer`          | UI/UX design, component specs         | Full access      | design-component   |
+| `software-engineer` | Implementation, coding                | Accept edits     | implement-feature  |
+| `code-reviewer`     | Code quality review                   | Plan (read-only) | review-code        |
+| `qa`                | Testing, bug finding                  | Accept edits     | write-tests        |
+| `sre-devops`        | Infrastructure, CI/CD, Docker         | Accept edits     | deploy             |
+| `security`          | Security audits, vulnerability review | Plan (read-only) | security-audit     |
+| `legal-compliance`  | License, privacy, AI ethics           | Plan (read-only) | compliance-check   |
 
 ### Available Skills (`.claude/skills/`)
 
-| Skill | Slash Command | Description |
-|-------|---------------|-------------|
-| plan-task | `/plan-task` | Create structured implementation plans |
-| orchestrate | `/orchestrate` | Coordinate multi-agent workflows |
-| write-requirements | `/write-requirements` | Write user stories and specs |
-| design-component | `/design-component` | Design UI component specifications |
-| implement-feature | `/implement-feature` | Implement features following project patterns |
-| review-code | `/review-code` | Review code for quality and security |
-| write-tests | `/write-tests` | Write unit/integration/E2E tests |
-| deploy | `/deploy` | Deploy application (manual invocation only) |
-| security-audit | `/security-audit` | Perform security audits |
-| compliance-check | `/compliance-check` | Check license/privacy/AI compliance |
+| Skill              | Slash Command         | Description                                   |
+| ------------------ | --------------------- | --------------------------------------------- |
+| plan-task          | `/plan-task`          | Create structured implementation plans        |
+| orchestrate        | `/orchestrate`        | Coordinate multi-agent workflows              |
+| write-requirements | `/write-requirements` | Write user stories and specs                  |
+| design-component   | `/design-component`   | Design UI component specifications            |
+| implement-feature  | `/implement-feature`  | Implement features following project patterns |
+| review-code        | `/review-code`        | Review code for quality and security          |
+| write-tests        | `/write-tests`        | Write unit/integration/E2E tests              |
+| deploy             | `/deploy`             | Deploy application (manual invocation only)   |
+| security-audit     | `/security-audit`     | Perform security audits                       |
+| compliance-check   | `/compliance-check`   | Check license/privacy/AI compliance           |
 
 ### Parallel Execution Patterns
 
 **Fan-out / Fan-in**: Spawn multiple agents in parallel, collect results.
-```
+
+```text
 Example: "Create an agent team to review this PR with security, code-reviewer, and qa agents in parallel"
 ```
 
 **Pipeline**: Chain agents sequentially with quality gates.
-```
+
+```text
 Example: "Use planner to plan, then software-engineer to implement, then code-reviewer to review, then qa to test"
 ```
 
 **Iterative**: Loop between agents until quality criteria met.
-```
+
+```text
 Example: "Have software-engineer implement and code-reviewer review, iterate until no critical issues"
 ```
 
 ### Agent Team Usage
 
-```
+```text
 # Start an agent team for a complex task
 Create an agent team: planner to break down the work, software-engineer and designer
 working in parallel on implementation, then code-reviewer and qa to verify.

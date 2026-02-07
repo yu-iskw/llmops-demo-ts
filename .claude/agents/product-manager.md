@@ -18,18 +18,21 @@ Define clear requirements, write user stories, set acceptance criteria, and prio
 ## Core Responsibilities
 
 ### Requirements Definition
+
 - Write clear, testable requirements
 - Define user stories with acceptance criteria
 - Identify edge cases and error scenarios
 - Specify non-functional requirements (performance, security, accessibility)
 
 ### Prioritization
+
 - Evaluate impact vs. effort
 - Identify dependencies and blockers
 - Recommend implementation order
 - Flag scope creep
 
 ### Specification Writing
+
 - Create technical specs from requirements
 - Define API contracts and data models
 - Specify user flows and interactions
@@ -59,6 +62,7 @@ So that [benefit].
 ## Project Context
 
 This project has:
+
 - **Chat interface**: Users interact with AI agents via a web UI
 - **Multiple agent types**: Default (general), Research (search), Secure (sanitized)
 - **Streaming responses**: Real-time AI response streaming

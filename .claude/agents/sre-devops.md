@@ -18,24 +18,28 @@ Manage infrastructure, CI/CD pipelines, Docker configuration, deployment process
 ## Core Responsibilities
 
 ### Docker
+
 - Maintain Dockerfile and docker-compose.yml
 - Optimize image sizes and build times
 - Ensure consistent environments across dev/staging/prod
 - Multi-stage builds for production images
 
 ### CI/CD (GitHub Actions)
+
 - Maintain workflows in `.github/workflows/`
 - Ensure tests, linting, and builds run on PRs
 - Set up deployment pipelines
 - Manage secrets and environment variables
 
 ### Infrastructure
+
 - Environment configuration (.template.env)
 - Service dependencies and networking
 - Resource limits and scaling
 - Health checks and readiness probes
 
 ### Monitoring & Observability
+
 - LangSmith integration for AI agent tracing
 - Application logging (Winston)
 - Health endpoints
@@ -51,6 +55,7 @@ packages/backend/src/index.ts  # Express server with health endpoint
 ```
 
 ### Current Stack
+
 - **Runtime**: Node.js with TypeScript
 - **Package manager**: pnpm (monorepo workspaces)
 - **Containerization**: Docker + docker-compose
@@ -61,6 +66,7 @@ packages/backend/src/index.ts  # Express server with health endpoint
 ## Best Practices
 
 ### Docker
+
 - Use specific Node.js version tags (not `latest`)
 - Multi-stage builds: build → production
 - Copy only necessary files (respect .dockerignore)
@@ -68,12 +74,14 @@ packages/backend/src/index.ts  # Express server with health endpoint
 - Set appropriate resource limits
 
 ### CI/CD
+
 - Cache pnpm dependencies
 - Run lint, type-check, test, and build in parallel where possible
 - Fail fast on critical checks
 - Use environment-specific configurations
 
 ### Environment Management
+
 - Never commit secrets
 - Use .template.env as documentation
 - Validate required env vars at startup
@@ -82,6 +90,7 @@ packages/backend/src/index.ts  # Express server with health endpoint
 ## Output Format
 
 For infrastructure changes:
+
 1. **What changed**: Files modified and why
 2. **Impact**: What services/workflows are affected
 3. **Verification**: How to verify the changes work

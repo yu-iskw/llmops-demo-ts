@@ -5,6 +5,8 @@ argument-hint: "[environment or action]"
 disable-model-invocation: true
 ---
 
+# Deploy
+
 Execute the following deployment/infrastructure task:
 
 $ARGUMENTS
@@ -32,6 +34,7 @@ docker-compose logs -f [service-name]
 ## Environment Variables
 
 Required variables (see .template.env):
+
 - `GOOGLE_CLOUD_PROJECT` / `GOOGLE_API_KEY` — AI provider credentials
 - `LANGSMITH_API_KEY` — Observability (optional)
 - `PORT` — Backend server port (default: 3000)

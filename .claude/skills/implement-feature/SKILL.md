@@ -4,6 +4,8 @@ description: Implement a feature or fix a bug following the project's TypeScript
 argument-hint: "[feature or bug description]"
 ---
 
+# Implement Feature
+
 Implement the following:
 
 $ARGUMENTS

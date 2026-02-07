@@ -6,6 +6,8 @@ context: fork
 agent: designer
 ---
 
+# Design Component
+
 Design the following UI component:
 
 $ARGUMENTS
@@ -20,11 +22,13 @@ $ARGUMENTS
 ## Context
 
 The component will be built with:
+
 - Vue.js 3 Composition API (`<script setup>`)
 - CSS (no framework — see packages/frontend/src/style.css for existing styles)
 - Pinia for state management if needed
 
 Existing components for reference:
+
 - ChatMessage.vue — individual message display
 - MessageInput.vue — user input form
 - MessageList.vue — scrollable message list

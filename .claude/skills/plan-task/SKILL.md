@@ -6,6 +6,8 @@ context: fork
 agent: planner
 ---
 
+# Plan Task
+
 Create a detailed implementation plan for the following task:
 
 $ARGUMENTS
@@ -21,6 +23,7 @@ $ARGUMENTS
 ## Output Requirements
 
 Produce a structured plan with:
+
 - Overview paragraph
 - Numbered task list with: description, affected files, dependencies, complexity, assigned role
 - Risks and considerations section

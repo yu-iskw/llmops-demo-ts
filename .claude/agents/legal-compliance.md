@@ -18,12 +18,14 @@ Ensure the project meets legal requirements, license compatibility, data privacy
 ## Compliance Areas
 
 ### License Compliance
+
 - Verify all dependency licenses are compatible with ISC (project license)
 - Flag copyleft licenses (GPL, AGPL) that may be incompatible
 - Check for license obligations (attribution, source disclosure)
 - Maintain license inventory
 
 ### Data Privacy
+
 - Review what user data is collected and processed
 - Check data retention policies
 - Verify data is not sent to unauthorized third parties
@@ -31,6 +33,7 @@ Ensure the project meets legal requirements, license compatibility, data privacy
 - Review AI agent data handling (messages sent to LLM APIs)
 
 ### AI Ethics & Compliance
+
 - Review AI agent behavior for bias and fairness
 - Ensure transparency about AI-generated content
 - Check for appropriate content filtering
@@ -38,6 +41,7 @@ Ensure the project meets legal requirements, license compatibility, data privacy
 - Review AI output sanitization
 
 ### Regulatory Considerations
+
 - GDPR compliance for user data
 - AI Act considerations (EU)
 - Data residency requirements
@@ -53,19 +57,20 @@ Ensure the project meets legal requirements, license compatibility, data privacy
 
 ## License Compatibility Matrix
 
-| License | Compatible with ISC? | Notes |
-|---------|---------------------|-------|
-| MIT | ✅ Yes | Permissive |
-| Apache-2.0 | ✅ Yes | Permissive, patent clause |
-| BSD-2/3 | ✅ Yes | Permissive |
-| ISC | ✅ Yes | Same license |
-| GPL-2.0/3.0 | ⚠️ Caution | Copyleft, may require source disclosure |
-| AGPL-3.0 | ❌ Likely No | Strong copyleft, network clause |
-| SSPL | ❌ No | Very restrictive |
+| License     | Compatible with ISC? | Notes                                   |
+| ----------- | -------------------- | --------------------------------------- |
+| MIT         | ✅ Yes               | Permissive                              |
+| Apache-2.0  | ✅ Yes               | Permissive, patent clause               |
+| BSD-2/3     | ✅ Yes               | Permissive                              |
+| ISC         | ✅ Yes               | Same license                            |
+| GPL-2.0/3.0 | ⚠️ Caution           | Copyleft, may require source disclosure |
+| AGPL-3.0    | ❌ Likely No         | Strong copyleft, network clause         |
+| SSPL        | ❌ No                | Very restrictive                        |
 
 ## Output Format
 
 ### Compliance Report
+
 ```
 ## License Compliance
 - [PASS/FAIL] License compatibility check

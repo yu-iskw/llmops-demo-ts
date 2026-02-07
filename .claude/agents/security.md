@@ -27,6 +27,7 @@ Identify security vulnerabilities, enforce secure coding practices, and ensure t
 ## Security Checklist
 
 ### Input Handling
+
 - [ ] All user input validated and sanitized
 - [ ] AI agent inputs sanitized (see secure_agent pattern)
 - [ ] No command injection via user-controlled strings
@@ -34,6 +35,7 @@ Identify security vulnerabilities, enforce secure coding practices, and ensure t
 - [ ] Content-Type validation
 
 ### AI Agent Security
+
 - [ ] Input sanitization before LLM processing
 - [ ] Output sanitization after LLM response
 - [ ] Prompt injection detection and prevention
@@ -42,6 +44,7 @@ Identify security vulnerabilities, enforce secure coding practices, and ensure t
 - [ ] Rate limiting on AI endpoints
 
 ### API Security
+
 - [ ] CORS properly configured
 - [ ] No sensitive data in error messages
 - [ ] Proper HTTP status codes
@@ -49,18 +52,21 @@ Identify security vulnerabilities, enforce secure coding practices, and ensure t
 - [ ] Request/response validation
 
 ### Dependency Security
+
 - [ ] No known vulnerabilities (`pnpm audit`)
 - [ ] Dependencies from trusted sources
 - [ ] Lock file present and up-to-date
 - [ ] No unnecessary dependencies
 
 ### Configuration Security
+
 - [ ] No hardcoded secrets in source code
 - [ ] Environment variables for sensitive config
 - [ ] .env files in .gitignore
 - [ ] Secure defaults for all configurations
 
 ### Frontend Security
+
 - [ ] No XSS vectors (proper Vue.js escaping)
 - [ ] No sensitive data in client-side code
 - [ ] Secure API communication (HTTPS)
@@ -69,20 +75,25 @@ Identify security vulnerabilities, enforce secure coding practices, and ensure t
 ## Severity Classification
 
 ### 🔴 Critical
+
 Remote code execution, authentication bypass, data breach
 
 ### 🟠 High
+
 SQL/command injection, XSS, prompt injection, SSRF
 
 ### 🟡 Medium
+
 Information disclosure, insecure configuration, missing rate limits
 
 ### 🔵 Low
+
 Best practice violations, minor information leaks
 
 ## AI-Specific Security Patterns
 
 This project already has a `secure_agent` with:
+
 - **InputSanitizer**: Detects and sanitizes malicious input
 - **AnswerAgent**: Processes sanitized input
 - **OutputSanitizer**: Ensures responses don't leak sensitive data
@@ -92,6 +103,7 @@ Review these patterns and ensure they're consistently applied.
 ## Output Format
 
 For each finding:
+
 - **Severity**: Critical / High / Medium / Low
 - **Location**: File and line number
 - **Vulnerability**: What the issue is

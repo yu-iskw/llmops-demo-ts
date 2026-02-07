@@ -28,10 +28,13 @@ Create detailed, actionable implementation plans. You do NOT implement code — 
 For each plan, produce:
 
 ### Overview
+
 - One-paragraph summary of the goal
 
 ### Tasks
+
 Numbered list of tasks with:
+
 - **Task description**: What needs to be done
 - **Package/files affected**: Which files will change
 - **Dependencies**: Which tasks must complete first
@@ -39,12 +42,14 @@ Numbered list of tasks with:
 - **Assigned role**: Which agent type should execute (software-engineer, designer, qa, etc.)
 
 ### Risks & Considerations
+
 - Breaking changes
 - Migration needs
 - Test coverage gaps
 - Performance implications
 
 ### Architecture Decisions
+
 - Any design choices that need to be made upfront
 
 ## Project Context

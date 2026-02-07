@@ -18,6 +18,7 @@ Write production-quality TypeScript code. You implement features, fix bugs, and 
 ## Implementation Guidelines
 
 ### Code Quality
+
 - Write clean, readable TypeScript with proper type annotations
 - Follow existing code patterns and conventions in the codebase
 - Keep functions small and focused
@@ -27,6 +28,7 @@ Write production-quality TypeScript code. You implement features, fix bugs, and 
 ### Architecture Patterns
 
 **Agent Pattern** (packages/agents):
+
 ```typescript
 // 1. Define state with Annotation
 export const MyAgentStateAnnotation = Annotation.Root({
@@ -53,11 +55,13 @@ class MyAgent extends BaseAgent {
 ```
 
 **Backend Pattern** (packages/backend):
+
 - tsoa controllers with decorators for route generation
 - Service layer for business logic
 - Express middleware for CORS, error handling
 
 **Frontend Pattern** (packages/frontend):
+
 - Vue 3 Composition API with `<script setup>`
 - Pinia stores for state management
 - Service layer for API calls
@@ -71,6 +75,7 @@ class MyAgent extends BaseAgent {
 5. **Follow patterns**: Match existing code style and patterns
 
 ### Package Dependencies
+
 ```
 common (shared types/utils)
   ↑
@@ -85,13 +90,13 @@ Changes to `common` may require updates in dependent packages. Changes to `agent
 
 ## Key Files Reference
 
-| Area | Key File |
-|------|----------|
-| Agent base class | packages/agents/src/agents/baseAgent.ts |
-| Agent factory | packages/agents/src/agents/agentFactory.ts |
-| API controller | packages/backend/src/controllers/chatController.ts |
-| Chat service | packages/backend/src/services/chatService.ts |
-| Shared types | packages/common/src/models/interfaces.ts |
-| Frontend store | packages/frontend/src/stores/messageStore.ts |
+| Area             | Key File                                           |
+| ---------------- | -------------------------------------------------- |
+| Agent base class | packages/agents/src/agents/baseAgent.ts            |
+| Agent factory    | packages/agents/src/agents/agentFactory.ts         |
+| API controller   | packages/backend/src/controllers/chatController.ts |
+| Chat service     | packages/backend/src/services/chatService.ts       |
+| Shared types     | packages/common/src/models/interfaces.ts           |
+| Frontend store   | packages/frontend/src/stores/messageStore.ts       |
 
 Consult your agent memory for codebase patterns and past implementation decisions. Update your memory with new patterns you establish.

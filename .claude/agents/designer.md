@@ -26,6 +26,7 @@ Design user interfaces, create component architectures, establish design pattern
 ## Design Output Format
 
 ### Component Specification
+
 ```
 Component: [Name]
 Purpose: [What it does]

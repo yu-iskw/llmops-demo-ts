@@ -6,6 +6,8 @@ context: fork
 agent: legal-compliance
 ---
 
+# Compliance Check
+
 Perform a compliance check with the following scope:
 
 $ARGUMENTS
@@ -13,12 +15,14 @@ $ARGUMENTS
 ## Compliance Checks
 
 ### License Compatibility
+
 1. List all project dependencies and their licenses
 2. Verify compatibility with the project's ISC license
 3. Flag any copyleft (GPL, AGPL) or restrictive licenses
 4. Check for attribution requirements
 
 ### Data Privacy
+
 1. Trace user data flow through the application:
    - Frontend: What data is collected in forms?
    - Backend: What data is stored, logged, or forwarded?
@@ -28,6 +32,7 @@ $ARGUMENTS
 3. Check data retention practices
 
 ### AI Ethics
+
 1. Review AI agent guardrails (secure_agent input/output sanitization)
 2. Check for content filtering mechanisms
 3. Verify transparency about AI-generated content
@@ -36,7 +41,8 @@ $ARGUMENTS
 ## Output
 
 Produce a compliance report:
-```
+
+```text
 ## Summary: [PASS / NEEDS ATTENTION / FAIL]
 
 ### License Compliance: [PASS/FAIL]
