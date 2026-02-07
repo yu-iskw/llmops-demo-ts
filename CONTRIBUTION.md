@@ -136,22 +136,154 @@ This project uses a **3-tier agent architecture** with a streamlined pipeline wo
 
 ### Architecture Overview
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│  Tier 1: Planning (read-only)                               │
-│  /plan-task → planner agent → structured task plan          │
-│  /research → researcher agent → docs, APIs, specs           │
-│  /write-requirements → product-manager → user stories       │
-├─────────────────────────────────────────────────────────────┤
-│  Tier 2: Orchestration (read-only)                          │
-│  /orchestrate → orchestrator agent → delegation plan        │
-│  (assigns agents, groups for parallelism, orders by deps)   │
-├─────────────────────────────────────────────────────────────┤
-│  Tier 3: Execution (parallel)                               │
-│  Main session spawns agents per delegation plan             │
-│  Group 0: [researcher] → Group 1: [engineer, designer] →   │
-│  Group 2: [reviewer, qa]                                    │
-└─────────────────────────────────────────────────────────────┘
+#### Pipeline Workflow
+
+```mermaid
+flowchart LR
+    User([User]) -->|"/plan-task"| Plan
+    User -->|"/research"| Research
+
+    subgraph Tier1["Tier 1: Planning (read-only)"]
+        Plan["/plan-task\n→ planner agent"]
+        Research["/research\n→ researcher agent"]
+    end
+
+    Plan -->|task plan| Orch
+    Research -.->|findings| Orch
+    Plan -.->|may trigger| Research
+
+    subgraph Tier2["Tier 2: Orchestration (read-only)"]
+        Orch["/orchestrate\n→ orchestrator agent"]
+    end
+
+    Orch -->|delegation plan| Main[Main Session]
+
+    Main -->|"Group 0\n(if needed)"| G0
+    Main -->|"Group 1"| G1
+    Main -->|"Group 2"| G2
+    Main -->|"Group 3\n(if needed)"| G3
+
+    subgraph Tier3["Tier 3: Execution (parallel)"]
+        subgraph G0["Group 0: Research"]
+            R0[researcher]
+        end
+        subgraph G1["Group 1: Implementation"]
+            SE[software-engineer]
+            DE[designer]
+        end
+        subgraph G2["Group 2: Review"]
+            CR[code-reviewer]
+            QA[qa]
+            SEC[security]
+        end
+        subgraph G3["Group 3: Fix"]
+            SE2[software-engineer]
+        end
+    end
+
+    G0 -->|findings| G1
+    G1 -->|code changes| G2
+    G2 -->|review feedback| G3
+```
+
+#### Agent–Skill Mapping
+
+```mermaid
+flowchart TB
+    subgraph Skills["Skills (slash commands)"]
+        S1["/plan-task"]
+        S2["/research"]
+        S3["/write-requirements"]
+        S4["/orchestrate"]
+        S5["/design-component"]
+        S6["/implement-feature"]
+        S7["/review-code"]
+        S8["/write-tests"]
+        S9["/deploy"]
+        S10["/security-audit"]
+        S11["/compliance-check"]
+    end
+
+    subgraph T1["Tier 1: Planning"]
+        A1["planner\n(plan mode)"]
+        A2["researcher\n(plan mode)"]
+        A3["product-manager\n(plan mode)"]
+    end
+
+    subgraph T2["Tier 2: Orchestration"]
+        A4["orchestrator\n(plan mode)"]
+    end
+
+    subgraph T3["Tier 3: Execution"]
+        A5["designer\n(full access)"]
+        A6["software-engineer\n(accept edits)"]
+        A7["code-reviewer\n(plan mode)"]
+        A8["qa\n(accept edits)"]
+        A9["sre-devops\n(accept edits)"]
+        A10["security\n(plan mode)"]
+        A11["legal-compliance\n(plan mode)"]
+    end
+
+    S1 -->|"context: fork"| A1
+    S2 -->|"context: fork"| A2
+    S3 -->|"context: fork"| A3
+    S4 -->|"context: fork"| A4
+    S5 -->|"context: fork"| A5
+    S6 --- A6
+    S7 -->|"context: fork"| A7
+    S8 --- A8
+    S9 --- A9
+    S10 -->|"context: fork"| A10
+    S11 -->|"context: fork"| A11
+
+    A1 -.->|"delegates research"| A2
+    A4 -.->|"schedules"| T3
+```
+
+#### Parallel Execution Pattern
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Main as Main Session
+    participant P as planner
+    participant R as researcher
+    participant O as orchestrator
+    participant SE as software-engineer
+    participant DE as designer
+    participant CR as code-reviewer
+    participant QA as qa
+
+    User->>Main: /plan-task Add feature X
+    Main->>P: fork (read-only)
+    P-->>Main: task plan (includes research task)
+
+    User->>Main: /research Library Y API
+    Main->>R: fork (read-only)
+    R-->>Main: research report with sources
+
+    User->>Main: /orchestrate [plan + research]
+    Main->>O: fork (read-only)
+    O-->>Main: delegation plan (3 parallel groups)
+
+    User->>Main: Execute delegation plan
+
+    par Group 1: Implementation
+        Main->>SE: implement feature
+        Main->>DE: design UI component
+    end
+
+    SE-->>Main: code changes
+    DE-->>Main: component specs
+
+    par Group 2: Review
+        Main->>CR: review code
+        Main->>QA: write tests
+    end
+
+    CR-->>Main: review findings
+    QA-->>Main: test results
+    Main-->>User: workflow complete
 ```
 
 ### Getting Started
