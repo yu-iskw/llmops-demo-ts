@@ -1,0 +1,114 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Skill(plan-task *)",
+      "Skill(orchestrate *)",
+      "Skill(write-requirements *)",
+      "Skill(design-component *)",
+      "Skill(implement-feature *)",
+      "Skill(review-code *)",
+      "Skill(write-tests *)",
+      "Skill(security-audit *)",
+      "Skill(research *)",
+      "Skill(compliance-check *)"
+    ]
+  },
+  "hooks": {
+    "SubagentStart": [
+      {
+        "matcher": "planner",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Planner agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "researcher",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Researcher agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "orchestrator",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Orchestrator agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "software-engineer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Software engineer agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "code-reviewer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Code reviewer agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "qa",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] QA agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "designer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Designer agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "security",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Security agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      },
+      {
+        "matcher": "sre-devops",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] SRE/DevOps agent started at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"[pipeline] Agent stopped at $(date)\" >> /tmp/agent-team.log"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -129,3 +129,328 @@ pnpm run build    # Build for production
 pnpm run preview  # Preview production build
 pnpm run test:e2e # Run E2E tests
 ```
+
+## Claude Code Agent Teams
+
+This project uses a **3-tier agent architecture** with a streamlined pipeline workflow for complex tasks. Agents are organized into Planning, Orchestration, and Execution tiers, each with enforced permission boundaries.
+
+### Architecture Overview
+
+#### Pipeline Workflow
+
+```mermaid
+flowchart LR
+    User([User]) -->|"/plan-task"| Plan
+    User -->|"/research"| Research
+
+    subgraph Tier1["Tier 1: Planning (read-only)"]
+        Plan["/plan-task\n→ planner agent"]
+        Research["/research\n→ researcher agent"]
+    end
+
+    Plan -->|task plan| Orch
+    Research -.->|findings| Orch
+    Plan -.->|may trigger| Research
+
+    subgraph Tier2["Tier 2: Orchestration (read-only)"]
+        Orch["/orchestrate\n→ orchestrator agent"]
+    end
+
+    Orch -->|delegation plan| Main[Main Session]
+
+    Main -->|"Group 0\n(if needed)"| G0
+    Main -->|"Group 1"| G1
+    Main -->|"Group 2"| G2
+    Main -->|"Group 3\n(if needed)"| G3
+
+    subgraph Tier3["Tier 3: Execution (parallel)"]
+        subgraph G0["Group 0: Research"]
+            R0[researcher]
+        end
+        subgraph G1["Group 1: Implementation"]
+            SE[software-engineer]
+            DE[designer]
+        end
+        subgraph G2["Group 2: Review"]
+            CR[code-reviewer]
+            QA[qa]
+            SEC[security]
+        end
+        subgraph G3["Group 3: Fix"]
+            SE2[software-engineer]
+        end
+    end
+
+    G0 -->|findings| G1
+    G1 -->|code changes| G2
+    G2 -->|review feedback| G3
+```
+
+#### Agent–Skill Mapping
+
+```mermaid
+flowchart TB
+    subgraph Skills["Skills (slash commands)"]
+        S1["/plan-task"]
+        S2["/research"]
+        S3["/write-requirements"]
+        S4["/orchestrate"]
+        S5["/design-component"]
+        S6["/implement-feature"]
+        S7["/review-code"]
+        S8["/write-tests"]
+        S9["/deploy"]
+        S10["/security-audit"]
+        S11["/compliance-check"]
+    end
+
+    subgraph T1["Tier 1: Planning"]
+        A1["planner\n(plan mode)"]
+        A2["researcher\n(plan mode)"]
+        A3["product-manager\n(plan mode)"]
+    end
+
+    subgraph T2["Tier 2: Orchestration"]
+        A4["orchestrator\n(plan mode)"]
+    end
+
+    subgraph T3["Tier 3: Execution"]
+        A5["designer\n(full access)"]
+        A6["software-engineer\n(accept edits)"]
+        A7["code-reviewer\n(plan mode)"]
+        A8["qa\n(accept edits)"]
+        A9["sre-devops\n(accept edits)"]
+        A10["security\n(plan mode)"]
+        A11["legal-compliance\n(plan mode)"]
+    end
+
+    S1 -->|"context: fork"| A1
+    S2 -->|"context: fork"| A2
+    S3 -->|"context: fork"| A3
+    S4 -->|"context: fork"| A4
+    S5 -->|"context: fork"| A5
+    S6 --- A6
+    S7 -->|"context: fork"| A7
+    S8 --- A8
+    S9 --- A9
+    S10 -->|"context: fork"| A10
+    S11 -->|"context: fork"| A11
+
+    A1 -.->|"delegates research"| A2
+    A4 -.->|"schedules"| T3
+```
+
+#### Parallel Execution Pattern
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Main as Main Session
+    participant P as planner
+    participant R as researcher
+    participant O as orchestrator
+    participant SE as software-engineer
+    participant DE as designer
+    participant CR as code-reviewer
+    participant QA as qa
+
+    User->>Main: /plan-task Add feature X
+    Main->>P: fork (read-only)
+    P-->>Main: task plan (includes research task)
+
+    User->>Main: /research Library Y API
+    Main->>R: fork (read-only)
+    R-->>Main: research report with sources
+
+    User->>Main: /orchestrate [plan + research]
+    Main->>O: fork (read-only)
+    O-->>Main: delegation plan (3 parallel groups)
+
+    User->>Main: Execute delegation plan
+
+    par Group 1: Implementation
+        Main->>SE: implement feature
+        Main->>DE: design UI component
+    end
+
+    SE-->>Main: code changes
+    DE-->>Main: component specs
+
+    par Group 2: Review
+        Main->>CR: review code
+        Main->>QA: write tests
+    end
+
+    CR-->>Main: review findings
+    QA-->>Main: test results
+    Main-->>User: workflow complete
+```
+
+### Getting Started
+
+Agent teams require Claude Code with the experimental agent teams feature. The project's `.claude/settings.json` already enables this via `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS`.
+
+#### Standard Pipeline (recommended for complex tasks)
+
+```bash
+# Step 1: Plan — creates a structured task breakdown
+/plan-task Add WebSocket support to the chat backend
+
+# Step 1.5 (if plan includes research): Gather external information
+/research WebSocket support in Express 5 with TypeScript
+
+# Step 2: Orchestrate — creates a delegation plan with parallel groups
+/orchestrate [paste the plan output from Step 1, include research findings]
+
+# Step 3: Execute — tell Claude to execute the delegation plan
+Execute the delegation plan above, spawning agents in parallel per group
+```
+
+#### Direct Agent Invocation (for focused tasks)
+
+```text
+Use the researcher agent to gather LangGraph documentation for the new feature
+Use the security agent to audit the authentication module
+Use the qa agent to write tests for the research agent nodes
+```
+
+#### Direct Skill Invocation
+
+```text
+/research LangGraph StateGraph conditional edges
+/review-code packages/agents/src/agents/default_agent/
+/write-tests packages/backend/src/services/chatService.ts
+/security-audit full
+```
+
+### Agent Tiers
+
+#### Tier 1 — Planning (read-only)
+
+These agents research the codebase and external sources, and produce structured plans. They cannot modify files.
+
+| Agent             | Role                       | Skill (Slash Command) |
+| ----------------- | -------------------------- | --------------------- |
+| `planner`         | Task breakdown, roadmaps   | `/plan-task`          |
+| `researcher`      | Library docs, APIs, specs  | `/research`           |
+| `product-manager` | Requirements, user stories | `/write-requirements` |
+
+The **researcher** is a key Tier 1 agent. When the planner identifies tasks involving unfamiliar libraries, APIs, or specifications, it assigns research tasks to the researcher. The orchestrator then schedules research in the earliest parallel group so findings are available before implementation begins.
+
+#### Tier 2 — Orchestration (read-only)
+
+The orchestrator analyzes a plan and produces a **delegation plan** — which agents should do what, grouped for parallel execution, ordered by dependencies. It does NOT execute tasks.
+
+| Agent          | Role                                           | Skill          |
+| -------------- | ---------------------------------------------- | -------------- |
+| `orchestrator` | Delegation planning, parallel group assignment | `/orchestrate` |
+
+The orchestrator outputs a structured format:
+
+```text
+## Delegation Plan
+### Parallel Group 1: Implementation
+Dependencies: none
+| Task | Agent             | Description              |
+|------|-------------------|--------------------------|
+| 1.1  | software-engineer | Build the new API        |
+| 1.2  | designer          | Design the settings UI   |
+
+### Parallel Group 2: Review
+Dependencies: Group 1
+| Task | Agent          | Description              |
+|------|----------------|--------------------------|
+| 2.1  | code-reviewer  | Review implementation    |
+| 2.2  | qa             | Write and run tests      |
+| 2.3  | security       | Security audit           |
+```
+
+#### Tier 3 — Execution (parallel)
+
+These agents do the actual work. The main session spawns them based on the delegation plan.
+
+| Agent               | Role                               | Permission Mode |
+| ------------------- | ---------------------------------- | --------------- |
+| `designer`          | UI/UX design, component specs      | Full access     |
+| `software-engineer` | Implementation, coding, bug fixes  | Accept edits    |
+| `code-reviewer`     | Code quality, security review      | Plan (R/O)      |
+| `qa`                | Testing, bug finding, coverage     | Accept edits    |
+| `sre-devops`        | Docker, CI/CD, deployment          | Accept edits    |
+| `security`          | OWASP audits, vulnerability review | Plan (R/O)      |
+| `legal-compliance`  | License, privacy, AI ethics        | Plan (R/O)      |
+
+### Parallel Execution Patterns
+
+#### Fan-out / Fan-in
+
+Spawn multiple agents in parallel, then collect and synthesize their results.
+
+```text
+Create an agent team to review this PR:
+- code-reviewer checks code quality
+- security agent checks for vulnerabilities
+- qa agent verifies test coverage
+Run all three in parallel and summarize findings.
+```
+
+#### Pipeline (Plan → Orchestrate → Execute)
+
+The standard workflow for complex features:
+
+```text
+/plan-task Add a new "summarizer" agent type
+  → Returns task plan with 7 tasks (including research on summarization APIs)
+
+/research Google Gemini summarization capabilities and LangGraph patterns
+  → Returns structured report with API docs, code patterns, and recommendations
+
+/orchestrate [task plan + research findings]
+  → Returns delegation plan: Group 0 (researcher), Group 1 (engineer + designer),
+    Group 2 (reviewer + qa + security)
+
+Execute the delegation plan
+  → Spawns groups in order, each group's agents run in parallel
+```
+
+#### Iterative
+
+Loop between agents until quality criteria are met.
+
+```text
+Have the software-engineer implement the feature and code-reviewer review it.
+Iterate until there are no critical issues remaining.
+```
+
+### Key Design Decisions
+
+**Why is the orchestrator read-only?** The orchestrator uses `permissionMode: plan` so it can only research and produce plans — never execute. This enforces the separation between planning delegation and executing it. The main session is the only entity that spawns parallel agents.
+
+**Why are planning and orchestration separate?** The planner focuses on _what_ needs to be done (task breakdown). The orchestrator focuses on _who_ does it and _when_ (agent assignment, parallelism, dependencies). This separation allows you to skip orchestration for simple tasks or re-orchestrate the same plan differently.
+
+**Why a dedicated researcher?** Implementation quality depends on understanding the libraries and APIs being used. The researcher gathers this information upfront — reading official documentation, checking version compatibility, and identifying best practices — so engineers don't have to context-switch between coding and research. Research tasks run in the earliest parallel group, making findings available before implementation begins.
+
+**Why does the main session execute?** Claude Code subagents cannot spawn other subagents. Only the main conversation can spawn parallel workers. The delegation plan gives the main session a clear, structured blueprint to follow.
+
+### Agent Memory
+
+All agents have **project-scoped persistent memory**. They remember patterns, decisions, and context from previous sessions:
+
+- Record architectural decisions they encounter
+- Track recurring patterns in the codebase
+- Learn from past review findings and test failures
+
+### Adding or Customizing Agents
+
+Agent definitions live in `.claude/agents/` as Markdown files with YAML frontmatter. To customize an agent:
+
+1. Edit the agent's `.md` file in `.claude/agents/`
+2. Modify the YAML frontmatter to change tools, permissions, or model
+3. Update the system prompt in the Markdown body
+
+To add a new skill:
+
+1. Create a directory under `.claude/skills/` (e.g., `.claude/skills/my-skill/`)
+2. Add a `SKILL.md` file with YAML frontmatter and instructions
+3. Reference the skill in the agent's frontmatter via `skills: [my-skill]`
+
+See the [Claude Code documentation](https://docs.anthropic.com/en/docs/claude-code) for the full agent and skill configuration reference.
