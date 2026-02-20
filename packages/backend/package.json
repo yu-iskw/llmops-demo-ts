@@ -25,7 +25,7 @@
     "@llmops-demo/common": "workspace:*",
     "@tsoa/runtime": "7.0.0-alpha.0",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "langsmith": "^0.4.6",
     "winston": "^3.19.0"
