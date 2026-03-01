@@ -27,7 +27,7 @@
     "@llmops-demo/common": "workspace:*",
     "@opentelemetry/sdk-trace-base": "^2.2.0",
     "commander": "^14.0.2",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.3.1",
     "langsmith": "^0.4.6",
     "openai": "^6.15.0",
     "openevals": "^0.1.4",
