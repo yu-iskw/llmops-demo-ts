@@ -28,7 +28,7 @@
     "@opentelemetry/sdk-trace-base": "^2.5.1",
     "commander": "^14.0.3",
     "dotenv": "^17.3.1",
-    "langsmith": "^0.5.7",
+    "langsmith": "^0.5.15",
     "openai": "^6.25.0",
     "openevals": "^0.1.4",
     "winston": "^3.19.0",
