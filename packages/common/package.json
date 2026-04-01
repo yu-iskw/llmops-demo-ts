@@ -9,14 +9,14 @@
     "test": "jest"
   },
   "dependencies": {
-    "@google/genai": "^1.43.0",
-    "@langchain/core": "^1.1.29",
+    "@google/genai": "^1.48.0",
+    "@langchain/core": "^1.1.38",
     "winston": "^3.19.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.3.3",
-    "jest": "^30.2.0",
+    "@types/node": "^25.5.0",
+    "jest": "^30.3.0",
     "ts-jest": "^29.4.6",
     "tsx": "^4.21.0"
   }

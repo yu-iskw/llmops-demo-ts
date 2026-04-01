@@ -20,21 +20,21 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "@langchain/core": "^1.1.29",
+    "@langchain/core": "^1.1.38",
     "@llmops-demo-ts/agents": "workspace:*",
     "@llmops-demo/common": "workspace:*",
     "@tsoa/runtime": "7.0.0-alpha.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "langsmith": "^0.5.7",
+    "langsmith": "^0.5.15",
     "winston": "^3.19.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.3.3",
-    "jest": "^30.2.0",
+    "@types/node": "^25.5.0",
+    "jest": "^30.3.0",
     "ts-jest": "^29.4.6",
     "tsoa": "7.0.0-alpha.0",
     "tsx": "^4.21.0",
