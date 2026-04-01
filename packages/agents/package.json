@@ -30,7 +30,7 @@
     "dotenv": "^17.3.1",
     "langsmith": "^0.5.7",
     "openai": "^6.25.0",
-    "openevals": "^0.1.4",
+    "openevals": "^0.1.5",
     "winston": "^3.19.0",
     "zod": "^4.3.6",
     "zod-to-json-schema": "^3.25.1"
