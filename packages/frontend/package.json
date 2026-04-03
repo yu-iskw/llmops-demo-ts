@@ -20,15 +20,15 @@
   "dependencies": {
     "@llmops-demo/common": "workspace:*",
     "pinia": "^3.0.4",
-    "playwright": "^1.58.2",
+    "playwright": "^1.59.1",
     "uuid": "^13.0.0",
-    "vue": "^3.5.29"
+    "vue": "^3.5.32"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
-    "@types/node": "^25.3.3",
-    "@vitejs/plugin-vue": "^6.0.4",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.1"
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.5.2",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3"
   }
 }

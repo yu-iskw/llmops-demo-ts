@@ -13,7 +13,8 @@
       "Skill(write-tests *)",
       "Skill(security-audit *)",
       "Skill(research *)",
-      "Skill(compliance-check *)"
+      "Skill(compliance-check *)",
+      "Skill(bump-dependencies *)"
     ]
   },
   "hooks": {
