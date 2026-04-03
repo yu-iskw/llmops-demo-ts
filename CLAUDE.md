@@ -125,6 +125,10 @@ Example: "Have software-engineer implement and code-reviewer review, iterate unt
 - **Observability**: LangSmith for AI tracing and evaluation
 - **Infrastructure**: Docker, GitHub Actions, pnpm workspaces
 
+## Dependency bumps (pnpm workspace)
+
+Use Claude Code skill **`/bump-dependencies`** (with optional scope: `all`, `root`, `common`, `agents`, `backend`, `frontend`, or package intent) to raise declared versions in root and `packages/*` `package.json` files—not only the lockfile. The skill lives at [`.claude/skills/bump-dependencies/SKILL.md`](.claude/skills/bump-dependencies/SKILL.md) and includes pre/post supply-chain checks (`pnpm audit`, `pnpm audit:osv`), `pnpm --filter` command patterns, and verification (`pnpm build`, `pnpm test`). Contributor-oriented notes are in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
 ## Conventions
 
 - Agent state uses LangGraph `Annotation.Root({})`

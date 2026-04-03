@@ -15,12 +15,20 @@ updates:
   - package-ecosystem: npm
     directory: /packages/agents/
     schedule:
-      interval: monthly
+      interval: weekly
+    groups:
+      langchain:
+        patterns:
+          - "@langchain/*"
   - package-ecosystem: npm
     directory: /packages/backend/
     schedule:
-      interval: monthly
+      interval: weekly
+    groups:
+      langchain:
+        patterns:
+          - "@langchain/*"
   - package-ecosystem: npm
     directory: /packages/frontend/
     schedule:
-      interval: monthly
+      interval: weekly
