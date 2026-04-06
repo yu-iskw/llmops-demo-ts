@@ -43,7 +43,8 @@
 						"enum": [
 							"default",
 							"research",
-							"secure"
+							"secure",
+							"routed"
 						]
 					},
 					"modelName": {
@@ -64,7 +65,8 @@
 				"enum": [
 					"default",
 					"research",
-					"secure"
+					"secure",
+					"routed"
 				]
 			},
 			"AgentInfo": {

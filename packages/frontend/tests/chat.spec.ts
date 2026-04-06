@@ -7,7 +7,7 @@ test.describe("Chat Application", () => {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(["default", "research", "secure"]),
+        body: JSON.stringify(["default", "research", "secure", "routed"]),
       });
     });
 

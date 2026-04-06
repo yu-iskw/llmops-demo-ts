@@ -1,0 +1,28 @@
+datasetName: Routed Agent Trip Specialist Dataset
+description: "Isolated trip specialist (LangChain createAgent): travel planning quality vs rubric."
+defaultProject: Routed Agent Trip Specialist Evaluation
+examples:
+  - inputs:
+      user_message: We have 3 days in Rome with two teenagers—what neighborhoods to stay and a loose daily plan?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: Suggests areas to stay and a plausible 3-day outline focused on Rome; practical for families.
+  - inputs:
+      user_message: Cheapest way to get from Narita to central Tokyo with luggage?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: Names realistic budget transit options (e.g. train/bus lines or tradeoffs); travel-focused.
+  - inputs:
+      user_message: What should I pack for a week in Iceland in late October?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: Weather-appropriate clothing and layers; outdoor/travel practical tips for Iceland autumn.
+  - inputs:
+      user_message: Explain compound interest formulas in detail for my 401k allocation.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: "Stays travel-focused or briefly redirects: not a full finance tutorial; may offer only generic note."
