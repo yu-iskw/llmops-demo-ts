@@ -3,9 +3,10 @@ import { IAgent } from "./baseAgent";
 import { DefaultAgent } from "./default_agent/defaultAgent";
 import { ResearchAgent } from "./research_agent/researchAgent";
 import { SecureAgent } from "./secure_agent/secureAgent";
+import { RoutedAgent } from "./routed_agent/routedAgent";
 import { logger } from "@llmops-demo/common";
 
-export type AgentType = "default" | "research" | "secure";
+export type AgentType = "default" | "research" | "secure" | "routed";
 
 export interface AgentConfig {
   messageWindowSize?: number;
@@ -42,7 +43,7 @@ export class AgentFactory {
    * Gets all available agent types with their descriptions
    */
   public static getAvailableAgents(): AgentInfo[] {
-    const agentTypes: AgentType[] = ["default", "research", "secure"];
+    const agentTypes: AgentType[] = ["default", "research", "secure", "routed"];
     return agentTypes.map((type) => {
       const agent = this.getAgent(type);
       return {
@@ -66,6 +67,8 @@ export class AgentFactory {
         return new DefaultAgent(config?.messageWindowSize);
       case "secure":
         return new SecureAgent(config?.messageWindowSize);
+      case "routed":
+        return new RoutedAgent(config?.messageWindowSize);
       default:
         logger.warn(
           `Unknown agent type: ${agentType}. Falling back to default.`,

@@ -1,0 +1,52 @@
+datasetName: Routed Agent Router Dataset
+description: "Evaluates classify_route: trip vs finance vs general for the routed agent."
+defaultProject: Routed Agent Router Evaluation
+examples:
+  - inputs:
+      user_message: Plan a 4-day itinerary in Lisbon with kid-friendly stops.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      route: trip
+  - inputs:
+      user_message: What ETFs should I buy for long-term retirement savings?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      route: finance
+  - inputs:
+      user_message: Rewrite this paragraph to sound more professional.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      route: general
+  - inputs:
+      user_message: Compare budget airlines for flying Tokyo to Osaka.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      route: trip
+  - inputs:
+      user_message: How much emergency fund should I keep in a savings account?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      route: finance
+  - inputs:
+      user_message: Explain what a closure is in JavaScript.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      route: general
+  - inputs:
+      user_message: Best time of year to visit Patagonia and packing tips.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      route: trip
+  - inputs:
+      user_message: Difference between Roth IRA and traditional IRA for taxes.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      route: finance

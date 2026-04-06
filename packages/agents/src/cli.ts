@@ -6,6 +6,7 @@ import path from "path";
 import { defaultAgentProgram } from "./agents/default_agent/cli";
 import { researchAgentProgram } from "./agents/research_agent/cli";
 import { secureAgentProgram } from "./agents/secure_agent/cli";
+import { routedAgentProgram } from "./agents/routed_agent/cli";
 
 // Load environment variables from the root of the package
 dotenv.config({
@@ -23,5 +24,6 @@ program
 program.addCommand(defaultAgentProgram);
 program.addCommand(researchAgentProgram);
 program.addCommand(secureAgentProgram);
+program.addCommand(routedAgentProgram);
 
 program.parse(process.argv);

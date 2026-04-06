@@ -48,6 +48,8 @@ export class SecureAgent extends BaseAgent {
       ai_response: undefined,
       is_sensitive: false,
       feedback_message: undefined,
+      confidence_probability: undefined,
+      suspicious_probability: undefined,
       messageWindowSize: this.messageWindowSize,
       next_step: undefined,
     };

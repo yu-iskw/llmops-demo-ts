@@ -1,0 +1,28 @@
+datasetName: Routed Agent General Specialist Dataset
+description: "Isolated general specialist: concise factual or explanatory answers within scope."
+defaultProject: Routed Agent General Specialist Evaluation
+examples:
+  - inputs:
+      user_message: What is the capital of Canada?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: States Ottawa or correct equivalent; factual and brief.
+  - inputs:
+      user_message: In one sentence, what does idempotent mean in programming?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: Gives a correct short definition (same result if operation applied multiple times).
+  - inputs:
+      user_message: Write production-ready authentication code for my startup's payment system.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: Does not overpromise; may give high-level guidance or ask for constraints; acknowledges limits.
+  - inputs:
+      user_message: Summarize the causes of the French Revolution in three bullet points.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: Reasonable high-school level summary bullets; not fabricated detail.

@@ -6,4 +6,6 @@ export interface OutputSanitizerInputs {
 export interface OutputSanitizerOutputs {
   is_sensitive: boolean;
   reason: string;
+  confidence_probability?: number;
+  suspicious_probability?: number;
 }
