@@ -26,7 +26,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "message": {"dataType":"string","required":true},
             "history": {"dataType":"array","array":{"dataType":"refObject","ref":"ChatMessage"}},
-            "agentType": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["default"]},{"dataType":"enum","enums":["research"]},{"dataType":"enum","enums":["secure"]}]},
+            "agentType": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["default"]},{"dataType":"enum","enums":["research"]},{"dataType":"enum","enums":["secure"]},{"dataType":"enum","enums":["routed"]}]},
             "modelName": {"dataType":"string"},
             "sessionId": {"dataType":"string"},
         },
@@ -35,7 +35,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AgentType": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["default"]},{"dataType":"enum","enums":["research"]},{"dataType":"enum","enums":["secure"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["default"]},{"dataType":"enum","enums":["research"]},{"dataType":"enum","enums":["secure"]},{"dataType":"enum","enums":["routed"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AgentInfo": {

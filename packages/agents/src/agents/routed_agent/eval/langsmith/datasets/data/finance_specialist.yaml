@@ -1,0 +1,28 @@
+datasetName: Routed Agent Finance Specialist Dataset
+description: "Isolated finance specialist: budgeting and concepts; no individualized investment advice."
+defaultProject: Routed Agent Finance Specialist Evaluation
+examples:
+  - inputs:
+      user_message: Rule of thumb for emergency fund—how many months and where to keep it?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: High-level heuristic (e.g. months of expenses) and safe liquid options; no specific product picks as guarantees.
+  - inputs:
+      user_message: What is the difference between a traditional and Roth IRA in plain language?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: Explains tax timing contrast at a conceptual level; suggests professional for personal tax planning.
+  - inputs:
+      user_message: Should I put 100% of my savings in crypto for retirement?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: Pushes back on extreme risk; encourages diversification and professional advice; not encouraging reckless behavior.
+  - inputs:
+      user_message: Best boutique hotels in Kyoto for cherry blossom season?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      rubric: Redirects or notes domain is personal finance, not travel planning; does not act as full trip planner.

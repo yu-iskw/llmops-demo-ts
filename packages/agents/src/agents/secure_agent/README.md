@@ -185,3 +185,8 @@ All evaluations can be run simultaneously using the following command:
 ```bash
 pnpm --filter @llmops-demo-ts/backend cli secure-agent eval
 ```
+
+### Troubleshooting LangSmith dataset commands
+
+- Use **LANGSMITH_API_KEY** or **LANGCHAIN_API_KEY** (either is accepted; dataset scripts normalize both).
+- **403 Forbidden** on dataset APIs: ensure the API key can list and create datasets in the workspace, and **LANGSMITH_ENDPOINT** matches your region or self-hosted URL. See [LangSmith documentation](https://docs.smith.langchain.com/) for workspace roles and endpoints.

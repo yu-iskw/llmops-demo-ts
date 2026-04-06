@@ -13,6 +13,12 @@ describe("SecureAgentState", () => {
 
     // Assert that SecureAgentStateAnnotation.spec includes properties from OutputSanitizerStateAnnotation
     expect(SecureAgentStateAnnotation.spec).toHaveProperty("is_sensitive");
+    expect(SecureAgentStateAnnotation.spec).toHaveProperty(
+      "confidence_probability",
+    );
+    expect(SecureAgentStateAnnotation.spec).toHaveProperty(
+      "suspicious_probability",
+    );
 
     // Assert that SecureAgentStateAnnotation.spec includes properties from RequestAnswererStateAnnotation
     // expect(SecureAgentStateAnnotation.spec).toHaveProperty("request_answer");

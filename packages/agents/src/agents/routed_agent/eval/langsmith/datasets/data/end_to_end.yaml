@@ -1,0 +1,25 @@
+datasetName: Routed Agent E2E Dataset
+description: "End-to-end routed agent: router, specialists, output sanitizer."
+defaultProject: Routed Agent E2E Evaluation
+examples:
+  - inputs:
+      user_message: Suggest a relaxed 2-day weekend plan in Chicago focusing on food and museums.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      expected_route: trip
+      rubric: Should give a plausible short itinerary or concrete suggestions for Chicago dining and museums.
+  - inputs:
+      user_message: Explain the rule of thumb for emergency fund size and where to park the cash.
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      expected_route: finance
+      rubric: Should mention months of expenses or similar heuristic and safe liquid savings options at a high level.
+  - inputs:
+      user_message: What is the capital of Canada?
+      messages: []
+      messageWindowSize: 5
+    outputs:
+      expected_route: general
+      rubric: Should answer Ottawa or correct capital factually.

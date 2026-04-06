@@ -17,6 +17,8 @@ export async function targetFunction(
       messageWindowSize: 5, // messageWindowSize is not used by output sanitizer checkOutput function
       is_sensitive: false,
       feedback_message: undefined,
+      confidence_probability: undefined,
+      suspicious_probability: undefined,
     };
 
     const result = await checkOutput(initialState, genAI, modelName);
@@ -24,12 +26,16 @@ export async function targetFunction(
     return {
       is_sensitive: result.is_sensitive || false,
       reason: result.feedback_message || "",
+      confidence_probability: result.confidence_probability,
+      suspicious_probability: result.suspicious_probability,
     };
   } catch (error) {
     console.error("Error in target function:", error);
     return {
       is_sensitive: true,
       reason: "An error occurred during output sanitization evaluation.",
+      confidence_probability: undefined,
+      suspicious_probability: undefined,
     };
   }
 }

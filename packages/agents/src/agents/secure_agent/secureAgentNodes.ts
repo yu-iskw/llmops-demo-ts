@@ -92,6 +92,8 @@ export const callOutputSanitizer = async (
     ai_response: state.ai_response, // Pass the AI response to the sanitizer
     is_sensitive: false,
     feedback_message: undefined,
+    confidence_probability: undefined,
+    suspicious_probability: undefined,
     messageWindowSize: state.messageWindowSize,
   };
 
@@ -100,6 +102,8 @@ export const callOutputSanitizer = async (
   return {
     is_sensitive: result.is_sensitive,
     feedback_message: result.feedback_message,
+    confidence_probability: result.confidence_probability,
+    suspicious_probability: result.suspicious_probability,
     messages: state.messages, // Keep the existing messages, don't modify here
     ai_response: state.ai_response, // Keep the AI response as is
   };
