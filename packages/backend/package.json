@@ -38,7 +38,7 @@
     "ts-jest": "^29.4.9",
     "tsoa": "7.0.0-alpha.0",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   },
   "_moduleAliases": {
     "@utils": "./dist/utils",
