@@ -22,9 +22,9 @@
   },
   "dependencies": {
     "@google/genai": "^1.48.0",
-    "@langchain/core": "^1.1.40",
-    "@langchain/google-genai": "^2.1.27",
-    "@langchain/google-vertexai": "^2.1.27",
+    "@langchain/core": "^1.1.41",
+    "@langchain/google-genai": "^2.1.28",
+    "@langchain/google-vertexai": "^2.1.28",
     "@langchain/langgraph": "^1.2.9",
     "@langchain/langgraph-sdk": "^1.8.9",
     "@llmops-demo/common": "workspace:*",
