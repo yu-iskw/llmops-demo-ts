@@ -21,7 +21,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@google/genai": "^1.48.0",
+    "@google/genai": "^1.51.0",
     "@langchain/core": "^1.1.40",
     "@langchain/google-genai": "^2.1.27",
     "@langchain/google-vertexai": "^2.1.27",
@@ -32,7 +32,7 @@
     "commander": "^14.0.3",
     "dotenv": "^17.4.0",
     "langchain": "^1.2.39",
-    "langsmith": "^0.5.16",
+    "langsmith": "^0.5.26",
     "openai": "^6.33.0",
     "openevals": "^0.1.5",
     "winston": "^3.19.0",
@@ -41,8 +41,11 @@
     "zod-to-json-schema": "^3.25.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.5.2",
+    "babel-jest": "^30.3.0",
     "jest": "^30.3.0",
     "ts-jest": "^29.4.9",
     "tsx": "^4.21.0",
