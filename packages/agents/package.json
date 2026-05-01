@@ -33,7 +33,7 @@
     "dotenv": "^17.4.0",
     "langchain": "^1.2.39",
     "langsmith": "^0.5.16",
-    "openai": "^6.33.0",
+    "openai": "^6.35.0",
     "openevals": "^0.1.5",
     "winston": "^3.19.0",
     "yaml": "2.8.3",
