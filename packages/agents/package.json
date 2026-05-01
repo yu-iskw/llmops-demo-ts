@@ -28,7 +28,7 @@
     "@langchain/langgraph": "^1.2.9",
     "@langchain/langgraph-sdk": "^1.8.9",
     "@llmops-demo/common": "workspace:*",
-    "@opentelemetry/sdk-trace-base": "^2.6.1",
+    "@opentelemetry/sdk-trace-base": "^2.7.1",
     "commander": "^14.0.3",
     "dotenv": "^17.4.0",
     "langchain": "^1.2.39",
