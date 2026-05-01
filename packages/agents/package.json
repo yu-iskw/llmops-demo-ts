@@ -21,7 +21,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@google/genai": "^1.48.0",
+    "@google/genai": "^1.51.0",
     "@langchain/core": "^1.1.40",
     "@langchain/google-genai": "^2.1.27",
     "@langchain/google-vertexai": "^2.1.27",
