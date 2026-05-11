@@ -1,4 +1,4 @@
-import { loadRoutedEvalDataset } from "./loadRoutedEvalDataset";
+import { loadRoutedEvalDataset } from "../../../datasets/loadRoutedEvalDataset";
 import { pushRoutedEvalDatasetToLangSmith } from "./pushRoutedEvalDatasetToLangSmith";
 
 export async function createAndAddExamples(): Promise<string> {

@@ -5,22 +5,33 @@ import { SpecialistAgentCache } from "../../../../specialistAgentCache";
 import { getGenAI } from "../../../../../../utils/genai";
 import { RoutedE2EInputs, RoutedE2EOutputs } from "./types";
 
-const genAI = getGenAI();
 const modelName = "gemini-2.5-flash";
 const specialistCache = new SpecialistAgentCache();
 
-const routedAgentGraph = createRoutedAgentGraphBuilder(
-  genAI,
-  modelName,
-  specialistCache,
-).compile({
-  checkpointer: new MemorySaver(),
-});
+let routedAgentGraph:
+  | ReturnType<ReturnType<typeof createRoutedAgentGraphBuilder>["compile"]>
+  | undefined;
+
+function getRoutedAgentGraph(): NonNullable<typeof routedAgentGraph> {
+  if (routedAgentGraph != null) {
+    return routedAgentGraph;
+  }
+  const genAI = getGenAI();
+  routedAgentGraph = createRoutedAgentGraphBuilder(
+    genAI,
+    modelName,
+    specialistCache,
+  ).compile({
+    checkpointer: new MemorySaver(),
+  });
+  return routedAgentGraph;
+}
 
 export async function targetFunction(
   inputs: RoutedE2EInputs,
 ): Promise<RoutedE2EOutputs> {
   try {
+    const routedAgentGraphInstance = getRoutedAgentGraph();
     const initialState = {
       user_message: inputs.user_message,
       messages: inputs.messages,
@@ -33,7 +44,7 @@ export async function targetFunction(
       suspicious_probability: undefined,
     };
 
-    const result = await routedAgentGraph.invoke(initialState, {
+    const result = await routedAgentGraphInstance.invoke(initialState, {
       configurable: { thread_id: randomUUID() },
     });
 

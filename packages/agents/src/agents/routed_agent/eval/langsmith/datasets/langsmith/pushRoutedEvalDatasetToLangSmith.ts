@@ -3,7 +3,7 @@ import {
   createLangSmithEvalClient,
   runLangSmithDatasetOperation,
 } from "../../../../../../utils/langsmithEvalClient";
-import type { RoutedEvalDataset } from "./routedEvalDatasetSchema";
+import type { RoutedEvalDataset } from "../../../datasets/routedEvalDatasetSchema";
 
 /**
  * Creates or reuses a LangSmith dataset and uploads examples from a validated spec.
@@ -37,7 +37,12 @@ export async function pushRoutedEvalDatasetToLangSmith(
     }
 
     await client.createExamples(
-      spec.examples.map((ex) => ({ ...ex, dataset_id: dataset!.id })),
+      spec.examples.map((ex) => ({
+        inputs: ex.inputs,
+        outputs: ex.outputs,
+        dataset_id: dataset!.id,
+        ...(ex.metadata ? { metadata: ex.metadata } : {}),
+      })),
     );
     console.log(successLogMessage);
     return dataset.id;

@@ -4,13 +4,13 @@ import { CreateAnswerAgentGraphBuilder } from "../../../answerAgentBuilder";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { MemorySaver } from "@langchain/langgraph";
 
-const genAI = getGenAI();
 const modelName = "gemini-2.5-flash"; // [[memory:5194513]]
 
 export async function targetFunction(inputs: {
   messages: ChatCompletionMessage[];
   simulated_user_prompt: string;
 }) {
+  const genAI = getGenAI();
   const history: Record<string, ChatCompletionMessage[]> = {};
 
   // Your application logic - must accept params object with inputs and threadId

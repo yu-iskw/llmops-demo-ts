@@ -2,14 +2,13 @@ import { checkOutput } from "../../../outputSanitizerNodes";
 import { getGenAI } from "../../../../../../../utils/genai";
 import { OutputSanitizerInputs, OutputSanitizerOutputs } from "../types";
 
-// Initialize GoogleGenAI client using the centralized utility
-const genAI = getGenAI();
 const modelName = "gemini-2.5-flash"; // [[memory:5194513]]
 
 export async function targetFunction(
   inputs: OutputSanitizerInputs,
 ): Promise<OutputSanitizerOutputs> {
   try {
+    const genAI = getGenAI();
     const initialState = {
       user_message: inputs.user_message,
       ai_response: inputs.ai_response,

@@ -82,10 +82,8 @@ Reference: {reference_outputs}
   return await evaluator(run, example);
 };
 
+import { routedAgentRouteExactMatchLangSmith } from "../../../../eval/shared/routedAgentRouteExactMatchLangSmith";
+
 export const routeExactMatch = async (run: Run, example?: Example) => {
-  const actual = run.outputs?.route;
-  const expected = example?.outputs?.expected_route ?? example?.outputs?.route;
-  const score = actual === expected ? 1 : 0;
-  const comment = `Expected route: ${expected}, Actual route: ${actual}`;
-  return { key: "route_exact_match", score, comment };
+  return routedAgentRouteExactMatchLangSmith(run, example);
 };

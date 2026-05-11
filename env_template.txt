@@ -15,3 +15,8 @@ LANGSMITH_TRACING_V2=true
 LANGSMITH_ENDPOINT=https://api.smith.langchain.com
 LANGSMITH_PROJECT="llmops-demo-ts"
 LANGSMITH_API_KEY="<YOUR-LANGSMITH-API-KEY>"
+
+# Langfuse (offline evals / experiments; optional)
+LANGFUSE_PUBLIC_KEY=
+LANGFUSE_SECRET_KEY=
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
