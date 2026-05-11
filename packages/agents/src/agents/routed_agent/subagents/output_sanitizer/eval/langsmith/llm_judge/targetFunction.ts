@@ -6,12 +6,11 @@ import {
 } from "../../../../../../secure_agent/subagents/output_sanitizer/eval/langsmith/types";
 import { ROUTED_AGENT_SANITIZER_MODEL } from "../../../../../routedAgentConstants";
 
-const genAI = getGenAI();
-
 export async function targetFunction(
   inputs: OutputSanitizerInputs,
 ): Promise<OutputSanitizerOutputs> {
   try {
+    const genAI = getGenAI();
     const initialState = {
       user_message: inputs.user_message,
       ai_response: inputs.ai_response,

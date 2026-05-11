@@ -3,17 +3,36 @@ import dotenv from "dotenv";
 import { getProjectRootPath } from "../../utils/utilities";
 import path from "path";
 import { runLlmJudgeEvaluation as runRouterEvaluation } from "./subagents/router/eval/langsmith/llm_judge/runEvaluation";
+import { runLlmJudgeEvaluation as runRouterLangfuseEvaluation } from "./subagents/router/eval/langfuse/llm_judge/runEvaluation";
 import { runLlmJudgeEvaluation as runOutputSanitizerEvaluation } from "./subagents/output_sanitizer/eval/langsmith/llm_judge/runEvaluation";
+import { runLlmJudgeEvaluation as runOutputSanitizerLangfuseEvaluation } from "./subagents/output_sanitizer/eval/langfuse/llm_judge/runEvaluation";
 import { runLlmJudgeEvaluation as runTripSpecialistEvaluation } from "./subagents/trip_agent/eval/langsmith/llm_judge/runEvaluation";
+import { runLlmJudgeEvaluation as runTripSpecialistLangfuseEvaluation } from "./subagents/trip_agent/eval/langfuse/llm_judge/runEvaluation";
 import { runLlmJudgeEvaluation as runFinanceSpecialistEvaluation } from "./subagents/finance_agent/eval/langsmith/llm_judge/runEvaluation";
+import { runLlmJudgeEvaluation as runFinanceSpecialistLangfuseEvaluation } from "./subagents/finance_agent/eval/langfuse/llm_judge/runEvaluation";
 import { runLlmJudgeEvaluation as runGeneralSpecialistEvaluation } from "./subagents/general_agent/eval/langsmith/llm_judge/runEvaluation";
+import { runLlmJudgeEvaluation as runGeneralSpecialistLangfuseEvaluation } from "./subagents/general_agent/eval/langfuse/llm_judge/runEvaluation";
 import { runLlmJudgeEvaluation as runE2EEvaluation } from "./eval/langsmith/end_to_end/llm_judge/runEvaluation";
+import { runLlmJudgeEvaluation as runE2ELangfuseEvaluation } from "./eval/langfuse/end_to_end/llm_judge/runEvaluation";
 import { createAndAddExamples as createRouterDataset } from "./eval/langsmith/datasets/routerDataset";
+import { createAndAddExamples as createRouterLangfuseDataset } from "./eval/langfuse/datasets/routerDataset";
 import { createAndAddExamples as createOutputSanitizerDataset } from "./eval/langsmith/datasets/outputSanitizerDataset";
+import { createAndAddExamples as createOutputSanitizerLangfuseDataset } from "./eval/langfuse/datasets/outputSanitizerDataset";
 import { createAndAddExamples as createTripSpecialistDataset } from "./eval/langsmith/datasets/tripSpecialistDataset";
+import { createAndAddExamples as createTripSpecialistLangfuseDataset } from "./eval/langfuse/datasets/tripSpecialistDataset";
 import { createAndAddExamples as createFinanceSpecialistDataset } from "./eval/langsmith/datasets/financeSpecialistDataset";
+import { createAndAddExamples as createFinanceSpecialistLangfuseDataset } from "./eval/langfuse/datasets/financeSpecialistDataset";
 import { createAndAddExamples as createGeneralSpecialistDataset } from "./eval/langsmith/datasets/generalSpecialistDataset";
+import { createAndAddExamples as createGeneralSpecialistLangfuseDataset } from "./eval/langfuse/datasets/generalSpecialistDataset";
 import { createAndAddExamples as createE2EDataset } from "./eval/langsmith/datasets/endToEndDataset";
+import { createAndAddExamples as createE2ELangfuseDataset } from "./eval/langfuse/datasets/endToEndDataset";
+import {
+  LANGFUSE_OFFLINE_EVAL_SUITE_IDS,
+  isLangfuseOfflineEvalSuiteId,
+  runAllLangfuseOfflineEvalSuitesParallel,
+  runAllLangfuseOfflineEvalSuitesSequential,
+  runLangfuseOfflineEvalSuite,
+} from "./eval/langfuse/runLangfuseOfflineEvalSuite";
 import { RoutedAgent } from "./routedAgent";
 import { GenAIConfig } from "../../utils/genai";
 
@@ -72,7 +91,9 @@ routedAgentProgram
 
 routedAgentProgram
   .command("eval")
-  .description("Run all LangSmith offline evaluations for the routed agent")
+  .description(
+    "Run all offline evaluations for the routed agent (LangSmith; use eval-langfuse for Langfuse)",
+  )
   .action(async () => {
     await runRouterEvaluation();
     await runOutputSanitizerEvaluation();
@@ -80,6 +101,39 @@ routedAgentProgram
     await runFinanceSpecialistEvaluation();
     await runGeneralSpecialistEvaluation();
     await runE2EEvaluation();
+  });
+
+routedAgentProgram
+  .command("eval-langfuse")
+  .description(
+    "Run all Langfuse offline evaluations for the routed agent (sequential by default; use --parallel for subprocess isolation)",
+  )
+  .option(
+    "-p, --parallel",
+    "Run each suite in its own Node subprocess (avoids OTEL / Langfuse singleton races)",
+  )
+  .action(async (options: { parallel?: boolean }) => {
+    if (options.parallel) {
+      await runAllLangfuseOfflineEvalSuitesParallel();
+    } else {
+      await runAllLangfuseOfflineEvalSuitesSequential();
+    }
+  });
+
+routedAgentProgram
+  .command("eval-langfuse-suite <suite>", { hidden: true })
+  .description(
+    "Run a single Langfuse offline eval suite (used by eval-langfuse --parallel)",
+  )
+  .action(async (suite: string) => {
+    if (!isLangfuseOfflineEvalSuiteId(suite)) {
+      console.error(
+        `Unknown suite "${suite}". Expected one of: ${LANGFUSE_OFFLINE_EVAL_SUITE_IDS.join(", ")}`,
+      );
+      process.exitCode = 1;
+      return;
+    }
+    await runLangfuseOfflineEvalSuite(suite);
   });
 
 const routerLangsmith = routedAgentProgram
@@ -101,6 +155,25 @@ routerLlmJudge
   .description("Create or extend the router LangSmith dataset")
   .action(async () => {
     await createRouterDataset();
+  });
+
+const routerLangfuse = routerLangsmith.command("langfuse");
+
+routerLangfuse
+  .command("eval-llm-as-judge")
+  .description(
+    "Evaluate routing with Langfuse experiments (LLM judge + exact route match)",
+  )
+  .action(async () => {
+    console.log("Running routed agent router Langfuse evaluation...");
+    await runRouterLangfuseEvaluation();
+  });
+
+routerLangfuse
+  .command("create-dataset-llm-as-judge")
+  .description("Create or upsert the router Langfuse dataset from YAML")
+  .action(async () => {
+    await createRouterLangfuseDataset();
   });
 
 const outputSanitizerProgram = routedAgentProgram
@@ -126,6 +199,27 @@ outputSanitizerLangsmith
     await createOutputSanitizerDataset();
   });
 
+const outputSanitizerLangfuse = outputSanitizerProgram.command("langfuse");
+
+outputSanitizerLangfuse
+  .command("eval-llm-as-judge")
+  .description(
+    "Evaluate output sanitizer with Langfuse experiments (LLM judge + accuracy metrics)",
+  )
+  .action(async () => {
+    console.log("Running routed agent output sanitizer Langfuse evaluation...");
+    await runOutputSanitizerLangfuseEvaluation();
+  });
+
+outputSanitizerLangfuse
+  .command("create-dataset-llm-as-judge")
+  .description(
+    "Create or upsert the output sanitizer Langfuse dataset from YAML",
+  )
+  .action(async () => {
+    await createOutputSanitizerLangfuseDataset();
+  });
+
 const tripSpecialistProgram = routedAgentProgram
   .command("trip")
   .description("Trip specialist evaluation");
@@ -145,6 +239,25 @@ tripSpecialistLangsmith
   .description("Create or extend the trip specialist LangSmith dataset")
   .action(async () => {
     await createTripSpecialistDataset();
+  });
+
+const tripSpecialistLangfuse = tripSpecialistProgram.command("langfuse");
+
+tripSpecialistLangfuse
+  .command("eval-llm-as-judge")
+  .description("Evaluate trip specialist with Langfuse experiments (LLM judge)")
+  .action(async () => {
+    console.log("Running routed agent trip specialist Langfuse evaluation...");
+    await runTripSpecialistLangfuseEvaluation();
+  });
+
+tripSpecialistLangfuse
+  .command("create-dataset-llm-as-judge")
+  .description(
+    "Create or upsert the trip specialist Langfuse dataset from YAML",
+  )
+  .action(async () => {
+    await createTripSpecialistLangfuseDataset();
   });
 
 const financeSpecialistProgram = routedAgentProgram
@@ -169,6 +282,29 @@ financeSpecialistLangsmith
     await createFinanceSpecialistDataset();
   });
 
+const financeSpecialistLangfuse = financeSpecialistProgram.command("langfuse");
+
+financeSpecialistLangfuse
+  .command("eval-llm-as-judge")
+  .description(
+    "Evaluate finance specialist with Langfuse experiments (LLM judge)",
+  )
+  .action(async () => {
+    console.log(
+      "Running routed agent finance specialist Langfuse evaluation...",
+    );
+    await runFinanceSpecialistLangfuseEvaluation();
+  });
+
+financeSpecialistLangfuse
+  .command("create-dataset-llm-as-judge")
+  .description(
+    "Create or upsert the finance specialist Langfuse dataset from YAML",
+  )
+  .action(async () => {
+    await createFinanceSpecialistLangfuseDataset();
+  });
+
 const generalSpecialistProgram = routedAgentProgram
   .command("general")
   .description("General specialist evaluation");
@@ -191,6 +327,29 @@ generalSpecialistLangsmith
     await createGeneralSpecialistDataset();
   });
 
+const generalSpecialistLangfuse = generalSpecialistProgram.command("langfuse");
+
+generalSpecialistLangfuse
+  .command("eval-llm-as-judge")
+  .description(
+    "Evaluate general specialist with Langfuse experiments (LLM judge)",
+  )
+  .action(async () => {
+    console.log(
+      "Running routed agent general specialist Langfuse evaluation...",
+    );
+    await runGeneralSpecialistLangfuseEvaluation();
+  });
+
+generalSpecialistLangfuse
+  .command("create-dataset-llm-as-judge")
+  .description(
+    "Create or upsert the general specialist Langfuse dataset from YAML",
+  )
+  .action(async () => {
+    await createGeneralSpecialistLangfuseDataset();
+  });
+
 const endToEndProgram = routedAgentProgram
   .command("end-to-end")
   .description("Full graph evaluation");
@@ -210,6 +369,25 @@ endToEndLangsmithProgram
   .description("Create or extend the E2E LangSmith dataset")
   .action(async () => {
     await createE2EDataset();
+  });
+
+const endToEndLangfuseProgram = endToEndProgram.command("langfuse");
+
+endToEndLangfuseProgram
+  .command("eval-llm-as-judge")
+  .description(
+    "Evaluate full routed agent with Langfuse experiments (LLM judge + route match)",
+  )
+  .action(async () => {
+    console.log("Running routed agent end-to-end Langfuse evaluation...");
+    await runE2ELangfuseEvaluation();
+  });
+
+endToEndLangfuseProgram
+  .command("create-dataset-llm-as-judge")
+  .description("Create or upsert the E2E Langfuse dataset from YAML")
+  .action(async () => {
+    await createE2ELangfuseDataset();
   });
 
 export { routedAgentProgram };

@@ -41,14 +41,13 @@ const createGenAIAsJudge = (parameters: {
   };
 };
 
-const trajectoryEvaluator = createGenAIAsJudge({
-  model: "gemini-2.5-flash", // [[memory:5194513]]
-  prompt:
-    "Based on the below conversation trajectory, was the user satisfied and was the agent helpful?\n{outputs}",
-  feedbackKey: "satisfaction_and_helpfulness",
-});
-
 export async function runEvaluation() {
+  const trajectoryEvaluator = createGenAIAsJudge({
+    model: "gemini-2.5-flash", // [[memory:5194513]]
+    prompt:
+      "Based on the below conversation trajectory, was the user satisfied and was the agent helpful?\n{outputs}",
+    feedbackKey: "satisfaction_and_helpfulness",
+  });
   const datasetId = await createAndAddExamples();
   await evaluate(targetFunction, {
     data: datasetId,

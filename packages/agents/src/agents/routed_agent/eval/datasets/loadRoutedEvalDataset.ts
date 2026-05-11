@@ -7,11 +7,7 @@ import {
   type RoutedEvalDataset,
 } from "./routedEvalDatasetSchema";
 
-const dataDirectory = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "..",
-  "data",
-);
+const dataDirectory = join(dirname(fileURLToPath(import.meta.url)), "data");
 
 const datasetYamlFiles = {
   router: "router.yaml",
@@ -24,7 +20,7 @@ const datasetYamlFiles = {
 
 export type RoutedEvalDatasetId = keyof typeof datasetYamlFiles;
 
-/** Loads and validates a routed-agent eval dataset from YAML next to this package. */
+/** Loads and validates a routed-agent eval dataset from YAML under eval/datasets/data. */
 export function loadRoutedEvalDataset(
   id: RoutedEvalDatasetId,
 ): RoutedEvalDataset {

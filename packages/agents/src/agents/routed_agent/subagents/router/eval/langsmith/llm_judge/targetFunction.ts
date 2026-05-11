@@ -3,12 +3,11 @@ import { getGenAI } from "../../../../../../../utils/genai";
 import { RouterEvalInputs, RouterEvalOutputs } from "./types";
 import type { RoutedAgentState } from "../../../../../routedAgentState";
 
-const genAI = getGenAI();
-
 export async function targetFunction(
   inputs: RouterEvalInputs,
 ): Promise<RouterEvalOutputs> {
   try {
+    const genAI = getGenAI();
     const state = {
       user_message: inputs.user_message,
       messages: inputs.messages,

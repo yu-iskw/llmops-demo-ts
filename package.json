@@ -20,7 +20,7 @@
     "fix-audit": "pnpm audit --fix",
     "format": "trunk fmt",
     "install:playwright": "pnpm --filter @llmops-demo-ts/frontend exec playwright install",
-    "lint": "trunk check .",
+    "lint": "trunk check -y .",
     "lint:eslint": "eslint --config eslint.config.js --fix",
     "playwright:report": "pnpm --filter @llmops-demo-ts/frontend exec playwright show-report",
     "start:backend": ". .env && pnpm --filter @llmops-demo-ts/backend dev",

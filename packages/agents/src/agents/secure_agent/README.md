@@ -186,6 +186,24 @@ All evaluations can be run simultaneously using the following command:
 pnpm --filter @llmops-demo-ts/backend cli secure-agent eval
 ```
 
+## Langfuse offline evaluation scores
+
+Secure-agent Langfuse suites mirror LangSmith evaluators through `adaptLangSmithEvaluator` in [`../../eval/langfuse/adaptLangSmithEvaluator.ts`](../../eval/langfuse/adaptLangSmithEvaluator.ts). Each LangSmith **`key`** is the Langfuse score **`name`**; **`value`** is always numeric in **`[0, 1]`** (coerced and clamped in the adapter).
+
+| Score name (`key`)                 | Suite                                            | Typical range | Needs Gemini / Vertex |
+| ---------------------------------- | ------------------------------------------------ | ------------- | --------------------- |
+| `correctness_genAI`                | Input sanitizer, output sanitizer                | 0 or 1        | Yes                   |
+| `is_suspicious_accuracy`           | Input sanitizer                                  | 0 or 1        | No                    |
+| `sanitized_message_accuracy`       | Input sanitizer                                  | 0 or 1        | No                    |
+| `is_sensitive_accuracy`            | Output sanitizer                                 | 0 or 1        | No                    |
+| `output_sanitized_reason_accuracy` | Output sanitizer                                 | 0 or 1        | No                    |
+| `correctness`                      | Answer LLM-judge (placeholder evaluator in-repo) | 0 or 1        | No (stub)             |
+| `satisfaction_and_helpfulness`     | Answer multi-turn                                | 0 or 1        | Yes                   |
+
+Set **LANGFUSE_PUBLIC_KEY**, **LANGFUSE_SECRET_KEY**, and optional **LANGFUSE_BASE_URL** for Langfuse dataset and experiment commands. Without Gemini credentials, LLM judges typically return **`0`** with **`Evaluator error`** while programmatic scores still run.
+
+Full LangSmith vs Langfuse parity by file path is in the routed-agent doc [`../routed_agent/eval/langfuse/LANGFUSE_OFFLINE_EVAL_SCORES.md`](../routed_agent/eval/langfuse/LANGFUSE_OFFLINE_EVAL_SCORES.md).
+
 ### Troubleshooting LangSmith dataset commands
 
 - Use **LANGSMITH_API_KEY** or **LANGCHAIN_API_KEY** (either is accepted; dataset scripts normalize both).

@@ -12,6 +12,13 @@ import { createAndAddExamples as createInputSanitizerExamples } from "./subagent
 import { createAndAddExamples as createOutputSanitizerExamples } from "./subagents/output_sanitizer/eval/langsmith/llm_judge/dataset";
 import { createAndAddExamples as createAnswerAgentLlmJudgeExamples } from "./subagents/answer_agent/eval/langsmith/llm_judge/dataset";
 import { createAndAddExamples as createAnswerAgentMultiTurnExamples } from "./subagents/answer_agent/eval/langsmith/multi_turn/dataset";
+import {
+  LANGFUSE_OFFLINE_EVAL_SUITE_IDS,
+  isLangfuseOfflineEvalSuiteId,
+  runAllLangfuseOfflineEvalSuitesParallel,
+  runAllLangfuseOfflineEvalSuitesSequential,
+  runLangfuseOfflineEvalSuite,
+} from "./eval/langfuse/runLangfuseOfflineEvalSuite";
 
 // Load environment variables from the root of the package
 dotenv.config({
@@ -69,7 +76,9 @@ secureAgentProgram
 
 secureAgentProgram
   .command("eval")
-  .description("Evaluate the Secure agent")
+  .description(
+    "Evaluate the Secure agent (LangSmith; use eval-langfuse for Langfuse)",
+  )
   .action(async () => {
     // Run the evaluation(s) of the input sanitizer
     await runInputSanitizerEvaluation();
@@ -82,6 +91,39 @@ secureAgentProgram
 
     // Run the evaluation(s) of the multi-turn answer agent
     await runMultiTurnEvaluation();
+  });
+
+secureAgentProgram
+  .command("eval-langfuse")
+  .description(
+    "Run all Langfuse offline evaluations for the secure agent (sequential by default; use --parallel for subprocess isolation)",
+  )
+  .option(
+    "-p, --parallel",
+    "Run each suite in its own Node subprocess (avoids OTEL / Langfuse singleton races)",
+  )
+  .action(async (options: { parallel?: boolean }) => {
+    if (options.parallel) {
+      await runAllLangfuseOfflineEvalSuitesParallel();
+    } else {
+      await runAllLangfuseOfflineEvalSuitesSequential();
+    }
+  });
+
+secureAgentProgram
+  .command("eval-langfuse-suite <suite>", { hidden: true })
+  .description(
+    "Run a single Langfuse offline eval suite (used by eval-langfuse --parallel)",
+  )
+  .action(async (suite: string) => {
+    if (!isLangfuseOfflineEvalSuiteId(suite)) {
+      console.error(
+        `Unknown suite "${suite}". Expected one of: ${LANGFUSE_OFFLINE_EVAL_SUITE_IDS.join(", ")}`,
+      );
+      process.exitCode = 1;
+      return;
+    }
+    await runLangfuseOfflineEvalSuite(suite);
   });
 
 ////////////////////////////////////////////////////////////////
