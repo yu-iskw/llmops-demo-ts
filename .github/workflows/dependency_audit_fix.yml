@@ -51,7 +51,7 @@ jobs:
 
       - name: Apply audit fixes
         continue-on-error: true
-        run: pnpm audit --fix
+        run: pnpm audit --fix update
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
