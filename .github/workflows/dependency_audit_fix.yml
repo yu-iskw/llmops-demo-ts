@@ -51,7 +51,10 @@ jobs:
 
       - name: Apply audit fixes
         continue-on-error: true
-        run: pnpm audit --fix
+        run: pnpm audit --fix override
+
+      - name: Apply overrides to lockfile
+        run: pnpm install
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
@@ -63,10 +66,12 @@ jobs:
           branch: "chore/pnpm-audit-fix-${{ github.run_id }}"
           delete-branch: true
           add-paths: |
+            package.json
             pnpm-lock.yaml
-            **/package.json
+            pnpm-workspace.yaml
+            packages/**/package.json
           body: |
-            Automated lockfile / manifest updates from `pnpm audit --fix` (npm advisory data).
+            Automated manifest overrides from `pnpm audit --fix` and lockfile updates from `pnpm install` (npm advisory data).
 
             **Before merging**
             - Wait for all checks to pass (Test Check, Trunk Check, and Build Check).
