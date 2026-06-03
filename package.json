@@ -17,7 +17,7 @@
     "build:backend": "pnpm --filter \"@llmops-demo-ts/backend\" build",
     "build:common": "pnpm --filter \"@llmops-demo/common\" build",
     "build:frontend": "pnpm --filter \"@llmops-demo-ts/frontend\" build",
-    "fix-audit": "pnpm audit --fix && pnpm install",
+    "fix-audit": "pnpm audit --fix && pnpm install --no-frozen-lockfile",
     "format": "trunk fmt",
     "install:playwright": "pnpm --filter @llmops-demo-ts/frontend exec playwright install",
     "lint": "trunk check .",
