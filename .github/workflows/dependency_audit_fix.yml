@@ -1,0 +1,75 @@
+# Monthly remediation for npm advisory database findings via pnpm.
+#
+# Optional repository secret DEPENDENCY_AUTOMATION_PAT: classic or fine-grained
+# PAT with contents and pull-requests scope. When unset, the default
+# GITHUB_TOKEN is used; per GitHub, workflows triggered by that token may not
+# re-run other workflows on the opened PR—set the PAT if PR checks do not start.
+#
+# pnpm audit and Trunk security use different signals; merge only after CI is green.
+
+name: Dependency audit fix
+
+on:
+  schedule:
+    # First day of each month, 09:00 UTC
+    - cron: 0 9 1 * *
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  audit-fix:
+    name: pnpm audit --fix and open PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.10.3
+        with:
+          egress-policy: audit
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies (not frozen; allows lockfile updates from audit --fix)
+        run: pnpm install
+
+      - name: Apply audit fixes
+        continue-on-error: true
+        run: pnpm audit --fix
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          commit-message: "chore(deps): apply pnpm audit --fix"
+          title: "chore(deps): apply pnpm audit --fix"
+          signoff: true
+          branch: "chore/pnpm-audit-fix-${{ github.run_id }}"
+          delete-branch: true
+          add-paths: |
+            pnpm-lock.yaml
+            **/package.json
+          body: |
+            Automated lockfile / manifest updates from `pnpm audit --fix` (npm advisory data).
+
+            **Before merging**
+            - Wait for all checks to pass (Test Check, Trunk Check, and Build Check).
+            - `pnpm audit` (npm advisory DB) and Trunk/OSV-scoped security are not identical; review any security findings.
+
+            If checks did not run on this PR, configure optional repository secret `DEPENDENCY_AUTOMATION_PAT` (see workflow file header in `.github/workflows/dependency_audit_fix.yml`).
