@@ -29,7 +29,7 @@
     "@langchain/langgraph-sdk": "^1.8.9",
     "@langfuse/client": "^5.3.0",
     "@langfuse/langchain": "^5.3.0",
-    "@langfuse/otel": "^5.3.0",
+    "@langfuse/otel": "^5.4.1",
     "@langfuse/tracing": "^5.3.0",
     "@llmops-demo/common": "workspace:*",
     "@opentelemetry/sdk-node": "^0.217.0",
