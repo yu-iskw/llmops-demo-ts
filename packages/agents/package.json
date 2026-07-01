@@ -33,7 +33,7 @@
     "@langfuse/tracing": "^5.3.0",
     "@llmops-demo/common": "workspace:*",
     "@opentelemetry/sdk-node": "^0.217.0",
-    "@opentelemetry/sdk-trace-base": "^2.6.1",
+    "@opentelemetry/sdk-trace-base": "^2.8.0",
     "commander": "^14.0.3",
     "dotenv": "^17.4.0",
     "langchain": "^1.2.39",
