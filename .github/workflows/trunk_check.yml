@@ -8,13 +8,14 @@ on:
       - main
 
 concurrency:
-  group: "trunk-check-${{ github.head_ref || github.run_id }}"
+  group: "trunk-check-${{ github.head_ref || github.ref }}"
   cancel-in-progress: true
 
 permissions: read-all
 
 jobs:
   trunk_check:
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
     name: Trunk Check Runner
     runs-on: ubuntu-latest
     permissions:
